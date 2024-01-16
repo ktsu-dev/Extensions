@@ -15,7 +15,7 @@ public static class DictionaryExtensions
 	/// <param name="dict">The dictionary to get the value from.</param>
 	/// <param name="key">The key to get the value for.</param>
 	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
-	public static TVal? GetOrCreate<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey key) where TKey : notnull where TVal : new()
+	public static TVal GetOrCreate<TKey, TVal>(this Dictionary<TKey, TVal> dict, TKey key) where TKey : notnull where TVal : new()
 	{
 		ArgumentNullException.ThrowIfNull(dict, nameof(dict));
 		ArgumentNullException.ThrowIfNull(key, nameof(key));
