@@ -43,4 +43,32 @@ public static class StringExtensions
 		ArgumentNullException.ThrowIfNull(value);
 		return str.Contains(value, StringComparison.Ordinal);
 	}
+
+	/// <summary>
+	/// Removes the specified <paramref name="suffix"/> from the current string.
+	/// </summary>
+	/// <param name="s">The string to remove the suffix from.</param>
+	/// <param name="suffix">The suffix to remove.</param>
+	/// <returns>The string with the suffix removed.</returns>
+	public static string RemoveSuffix(this string s, string suffix)
+	{
+		ArgumentNullException.ThrowIfNull(s);
+		ArgumentNullException.ThrowIfNull(suffix);
+
+		return s.EndsWithOrdinal(suffix) ? s[..^suffix.Length] : s;
+	}
+
+	/// <summary>
+	/// Removes the specified <paramref name="prefix"/> from the current string.
+	/// </summary>
+	/// <param name="s">The string to remove the prefix from.</param>
+	/// <param name="prefix">The prefix to remove.</param>
+	/// <returns>The string with the prefix removed.</returns>
+	public static string RemovePrefix(this string s, string prefix)
+	{
+		ArgumentNullException.ThrowIfNull(s);
+		ArgumentNullException.ThrowIfNull(prefix);
+
+		return s.StartsWithOrdinal(prefix) ? s[prefix.Length..] : s;
+	}
 }
