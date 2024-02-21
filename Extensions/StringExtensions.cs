@@ -140,4 +140,36 @@ public static class StringExtensions
 
 		return (TDerived)(s.StartsWithOrdinal(prefix) ? s.WeakString[prefix.Length..] : s);
 	}
+
+	/// <summary>
+	/// Replace all occurrences of a string with another string using ordinal comparison.
+	/// </summary>
+	/// <param name="s">The string to search in.</param>
+	/// <param name="oldValue">The string to replace.</param>
+	/// <param name="newValue">The string to replace with.</param>
+	/// <returns></returns>
+	public static string ReplaceOrdinal(this string s, string oldValue, string newValue)
+	{
+		ArgumentNullException.ThrowIfNull(s);
+		ArgumentNullException.ThrowIfNull(oldValue);
+		ArgumentNullException.ThrowIfNull(newValue);
+
+		return s.Replace(oldValue, newValue, StringComparison.Ordinal);
+	}
+
+	/// <summary>
+	/// Replace all occurrences of a string with another string using ordinal comparison.
+	/// </summary>
+	/// <param name="s">The string to search in.</param>
+	/// <param name="oldValue">The string to replace.</param>
+	/// <param name="newValue">The string to replace with.</param>
+	/// <returns></returns>
+	public static string ReplaceOrdinal<TDerived>(this TDerived s, string oldValue, string newValue) where TDerived : AnyStrongString<TDerived>
+	{
+		ArgumentNullException.ThrowIfNull(s);
+		ArgumentNullException.ThrowIfNull(oldValue);
+		ArgumentNullException.ThrowIfNull(newValue);
+
+		return s.Replace(oldValue, newValue);
+	}
 }
