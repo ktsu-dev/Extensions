@@ -1,15 +1,15 @@
 # Extensions
 
 ## String Extensions
--Ordinals
--Invariants
+- Ordinals
+- Invariants
 
 ## Reflection Extensions
--TryFindMethod
+- TryFindMethod
 
 ## Enumerable Extensions
--WithIndex
--ToCollection
+- WithIndex
+- ToCollection
 
 ## Dictionary Extensions
--GetOrCreate
+- GetOrCreate
