@@ -36,4 +36,21 @@ public static class EnumerableExtensions
 
 		return collection;
 	}
+
+	/// <summary>
+	/// Apply an action to each item in an enumerable.
+	/// </summary>
+	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
+	/// <param name="enumerable">The enumerable to apply the action to.</param>
+	/// <param name="action">The action to apply to each item in the enumerable.</param>
+	public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+	{
+		ArgumentNullException.ThrowIfNull(enumerable);
+		ArgumentNullException.ThrowIfNull(action);
+
+		foreach (var v in enumerable)
+		{
+			action(v);
+		}
+	}
 }
