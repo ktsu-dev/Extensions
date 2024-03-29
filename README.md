@@ -1,4 +1,5 @@
 # Extensions
+Extension Methods for common operations to help with expressiveness and maintainability.
 
 ## String Extensions
 - StartsWithOrdinal
