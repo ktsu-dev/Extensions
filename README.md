@@ -1,8 +1,12 @@
 # Extensions
 
 ## String Extensions
-- Ordinals
-- Invariants
+- StartsWithOrdinal
+- EndsWithOrdinal
+- ContainsOrdinal
+- ReplaceOrdinal
+- RemovePrefix
+- RemoveSuffix
 
 ## Reflection Extensions
 - TryFindMethod
@@ -10,6 +14,7 @@
 ## Enumerable Extensions
 - WithIndex
 - ToCollection
+- ForEach
 
 ## Dictionary Extensions
 - GetOrCreate
