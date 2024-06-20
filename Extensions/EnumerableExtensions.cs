@@ -25,7 +25,7 @@ public static class EnumerableExtensions
 	/// <returns>The new collection with the items added.</returns>
 	public static Collection<T> ToCollection<T>(this IEnumerable<T> items)
 	{
-		ArgumentNullException.ThrowIfNull(items, nameof(items));
+		ArgumentNullException.ThrowIfNull(items);
 
 		var collection = new Collection<T>();
 
