@@ -1,4 +1,4 @@
-﻿namespace ktsu.io.Extensions;
+namespace ktsu.io.Extensions;
 
 using System.Reflection;
 
@@ -18,6 +18,7 @@ public static class ReflectionExtensions
 	public static bool TryFindMethod(this Type type, string methodName, BindingFlags bindingFlags, out MethodInfo? methodInfo)
 	{
 		ArgumentNullException.ThrowIfNull(type);
+		ArgumentNullException.ThrowIfNull(methodName);
 		ArgumentException.ThrowIfNullOrEmpty(methodName);
 
 		methodInfo = null;
