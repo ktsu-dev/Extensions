@@ -19,3 +19,6 @@ Extension Methods for common operations to help with expressiveness and maintain
 
 ## Dictionary Extensions
 - GetOrCreate
+
+## Collection Extensions
+- AddMany
