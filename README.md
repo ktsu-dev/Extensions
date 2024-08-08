@@ -16,6 +16,7 @@ Extension Methods for common operations to help with expressiveness and maintain
 - WithIndex
 - ToCollection (with optional lock)
 - ForEach
+- DeepClone (to a collection, with optional lock)
 
 ## Dictionary Extensions
 - GetOrCreate
