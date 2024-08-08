@@ -14,7 +14,7 @@ Extension Methods for common operations to help with expressiveness and maintain
 
 ## Enumerable Extensions
 - WithIndex
-- ToCollection
+- ToCollection (with optional lock)
 - ForEach
 
 ## Dictionary Extensions

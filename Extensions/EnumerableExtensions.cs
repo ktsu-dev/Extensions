@@ -37,6 +37,24 @@ public static class EnumerableExtensions
 		return collection;
 	}
 
+	// from: https://stackoverflow.com/a/971092
+	/// <summary>
+	/// Method for adding an enumeration of items to a new collection while locked.
+	/// </summary>
+	/// <typeparam name="T">The type of the items.</typeparam>
+	/// <param name="items">The enumeration of items to add to the new collection.</param>
+	/// <param name="lockObj">The object to lock on.</param>
+	/// <returns>The new collection with the items added.</returns>
+	public static Collection<T> ToCollection<T>(this IEnumerable<T> items, object lockObj)
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		ArgumentNullException.ThrowIfNull(lockObj);
+		lock (lockObj)
+		{
+			return ToCollection(items);
+		}
+	}
+
 	/// <summary>
 	/// Apply an action to each item in an enumerable.
 	/// </summary>

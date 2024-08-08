@@ -24,7 +24,7 @@ public class EnumerableExtensionsTests
 	public void ToCollection_CreatesCollection()
 	{
 		int[] items = [1, 2, 3];
-		var collection = items.ToCollection();
+		var collection = items.ToCollection(items);
 
 		Assert.AreEqual(3, collection.Count);
 		Assert.AreEqual(1, collection[0]);
