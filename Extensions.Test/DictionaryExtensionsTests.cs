@@ -1,6 +1,7 @@
 namespace ktsu.io.Extensions.Tests;
 
 using System.Collections.Concurrent;
+using ktsu.io.DeepClone;
 using ktsu.io.Extensions;
 
 [TestClass]
@@ -85,5 +86,126 @@ public class DictionaryExtensionsTests
 		var dictionary = new Dictionary<string, DictionaryExtensionsTests>();
 
 		Assert.ThrowsException<ArgumentNullException>(() => dictionary.GetOrCreate("key1", null!));
+	}
+
+	public class SampleValue : IDeepCloneable<SampleValue>
+	{
+		public int Value { get; set; }
+
+		public SampleValue DeepClone()
+		{
+			return new SampleValue { Value = Value };
+		}
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_ShouldCloneDictionaryCorrectly()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, SampleValue>
+		{
+			{ "One", new SampleValue { Value = 1 } },
+			{ "Two", new SampleValue { Value = 2 } },
+			{ "Three", new SampleValue { Value = 3 } }
+		};
+
+		// Act
+		var clonedDict = originalDict.DeepClone();
+
+		// Assert
+		Assert.AreEqual(originalDict.Count, clonedDict.Count);
+		foreach (var kvp in originalDict)
+		{
+			Assert.IsTrue(clonedDict.ContainsKey(kvp.Key));
+			Assert.AreNotSame(kvp.Value, clonedDict[kvp.Key]);
+			Assert.AreEqual(kvp.Value.Value, clonedDict[kvp.Key].Value);
+		}
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		Dictionary<string, SampleValue> originalDict = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalDict.DeepClone());
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_WithLockObj_ShouldCloneDictionaryCorrectly()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, SampleValue>
+		{
+			{ "One", new SampleValue { Value = 1 } },
+			{ "Two", new SampleValue { Value = 2 } },
+			{ "Three", new SampleValue { Value = 3 } }
+		};
+		object lockObj = new();
+
+		// Act
+		var clonedDict = originalDict.DeepClone(lockObj);
+
+		// Assert
+		Assert.AreEqual(originalDict.Count, clonedDict.Count);
+		foreach (var kvp in originalDict)
+		{
+			Assert.IsTrue(clonedDict.ContainsKey(kvp.Key));
+			Assert.AreNotSame(kvp.Value, clonedDict[kvp.Key]);
+			Assert.AreEqual(kvp.Value.Value, clonedDict[kvp.Key].Value);
+		}
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		Dictionary<string, SampleValue> originalDict = null!;
+		object lockObj = new();
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalDict.DeepClone(lockObj));
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, SampleValue>
+		{
+			{ "One", new SampleValue { Value = 1 } },
+			{ "Two", new SampleValue { Value = 2 } },
+			{ "Three", new SampleValue { Value = 3 } }
+		};
+		object lockObj = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalDict.DeepClone(lockObj));
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_WithLockObj_ShouldLockAndCloneCorrectly()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, SampleValue>
+		{
+			{ "One", new SampleValue { Value = 1 } },
+			{ "Two", new SampleValue { Value = 2 } },
+			{ "Three", new SampleValue { Value = 3 } }
+		};
+		object lockObj = new();
+		bool wasLocked = false;
+
+		// Act
+		lock (lockObj)
+		{
+			wasLocked = true;
+			var clonedDict = originalDict.DeepClone(lockObj);
+			wasLocked = false;
+		}
+
+		// Assert
+		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
 	}
 }
