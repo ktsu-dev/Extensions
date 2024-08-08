@@ -15,7 +15,7 @@ Extension Methods for common operations to help with expressiveness and maintain
 ## Enumerable Extensions
 - WithIndex
 - ToCollection (with optional lock)
-- ForEach
+- ForEach (with optional lock)
 - DeepClone (to a collection, with optional lock)
 - ShallowClone (to a collection, with optional lock)
 

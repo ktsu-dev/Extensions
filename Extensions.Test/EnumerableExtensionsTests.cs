@@ -269,4 +269,120 @@ public class EnumerableExtensionsTests
 		// Assert
 		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
 	}
+
+	[TestMethod]
+	public void ForEach_ShouldApplyActionToEachElement()
+	{
+		// Arrange
+		var items = new List<int> { 1, 2, 3, 4, 5 };
+		var results = new List<int>();
+
+		// Act
+		items.ForEach(i => results.Add(i * 2));
+
+		// Assert
+		Assert.AreEqual(items.Count, results.Count);
+		for (int i = 0; i < items.Count; i++)
+		{
+			Assert.AreEqual(items[i] * 2, results[i]);
+		}
+	}
+
+	[TestMethod]
+	public void ForEach_ShouldThrowArgumentNullException_WhenEnumerableIsNull()
+	{
+		// Arrange
+		IEnumerable<int> items = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(i => { }));
+	}
+
+	[TestMethod]
+	public void ForEach_ShouldThrowArgumentNullException_WhenActionIsNull()
+	{
+		// Arrange
+		var items = new List<int> { 1, 2, 3, 4, 5 };
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(null!));
+	}
+
+	[TestMethod]
+	public void ForEach_WithLockObj_ShouldApplyActionToEachElement()
+	{
+		// Arrange
+		var items = new List<int> { 1, 2, 3, 4, 5 };
+		var results = new List<int>();
+		object lockObj = new();
+
+		// Act
+		items.ForEach(lockObj, i => results.Add(i * 2));
+
+		// Assert
+		Assert.AreEqual(items.Count, results.Count);
+		for (int i = 0; i < items.Count; i++)
+		{
+			Assert.AreEqual(items[i] * 2, results[i]);
+		}
+	}
+
+	[TestMethod]
+	public void ForEach_WithLockObj_ShouldThrowArgumentNullException_WhenEnumerableIsNull()
+	{
+		// Arrange
+		IEnumerable<int> items = null!;
+		object lockObj = new();
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(lockObj, i => { }));
+	}
+
+	[TestMethod]
+	public void ForEach_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	{
+		// Arrange
+		var items = new List<int> { 1, 2, 3, 4, 5 };
+		object lockObj = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(lockObj, i => { }));
+	}
+
+	[TestMethod]
+	public void ForEach_WithLockObj_ShouldThrowArgumentNullException_WhenActionIsNull()
+	{
+		// Arrange
+		var items = new List<int> { 1, 2, 3, 4, 5 };
+		object lockObj = new();
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(lockObj, null!));
+	}
+
+	[TestMethod]
+	public void ForEach_WithLockObj_ShouldLockAndApplyActionCorrectly()
+	{
+		// Arrange
+		var items = new List<int> { 1, 2, 3, 4, 5 };
+		var results = new List<int>();
+		object lockObj = new();
+		bool wasLocked = false;
+
+		// Act
+		lock (lockObj)
+		{
+			wasLocked = true;
+			items.ForEach(lockObj, i => results.Add(i * 2));
+			wasLocked = false;
+		}
+
+		// Assert
+		Assert.AreEqual(items.Count, results.Count);
+		for (int i = 0; i < items.Count; i++)
+		{
+			Assert.AreEqual(items[i] * 2, results[i]);
+		}
+		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
+	}
 }

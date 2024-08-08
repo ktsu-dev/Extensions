@@ -57,12 +57,16 @@ public static class EnumerableExtensions
 		}
 	}
 
+
 	/// <summary>
-	/// Apply an action to each item in an enumerable.
+	/// Performs the specified action on each element of the <see cref="IEnumerable{T}"/>.
 	/// </summary>
-	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
-	/// <param name="enumerable">The enumerable to apply the action to.</param>
-	/// <param name="action">The action to apply to each item in the enumerable.</param>
+	/// <typeparam name="T">The type of the elements in the enumerable.</typeparam>
+	/// <param name="enumerable">The enumerable whose elements the action will be applied to. This cannot be null.</param>
+	/// <param name="action">The action to perform on each element. This cannot be null.</param>
+	/// <exception cref="ArgumentNullException">
+	/// Thrown if the <paramref name="enumerable"/> or <paramref name="action"/> is null.
+	/// </exception>
 	public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 	{
 		ArgumentNullException.ThrowIfNull(enumerable);
@@ -73,6 +77,29 @@ public static class EnumerableExtensions
 			action(v);
 		}
 	}
+
+	/// <summary>
+	/// Performs the specified action on each element of the <see cref="IEnumerable{T}"/> with thread-safety ensured by locking on the provided object.
+	/// </summary>
+	/// <typeparam name="T">The type of the elements in the enumerable.</typeparam>
+	/// <param name="enumerable">The enumerable whose elements the action will be applied to. This cannot be null.</param>
+	/// <param name="lockObj">The object to lock on to ensure thread-safety during the enumeration. This cannot be null.</param>
+	/// <param name="action">The action to perform on each element. This cannot be null.</param>
+	/// <exception cref="ArgumentNullException">
+	/// Thrown if the <paramref name="enumerable"/>, <paramref name="lockObj"/>, or <paramref name="action"/> is null.
+	/// </exception>
+	public static void ForEach<T>(this IEnumerable<T> enumerable, object lockObj, Action<T> action)
+	{
+		ArgumentNullException.ThrowIfNull(enumerable);
+		ArgumentNullException.ThrowIfNull(lockObj);
+		ArgumentNullException.ThrowIfNull(action);
+
+		lock (lockObj)
+		{
+			enumerable.ForEach(action);
+		}
+	}
+
 
 	/// <summary>
 	/// Creates a deep clone of a collection of items, returning a new collection of the specified type.
