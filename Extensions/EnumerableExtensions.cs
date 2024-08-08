@@ -115,4 +115,44 @@ public static class EnumerableExtensions
 			return DeepClone<TItem, TDest>(items);
 		}
 	}
+
+	/// <summary>
+	/// Creates a shallow clone of a collection of items, returning a new collection of the specified type.
+	/// </summary>
+	/// <typeparam name="TItem">The type of the items in the collection.</typeparam>
+	/// <typeparam name="TDest">The type of the destination collection, which must implement <see cref="ICollection{TItem}"/> and have a parameterless constructor.</typeparam>
+	/// <param name="items">The collection of items to clone. This collection cannot be null.</param>
+	/// <returns>A new collection of type <typeparamref name="TDest"/> containing the same items as the input collection.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if the <paramref name="items"/> collection is null.</exception>
+	public static TDest ShallowClone<TItem, TDest>(this IEnumerable<TItem> items)
+		where TDest : ICollection<TItem>, new()
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		var destination = new TDest();
+		destination.AddMany(items);
+		return destination;
+	}
+
+	/// <summary>
+	/// Creates a shallow clone of a collection of items, returning a new collection of the specified type,
+	/// with thread-safety ensured by locking on the provided object.
+	/// </summary>
+	/// <typeparam name="TItem">The type of the items in the collection.</typeparam>
+	/// <typeparam name="TDest">The type of the destination collection, which must implement <see cref="ICollection{TItem}"/> and have a parameterless constructor.</typeparam>
+	/// <param name="items">The collection of items to clone. This collection cannot be null.</param>
+	/// <param name="lockObj">The object to lock on to ensure thread-safety during the cloning operation. This cannot be null.</param>
+	/// <returns>A new collection of type <typeparamref name="TDest"/> containing the same items as the input collection.</returns>
+	/// <exception cref="ArgumentNullException">
+	/// Thrown if the <paramref name="items"/> collection or the <paramref name="lockObj"/> is null.
+	/// </exception>
+	public static TDest ShallowClone<TItem, TDest>(this IEnumerable<TItem> items, object lockObj)
+		where TDest : ICollection<TItem>, new()
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		ArgumentNullException.ThrowIfNull(lockObj);
+		lock (lockObj)
+		{
+			return ShallowClone<TItem, TDest>(items);
+		}
+	}
 }

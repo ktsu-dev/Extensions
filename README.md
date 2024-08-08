@@ -17,9 +17,12 @@ Extension Methods for common operations to help with expressiveness and maintain
 - ToCollection (with optional lock)
 - ForEach
 - DeepClone (to a collection, with optional lock)
+- ShallowClone (to a collection, with optional lock)
 
 ## Dictionary Extensions
 - GetOrCreate
+- DeepClone (with optional lock)
+- ShallowClone (with optional lock)
 
 ## Collection Extensions
 - AddMany

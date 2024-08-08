@@ -108,4 +108,43 @@ public static class DictionaryExtensions
 			return DeepClone(items);
 		}
 	}
+
+	/// <summary>
+	/// Creates a shallow clone of a dictionary, returning a new dictionary with the same keys and values.
+	/// </summary>
+	/// <typeparam name="TKey">The type of the keys in the dictionary. Keys must be non-nullable.</typeparam>
+	/// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
+	/// <param name="items">The dictionary to clone. This dictionary cannot be null.</param>
+	/// <returns>A new dictionary with the same keys and values as the input dictionary.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if the <paramref name="items"/> dictionary is null.</exception>
+	public static IDictionary<TKey, TValue> ShallowClone<TKey, TValue>(this IDictionary<TKey, TValue> items)
+		where TKey : notnull
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		return items.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+	}
+
+	/// <summary>
+	/// Creates a shallow clone of a dictionary, returning a new dictionary with the same keys and values,
+	/// with thread-safety ensured by locking on the provided object.
+	/// </summary>
+	/// <typeparam name="TKey">The type of the keys in the dictionary. Keys must be non-nullable.</typeparam>
+	/// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
+	/// <param name="items">The dictionary to clone. This dictionary cannot be null.</param>
+	/// <param name="lockObj">The object to lock on to ensure thread-safety during the cloning operation. This cannot be null.</param>
+	/// <returns>A new dictionary with the same keys and values as the input dictionary.</returns>
+	/// <exception cref="ArgumentNullException">
+	/// Thrown if the <paramref name="items"/> dictionary or the <paramref name="lockObj"/> is null.
+	/// </exception>
+	public static IDictionary<TKey, TValue> ShallowClone<TKey, TValue>(this IDictionary<TKey, TValue> items, object lockObj)
+		where TKey : notnull
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		ArgumentNullException.ThrowIfNull(lockObj);
+		lock (lockObj)
+		{
+			return ShallowClone(items);
+		}
+	}
+
 }

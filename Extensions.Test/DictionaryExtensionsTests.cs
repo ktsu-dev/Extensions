@@ -208,4 +208,113 @@ public class DictionaryExtensionsTests
 		// Assert
 		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
 	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_ShouldCloneDictionaryCorrectly()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, int>
+		{
+			{ "One", 1 },
+			{ "Two", 2 },
+			{ "Three", 3 }
+		};
+
+		// Act
+		var clonedDict = originalDict.ShallowClone();
+
+		// Assert
+		Assert.AreEqual(originalDict.Count, clonedDict.Count);
+		foreach (var kvp in originalDict)
+		{
+			Assert.IsTrue(clonedDict.ContainsKey(kvp.Key));
+			Assert.AreEqual(kvp.Value, clonedDict[kvp.Key]);
+		}
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		Dictionary<string, int> originalDict = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(originalDict.ShallowClone);
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_WithLockObj_ShouldCloneDictionaryCorrectly()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, int>
+		{
+			{ "One", 1 },
+			{ "Two", 2 },
+			{ "Three", 3 }
+		};
+		object lockObj = new();
+
+		// Act
+		var clonedDict = originalDict.ShallowClone(lockObj);
+
+		// Assert
+		Assert.AreEqual(originalDict.Count, clonedDict.Count);
+		foreach (var kvp in originalDict)
+		{
+			Assert.IsTrue(clonedDict.ContainsKey(kvp.Key));
+			Assert.AreEqual(kvp.Value, clonedDict[kvp.Key]);
+		}
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		Dictionary<string, int> originalDict = null!;
+		object lockObj = new();
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalDict.ShallowClone(lockObj));
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, int>
+		{
+			{ "One", 1 },
+			{ "Two", 2 },
+			{ "Three", 3 }
+		};
+		object lockObj = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalDict.ShallowClone(lockObj));
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_WithLockObj_ShouldLockAndCloneCorrectly()
+	{
+		// Arrange
+		var originalDict = new Dictionary<string, int>
+		{
+			{ "One", 1 },
+			{ "Two", 2 },
+			{ "Three", 3 }
+		};
+		object lockObj = new();
+		bool wasLocked = false;
+
+		// Act
+		lock (lockObj)
+		{
+			wasLocked = true;
+			var clonedDict = originalDict.ShallowClone(lockObj);
+			wasLocked = false;
+		}
+
+		// Assert
+		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
+	}
 }

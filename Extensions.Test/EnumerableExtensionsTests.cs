@@ -182,4 +182,91 @@ public class EnumerableExtensionsTests
 		// Assert
 		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
 	}
+
+	[TestMethod]
+	public void ShallowClone_ShouldCloneCollectionCorrectly()
+	{
+		// Arrange
+		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
+
+		// Act
+		var clonedItems = originalItems.ShallowClone<int, List<int>>();
+
+		// Assert
+		Assert.AreEqual(originalItems.Count, clonedItems.Count);
+		for (int i = 0; i < originalItems.Count; i++)
+		{
+			Assert.AreEqual(originalItems[i], clonedItems[i]);
+		}
+	}
+
+	[TestMethod]
+	public void ShallowClone_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		List<int> originalItems = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(originalItems.ShallowClone<int, List<int>>);
+	}
+
+	[TestMethod]
+	public void ShallowClone_WithLockObj_ShouldCloneCollectionCorrectly()
+	{
+		// Arrange
+		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
+		object lockObj = new();
+
+		// Act
+		var clonedItems = originalItems.ShallowClone<int, List<int>>(lockObj);
+
+		// Assert
+		Assert.AreEqual(originalItems.Count, clonedItems.Count);
+		for (int i = 0; i < originalItems.Count; i++)
+		{
+			Assert.AreEqual(originalItems[i], clonedItems[i]);
+		}
+	}
+
+	[TestMethod]
+	public void ShallowClone_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		List<int> originalItems = null!;
+		object lockObj = new();
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalItems.ShallowClone<int, List<int>>(lockObj));
+	}
+
+	[TestMethod]
+	public void ShallowClone_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	{
+		// Arrange
+		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
+		object lockObj = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => originalItems.ShallowClone<int, List<int>>(lockObj));
+	}
+
+	[TestMethod]
+	public void ShallowClone_WithLockObj_ShouldLockAndCloneCorrectly()
+	{
+		// Arrange
+		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
+		object lockObj = new();
+		bool wasLocked = false;
+
+		// Act
+		lock (lockObj)
+		{
+			wasLocked = true;
+			var clonedItems = originalItems.ShallowClone<int, List<int>>(lockObj);
+			wasLocked = false;
+		}
+
+		// Assert
+		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
+	}
 }
