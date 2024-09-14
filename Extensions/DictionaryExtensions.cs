@@ -1,9 +1,9 @@
-namespace ktsu.io.Extensions;
+namespace ktsu.Extensions;
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ktsu.io.DeepClone;
+using ktsu.DeepClone;
 
 /// <summary>
 /// Extension methods for dictionaries.

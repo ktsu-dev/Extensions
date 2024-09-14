@@ -1,8 +1,8 @@
-namespace ktsu.io.Extensions.Tests;
+namespace ktsu.Extensions.Tests;
 
 using System.Collections.Concurrent;
-using ktsu.io.DeepClone;
-using ktsu.io.Extensions;
+using ktsu.DeepClone;
+using ktsu.Extensions;
 
 [TestClass]
 public class DictionaryExtensionsTests

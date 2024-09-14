@@ -1,6 +1,6 @@
-namespace ktsu.io.Extensions;
+namespace ktsu.Extensions;
 
-using ktsu.io.StrongStrings;
+using ktsu.StrongStrings;
 
 /// <summary>
 /// Extension methods for strings.

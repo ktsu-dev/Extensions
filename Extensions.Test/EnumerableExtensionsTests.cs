@@ -1,9 +1,9 @@
-namespace ktsu.io.Extensions.Tests;
+namespace ktsu.Extensions.Tests;
 
 using System.Collections.Generic;
 using System.Linq;
-using ktsu.io.DeepClone;
-using ktsu.io.Extensions;
+using ktsu.DeepClone;
+using ktsu.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]

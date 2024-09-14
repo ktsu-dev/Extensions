@@ -1,4 +1,4 @@
-namespace ktsu.io.Extensions.Tests;
+namespace ktsu.Extensions.Tests;
 
 [TestClass]
 public class CollectionExtensionsTests

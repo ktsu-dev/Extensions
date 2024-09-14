@@ -1,8 +1,8 @@
-namespace ktsu.io.Extensions;
+namespace ktsu.Extensions;
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using ktsu.io.DeepClone;
+using ktsu.DeepClone;
 
 /// <summary>
 /// Extension methods for enumerables.

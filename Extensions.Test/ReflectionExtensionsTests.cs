@@ -1,7 +1,7 @@
-namespace ktsu.io.Extensions.Tests;
+namespace ktsu.Extensions.Tests;
 
 using System.Reflection;
-using ktsu.io.Extensions;
+using ktsu.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]

@@ -1,4 +1,4 @@
-namespace ktsu.io.Extensions;
+namespace ktsu.Extensions;
 
 /// <summary>
 /// Extension methods for collections.

@@ -1,7 +1,7 @@
-namespace ktsu.io.Extensions.Tests;
+namespace ktsu.Extensions.Tests;
 
-using ktsu.io.Extensions;
-using ktsu.io.StrongStrings;
+using ktsu.Extensions;
+using ktsu.StrongStrings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
