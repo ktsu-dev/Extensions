@@ -8,6 +8,16 @@ using ktsu.StrongStrings;
 public static class StringExtensions
 {
 	/// <summary>
+	/// Converts a weak string to a strong string of the specified type.
+	/// </summary>
+	/// <typeparam name="TDest">The type of the strong string.</typeparam>
+	/// <param name="weakString">The weak string to convert.</param>
+	/// <returns>The converted strong string.</returns>
+	public static TDest As<TDest>(this string weakString)
+		where TDest : AnyStrongString
+		=> AnyStrongString.FromString<TDest>(weakString);
+
+	/// <summary>
 	/// Method that compares two strings using ordinal comparison.
 	/// </summary>
 	/// <param name="str">The string to compare.</param>
