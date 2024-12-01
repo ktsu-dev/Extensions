@@ -57,7 +57,6 @@ public static class EnumerableExtensions
 		}
 	}
 
-
 	/// <summary>
 	/// Performs the specified action on each element of the <see cref="IEnumerable{T}"/>.
 	/// </summary>
@@ -99,7 +98,6 @@ public static class EnumerableExtensions
 			enumerable.ForEach(action);
 		}
 	}
-
 
 	/// <summary>
 	/// Creates a deep clone of a collection of items, returning a new collection of the specified type.
@@ -181,5 +179,64 @@ public static class EnumerableExtensions
 		{
 			return ShallowClone<TItem, TDest>(items);
 		}
+	}
+
+	/// <summary>
+	/// Checks if the enumerable contains any null items.
+	/// </summary>
+	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
+	/// <param name="items">The enumerable to check for null items.</param>
+	/// <returns>True if the enumerable contains any null items; otherwise, false.</returns>
+	public static bool AnyNull<T>(this IEnumerable<T> items)
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		return items.Any(item => item is null);
+	}
+
+	/// <summary>
+	/// Writes the items of the enumerable to the console, skipping null items.
+	/// </summary>
+	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
+	/// <param name="items">The enumerable whose items will be written to the console.</param>
+	public static void WriteItemsToConsole<T>(this IEnumerable<T> items) =>
+		items.ToStringEnumerable().ForEach(Console.WriteLine);
+
+	/// <summary>
+	/// Converts an enumerable to an enumerable of strings, removing null items by default.
+	/// </summary>
+	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
+	/// <param name="items">The enumerable to convert.</param>
+	/// <returns>An enumerable of strings with null items removed.</returns>
+	public static IEnumerable<string> ToStringEnumerable<T>(this IEnumerable<T> items)
+	{
+		ArgumentNullException.ThrowIfNull(items);
+
+		return items.ToStringEnumerable(NullItemHandling.Remove)
+			.Select(item => item!);
+	}
+
+	/// <summary>
+	/// Converts an enumerable to an enumerable of strings, handling null items according to the specified behavior.
+	/// </summary>
+	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
+	/// <param name="items">The enumerable to convert.</param>
+	/// <param name="nullItemHandling">Specifies how to handle null items.</param>
+	/// <returns>An enumerable of strings.</returns>
+	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
+	public static IEnumerable<string?> ToStringEnumerable<T>(this IEnumerable<T> items, NullItemHandling nullItemHandling)
+	{
+		ArgumentNullException.ThrowIfNull(items);
+
+		if (nullItemHandling == NullItemHandling.Throw)
+		{
+			if (items.AnyNull())
+			{
+				throw new InvalidOperationException("The enumerable contains a null item.");
+			}
+		}
+
+		return items
+			.Select(item => item?.ToString())
+			.Where(item => nullItemHandling == NullItemHandling.Include || item is not null);
 	}
 }

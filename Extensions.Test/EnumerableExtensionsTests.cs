@@ -25,7 +25,7 @@ public class EnumerableExtensionsTests
 	public void ToCollection_CreatesCollection()
 	{
 		int[] items = [1, 2, 3];
-		var collection = items.ToCollection(items);
+		var collection = items.ToCollection();
 
 		Assert.AreEqual(3, collection.Count);
 		Assert.AreEqual(1, collection[0]);
@@ -79,11 +79,11 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
-		{
-			new() { Value = 1 },
-			new() { Value = 2 },
-			new() { Value = 3 }
-		};
+			{
+				new() { Value = 1 },
+				new() { Value = 2 },
+				new() { Value = 3 }
+			};
 
 		// Act
 		var clonedItems = originalItems.DeepClone<SampleItem, List<SampleItem>>();
@@ -112,11 +112,11 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
-		{
-			new() { Value = 1 },
-			new() { Value = 2 },
-			new() { Value = 3 }
-		};
+			{
+				new() { Value = 1 },
+				new() { Value = 2 },
+				new() { Value = 3 }
+			};
 		object lockObj = new();
 
 		// Act
@@ -147,11 +147,11 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
-		{
-			new() { Value = 1 },
-			new() { Value = 2 },
-			new() { Value = 3 }
-		};
+			{
+				new() { Value = 1 },
+				new() { Value = 2 },
+				new() { Value = 3 }
+			};
 		object lockObj = null!;
 
 		// Act & Assert
@@ -163,11 +163,11 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
-		{
-			new() { Value = 1 },
-			new() { Value = 2 },
-			new() { Value = 3 }
-		};
+			{
+				new() { Value = 1 },
+				new() { Value = 2 },
+				new() { Value = 3 }
+			};
 		object lockObj = new();
 		bool wasLocked = false;
 
@@ -384,5 +384,130 @@ public class EnumerableExtensionsTests
 			Assert.AreEqual(items[i] * 2, results[i]);
 		}
 		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
+	}
+
+	// Additional tests for edge cases and scenarios
+
+	[TestMethod]
+	public void WithIndex_EmptyEnumerable_ReturnsEmpty()
+	{
+		var items = Enumerable.Empty<string>();
+		var result = items.WithIndex().ToList();
+
+		Assert.AreEqual(0, result.Count);
+	}
+
+	[TestMethod]
+	public void ToCollection_EmptyEnumerable_ReturnsEmptyCollection()
+	{
+		var items = Enumerable.Empty<int>();
+		var collection = items.ToCollection();
+
+		Assert.AreEqual(0, collection.Count);
+	}
+
+	[TestMethod]
+	public void ForEach_EmptyEnumerable_DoesNothing()
+	{
+		var items = Enumerable.Empty<int>();
+		int sum = 0;
+		items.ForEach(item => sum += item);
+
+		Assert.AreEqual(0, sum);
+	}
+
+	[TestMethod]
+	public void AnyNull_WithNullItems_ReturnsTrue()
+	{
+		var items = new List<string?> { "a", null, "b" };
+
+		bool result = items.AnyNull();
+
+		Assert.IsTrue(result);
+	}
+
+	[TestMethod]
+	public void AnyNull_WithoutNullItems_ReturnsFalse()
+	{
+		var items = new List<string?> { "a", "b", "c" };
+
+		bool result = items.AnyNull();
+
+		Assert.IsFalse(result);
+	}
+
+	[TestMethod]
+	public void AnyNull_EmptyEnumerable_ReturnsFalse()
+	{
+		var items = Enumerable.Empty<string?>();
+
+		bool result = items.AnyNull();
+
+		Assert.IsFalse(result);
+	}
+
+	[TestMethod]
+	public void WriteItemsToConsole_WritesCorrectOutput()
+	{
+		var items = new List<object?> { "a", null, 1 };
+		using var sw = new StringWriter();
+		Console.SetOut(sw);
+
+		items.WriteItemsToConsole();
+
+		string expected = $"a{Environment.NewLine}1{Environment.NewLine}";
+		Assert.AreEqual(expected, sw.ToString());
+	}
+
+	[TestMethod]
+	public void WriteItemsToConsole_EmptyEnumerable_NoOutput()
+	{
+		var items = Enumerable.Empty<object?>();
+
+		using var sw = new StringWriter();
+		Console.SetOut(sw);
+
+		items.WriteItemsToConsole();
+
+		string expected = string.Empty;
+		Assert.AreEqual(expected, sw.ToString());
+	}
+
+	[TestMethod]
+	public void ToStringEnumerable_WithNullItems_RemoveHandling()
+	{
+		var items = new List<object?> { "a", null, 1 };
+
+		var result = items.ToStringEnumerable(NullItemHandling.Remove);
+
+		CollectionAssert.AreEqual(new List<string> { "a", "1" }, result.ToList());
+	}
+
+	[TestMethod]
+	public void ToStringEnumerable_WithNullItems_IncludeHandling()
+	{
+		var items = new List<object?> { "a", null, 1 };
+
+		var result = items.ToStringEnumerable(NullItemHandling.Include);
+
+		CollectionAssert.AreEqual(new List<string?> { "a", null, "1" }, result.ToList());
+	}
+
+	[TestMethod]
+	public void ToStringEnumerable_WithNullItems_ThrowHandling()
+	{
+		var items = new List<object?> { "a", null, 1 };
+
+		Assert.ThrowsException<InvalidOperationException>(() => items.ToStringEnumerable(NullItemHandling.Throw).ToList());
+	}
+
+	[TestMethod]
+	public void ToStringEnumerable_EmptyEnumerable_ReturnsEmpty()
+	{
+		var items = Enumerable.Empty<object?>();
+
+		var result = items.ToStringEnumerable();
+
+		Assert.AreEqual(0, result.Count());
 	}
 }

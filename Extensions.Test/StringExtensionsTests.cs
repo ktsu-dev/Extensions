@@ -198,4 +198,143 @@ public class StringExtensionsTests
 
 		Assert.ThrowsException<ArgumentNullException>(() => originalString.ReplaceOrdinal(oldValue, newValue));
 	}
+
+	// Additional tests for edge cases and scenarios
+
+	[TestMethod]
+	public void As_ConvertsWeakStringToStrongString()
+	{
+		string weakString = "hello world";
+		var strongString = weakString.As<MyStrongString>();
+
+		Assert.AreEqual(weakString, strongString.ToString());
+	}
+
+	[TestMethod]
+	public void As_ThrowsArgumentNullException_WhenWeakStringIsNull()
+	{
+		string weakString = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(weakString.As<MyStrongString>);
+	}
+
+	[TestMethod]
+	public void StartsWithOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	{
+		string str = null!;
+		string value = "hello";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.StartsWithOrdinal(value));
+	}
+
+	[TestMethod]
+	public void StartsWithOrdinal_ThrowsArgumentNullException_WhenValueIsNull()
+	{
+		string str = "hello world";
+		string value = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.StartsWithOrdinal(value));
+	}
+
+	[TestMethod]
+	public void EndsWithOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	{
+		string str = null!;
+		string value = "world";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.EndsWithOrdinal(value));
+	}
+
+	[TestMethod]
+	public void EndsWithOrdinal_ThrowsArgumentNullException_WhenValueIsNull()
+	{
+		string str = "hello world";
+		string value = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.EndsWithOrdinal(value));
+	}
+
+	[TestMethod]
+	public void ContainsOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	{
+		string str = null!;
+		string value = "lo wo";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.ContainsOrdinal(value));
+	}
+
+	[TestMethod]
+	public void ContainsOrdinal_ThrowsArgumentNullException_WhenValueIsNull()
+	{
+		string str = "hello world";
+		string value = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.ContainsOrdinal(value));
+	}
+
+	[TestMethod]
+	public void RemoveSuffix_ThrowsArgumentNullException_WhenStringIsNull()
+	{
+		string str = null!;
+		string suffix = ".txt";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.RemoveSuffix(suffix));
+	}
+
+	[TestMethod]
+	public void RemoveSuffix_ThrowsArgumentNullException_WhenSuffixIsNull()
+	{
+		string str = "filename.txt";
+		string suffix = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.RemoveSuffix(suffix));
+	}
+
+	[TestMethod]
+	public void RemovePrefix_ThrowsArgumentNullException_WhenStringIsNull()
+	{
+		string str = null!;
+		string prefix = "prefix_";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.RemovePrefix(prefix));
+	}
+
+	[TestMethod]
+	public void RemovePrefix_ThrowsArgumentNullException_WhenPrefixIsNull()
+	{
+		string str = "prefix_filename";
+		string prefix = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.RemovePrefix(prefix));
+	}
+
+	[TestMethod]
+	public void ReplaceOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	{
+		string str = null!;
+		string oldValue = "world";
+		string newValue = "universe";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.ReplaceOrdinal(oldValue, newValue));
+	}
+
+	[TestMethod]
+	public void ReplaceOrdinal_ThrowsArgumentNullException_WhenOldValueIsNull()
+	{
+		string str = "hello world";
+		string oldValue = null!;
+		string newValue = "universe";
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.ReplaceOrdinal(oldValue, newValue));
+	}
+
+	[TestMethod]
+	public void ReplaceOrdinal_ThrowsArgumentNullException_WhenNewValueIsNull()
+	{
+		string str = "hello world";
+		string oldValue = "world";
+		string newValue = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => str.ReplaceOrdinal(oldValue, newValue));
+	}
 }

@@ -1,3 +1,7 @@
+#pragma warning disable CA1822 // Mark members as static
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable IDE0060 // Remove unused parameter
+
 namespace ktsu.Extensions.Tests;
 
 using System.Reflection;
@@ -94,5 +98,102 @@ public class ReflectionExtensionsTests
 
 		Assert.ThrowsException<ArgumentNullException>(() => type.TryFindMethod(null!, bindingFlags, out _));
 		Assert.ThrowsException<ArgumentException>(() => type.TryFindMethod(string.Empty, bindingFlags, out _));
+	}
+
+	// Additional tests for edge cases and scenarios
+
+	[TestMethod]
+	public void TryFindMethod_FindsPrivateMethod()
+	{
+		var type = typeof(DerivedClassWithAdditionalMethods);
+		string methodName = "PrivateMethod";
+		var bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(methodName, methodInfo.Name);
+	}
+
+	[TestMethod]
+	public void TryFindMethod_FindsStaticMethod()
+	{
+		var type = typeof(DerivedClassWithAdditionalMethods);
+		string methodName = "StaticMethod";
+		var bindingFlags = BindingFlags.Static | BindingFlags.Public;
+
+		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(methodName, methodInfo.Name);
+	}
+
+	[TestMethod]
+	public void TryFindMethod_FindsMethodWithParameters()
+	{
+		var type = typeof(DerivedClassWithAdditionalMethods);
+		string methodName = "MethodWithParameters";
+		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(methodName, methodInfo.Name);
+	}
+
+	[TestMethod]
+	public void TryFindMethod_ThrowsOnAmbiguousMatchForOverloadedMethod()
+	{
+		var type = typeof(DerivedClassWithAdditionalMethods);
+		string methodName = "OverloadedMethod";
+		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		Assert.ThrowsException<AmbiguousMatchException>(() => type.TryFindMethod(methodName, bindingFlags, out var methodInfo));
+	}
+
+	[TestMethod]
+	public void TryFindMethod_FindsGenericMethod()
+	{
+		var type = typeof(DerivedClassWithAdditionalMethods);
+		string methodName = "GenericMethod";
+		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(methodName, methodInfo.Name);
+	}
+
+	// Helper methods for additional tests
+
+	public class DerivedClassWithAdditionalMethods : DerivedClass
+	{
+		private void PrivateMethod()
+		{
+		}
+
+		public static void StaticMethod()
+		{
+		}
+
+		public void MethodWithParameters(int param1, string param2)
+		{
+		}
+
+		public void OverloadedMethod()
+		{
+		}
+
+		public void OverloadedMethod(int param)
+		{
+		}
+
+		public void GenericMethod<T>(T param)
+		{
+		}
 	}
 }

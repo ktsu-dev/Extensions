@@ -103,11 +103,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
-		{
-			{ "One", new SampleValue { Value = 1 } },
-			{ "Two", new SampleValue { Value = 2 } },
-			{ "Three", new SampleValue { Value = 3 } }
-		};
+			{
+				{ "One", new SampleValue { Value = 1 } },
+				{ "Two", new SampleValue { Value = 2 } },
+				{ "Three", new SampleValue { Value = 3 } }
+			};
 
 		// Act
 		var clonedDict = originalDict.DeepClone();
@@ -137,11 +137,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
-		{
-			{ "One", new SampleValue { Value = 1 } },
-			{ "Two", new SampleValue { Value = 2 } },
-			{ "Three", new SampleValue { Value = 3 } }
-		};
+			{
+				{ "One", new SampleValue { Value = 1 } },
+				{ "Two", new SampleValue { Value = 2 } },
+				{ "Three", new SampleValue { Value = 3 } }
+			};
 		object lockObj = new();
 
 		// Act
@@ -173,11 +173,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
-		{
-			{ "One", new SampleValue { Value = 1 } },
-			{ "Two", new SampleValue { Value = 2 } },
-			{ "Three", new SampleValue { Value = 3 } }
-		};
+			{
+				{ "One", new SampleValue { Value = 1 } },
+				{ "Two", new SampleValue { Value = 2 } },
+				{ "Three", new SampleValue { Value = 3 } }
+			};
 		object lockObj = null!;
 
 		// Act & Assert
@@ -189,11 +189,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
-		{
-			{ "One", new SampleValue { Value = 1 } },
-			{ "Two", new SampleValue { Value = 2 } },
-			{ "Three", new SampleValue { Value = 3 } }
-		};
+			{
+				{ "One", new SampleValue { Value = 1 } },
+				{ "Two", new SampleValue { Value = 2 } },
+				{ "Three", new SampleValue { Value = 3 } }
+			};
 		object lockObj = new();
 		bool wasLocked = false;
 
@@ -214,11 +214,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
-		{
-			{ "One", 1 },
-			{ "Two", 2 },
-			{ "Three", 3 }
-		};
+			{
+				{ "One", 1 },
+				{ "Two", 2 },
+				{ "Three", 3 }
+			};
 
 		// Act
 		var clonedDict = originalDict.ShallowClone();
@@ -247,11 +247,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
-		{
-			{ "One", 1 },
-			{ "Two", 2 },
-			{ "Three", 3 }
-		};
+			{
+				{ "One", 1 },
+				{ "Two", 2 },
+				{ "Three", 3 }
+			};
 		object lockObj = new();
 
 		// Act
@@ -282,11 +282,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
-		{
-			{ "One", 1 },
-			{ "Two", 2 },
-			{ "Three", 3 }
-		};
+			{
+				{ "One", 1 },
+				{ "Two", 2 },
+				{ "Three", 3 }
+			};
 		object lockObj = null!;
 
 		// Act & Assert
@@ -298,11 +298,11 @@ public class DictionaryExtensionsTests
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
-		{
-			{ "One", 1 },
-			{ "Two", 2 },
-			{ "Three", 3 }
-		};
+			{
+				{ "One", 1 },
+				{ "Two", 2 },
+				{ "Three", 3 }
+			};
 		object lockObj = new();
 		bool wasLocked = false;
 
@@ -316,5 +316,49 @@ public class DictionaryExtensionsTests
 
 		// Assert
 		Assert.IsFalse(wasLocked, "The lock object should have been released after the method executed.");
+	}
+
+	// Additional tests for edge cases and scenarios
+
+	[TestMethod]
+	public void DeepCloneDictionary_ShouldHandleEmptyDictionary()
+	{
+		var originalDict = new Dictionary<string, SampleValue>();
+
+		var clonedDict = originalDict.DeepClone();
+
+		Assert.AreEqual(0, clonedDict.Count);
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_ShouldHandleEmptyDictionary()
+	{
+		var originalDict = new Dictionary<string, int>();
+
+		var clonedDict = originalDict.ShallowClone();
+
+		Assert.AreEqual(0, clonedDict.Count);
+	}
+
+	[TestMethod]
+	public void DeepCloneDictionary_WithLockObj_ShouldHandleEmptyDictionary()
+	{
+		var originalDict = new Dictionary<string, SampleValue>();
+		object lockObj = new();
+
+		var clonedDict = originalDict.DeepClone(lockObj);
+
+		Assert.AreEqual(0, clonedDict.Count);
+	}
+
+	[TestMethod]
+	public void ShallowCloneDictionary_WithLockObj_ShouldHandleEmptyDictionary()
+	{
+		var originalDict = new Dictionary<string, int>();
+		object lockObj = new();
+
+		var clonedDict = originalDict.ShallowClone(lockObj);
+
+		Assert.AreEqual(0, clonedDict.Count);
 	}
 }
