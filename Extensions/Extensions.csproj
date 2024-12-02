@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="ktsu.DeepClone" Version="1.0.17" />
+    <PackageReference Include="ktsu.DeepClone" Version="1.1.1" />
     <PackageReference Include="ktsu.StrongStrings" Version="1.2.13" />
   </ItemGroup>
 </Project>
