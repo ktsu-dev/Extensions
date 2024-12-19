@@ -239,4 +239,44 @@ public static class EnumerableExtensions
 			.Select(item => item?.ToString())
 			.Where(item => nullItemHandling == NullItemHandling.Include || item is not null);
 	}
+
+	/// <summary>
+	/// Concatenates the elements of an enumerable as a string, using the specified separator between each element.
+	/// </summary>
+	/// <param name="items">The enumerable of items to concatenate. This cannot be null.</param>
+	/// <param name="separator">The string to use as a separator. This cannot be null.</param>
+	/// <returns>A string that consists of the elements in the enumerable delimited by the separator string.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if the <paramref name="items"/> or <paramref name="separator"/> is null.</exception>
+	public static string Join<T>(this IEnumerable<T> items, string separator)
+	{
+		ArgumentNullException.ThrowIfNull(items);
+		ArgumentNullException.ThrowIfNull(separator);
+
+		return items.Join(separator, NullItemHandling.Remove);
+	}
+
+	/// <summary>
+	/// Concatenates the elements of an enumerable as a string, using the specified separator between each element,
+	/// and handling null items according to the specified behavior.
+	/// </summary>
+	/// <param name="items">The enumerable of items to concatenate. This cannot be null.</param>
+	/// <param name="separator">The string to use as a separator. This cannot be null.</param>
+	/// <param name="nullItemHandling">Specifies how to handle null items in the enumerable.</param>
+	/// <returns>A string that consists of the elements in the enumerable delimited by the separator string.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if the <paramref name="items"/> or <paramref name="separator"/> is null.</exception>
+	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
+	public static string Join<T>(this IEnumerable<T> items, string separator, NullItemHandling nullItemHandling)
+	{
+		ArgumentNullException.ThrowIfNull(items);
+
+		if (nullItemHandling == NullItemHandling.Throw)
+		{
+			if (items.AnyNull())
+			{
+				throw new InvalidOperationException("The enumerable contains a null item.");
+			}
+		}
+
+		return string.Join(separator, items.Where(item => nullItemHandling == NullItemHandling.Include || item is not null).Select(i => i?.ToString()));
+	}
 }
