@@ -361,4 +361,43 @@ public class DictionaryExtensionsTests
 
 		Assert.AreEqual(0, clonedDict.Count);
 	}
+
+	[TestMethod]
+	public void AddOrReplace_ShouldAddNewValue()
+	{
+		var dictionary = new ConcurrentDictionary<string, int>();
+
+		dictionary.AddOrReplace("key1", 42);
+
+		Assert.AreEqual(1, dictionary.Count);
+		Assert.AreEqual(42, dictionary["key1"]);
+	}
+
+	[TestMethod]
+	public void AddOrReplace_ShouldReplaceExistingValue()
+	{
+		var dictionary = new ConcurrentDictionary<string, int>();
+		dictionary.TryAdd("key1", 42);
+
+		dictionary.AddOrReplace("key1", 99);
+
+		Assert.AreEqual(1, dictionary.Count);
+		Assert.AreEqual(99, dictionary["key1"]);
+	}
+
+	[TestMethod]
+	public void AddOrReplace_ShouldThrowArgumentNullException_WhenDictionaryIsNull()
+	{
+		ConcurrentDictionary<string, int>? dictionary = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => dictionary.AddOrReplace("key1", 42));
+	}
+
+	[TestMethod]
+	public void AddOrReplace_ShouldThrowArgumentNullException_WhenKeyIsNull()
+	{
+		var dictionary = new ConcurrentDictionary<string, int>();
+
+		Assert.ThrowsException<ArgumentNullException>(() => dictionary.AddOrReplace(null!, 42));
+	}
 }
