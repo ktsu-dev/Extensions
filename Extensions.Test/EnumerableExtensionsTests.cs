@@ -510,4 +510,79 @@ public class EnumerableExtensionsTests
 
 		Assert.AreEqual(0, result.Count());
 	}
+
+	[TestMethod]
+	public void Join_ConcatenatesElementsWithSeparator()
+	{
+		// Arrange
+		var items = new List<string> { "a", "b", "c" };
+		string separator = ",";
+
+		// Act
+		string result = items.Join(separator);
+
+		// Assert
+		Assert.AreEqual("a,b,c", result);
+	}
+
+	[TestMethod]
+	public void Join_ThrowsArgumentNullException_WhenItemsIsNull()
+	{
+		// Arrange
+		List<string> items = null!;
+		string separator = ",";
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.Join(separator));
+	}
+
+	[TestMethod]
+	public void Join_ThrowsArgumentNullException_WhenSeparatorIsNull()
+	{
+		// Arrange
+		var items = new List<string> { "a", "b", "c" };
+		string separator = null!;
+
+		// Act & Assert
+		Assert.ThrowsException<ArgumentNullException>(() => items.Join(separator));
+	}
+
+	[TestMethod]
+	public void Join_WithNullItemHandlingRemove_RemovesNullItems()
+	{
+		// Arrange
+		var items = new List<string?> { "a", null, "b", "c" };
+		string separator = ",";
+
+		// Act
+		string result = items.Join(separator, NullItemHandling.Remove);
+
+		// Assert
+		Assert.AreEqual("a,b,c", result);
+	}
+
+	[TestMethod]
+	public void Join_WithNullItemHandlingInclude_IncludesNullItems()
+	{
+		// Arrange
+		var items = new List<string?> { "a", null, "b", "c" };
+		string separator = ",";
+
+		// Act
+		string result = items.Join(separator, NullItemHandling.Include);
+
+		// Assert
+		Assert.AreEqual("a,,b,c", result);
+	}
+
+	[TestMethod]
+	public void Join_WithNullItemHandlingThrow_ThrowsInvalidOperationException()
+	{
+		// Arrange
+		var items = new List<string?> { "a", null, "b", "c" };
+		string separator = ",";
+
+		// Act & Assert
+		Assert.ThrowsException<InvalidOperationException>(() => items.Join(separator, NullItemHandling.Throw));
+	}
 }
