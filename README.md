@@ -13,6 +13,7 @@ A utility library of extension methods designed to enhance the functionality of 
   - `AnyNull`: Checks if the enumerable contains any null items.
   - `WriteItemsToConsole`: Writes the items of the enumerable to the console, skipping null items.
   - `ToStringEnumerable`: Converts an enumerable to an enumerable of strings, handling null items according to the specified behavior.
+  - `Join`: Joins the items of the enumerable into a single string using the specified separator.
 
 - **Collection Extensions**
   - `AddMany`: Adds items from an enumerable to a collection.
