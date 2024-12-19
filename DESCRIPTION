@@ -1,1 +1,1 @@
-Extension Methods for common operations to help with expressiveness and maintainability.
+A utility library of extension methods to enhance the functionality of collections, enumerables, dictionaries, strings, and reflection in .NET
