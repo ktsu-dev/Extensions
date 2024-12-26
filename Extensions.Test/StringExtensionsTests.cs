@@ -10,7 +10,7 @@ public class StringExtensionsTests
 	public record MyStrongString : AnyStrongString<MyStrongString> { }
 
 	[TestMethod]
-	public void StartsWithOrdinal_StringComparison_ReturnsTrue()
+	public void StartsWithOrdinalStringComparisonReturnsTrue()
 	{
 		string str = "hello world";
 		string value = "hello";
@@ -18,7 +18,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void StartsWithOrdinal_StringComparison_ReturnsFalse()
+	public void StartsWithOrdinalStringComparisonReturnsFalse()
 	{
 		string str = "hello world";
 		string value = "world";
@@ -26,7 +26,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void EndsWithOrdinal_StringComparison_ReturnsTrue()
+	public void EndsWithOrdinalStringComparisonReturnsTrue()
 	{
 		string str = "hello world";
 		string value = "world";
@@ -34,7 +34,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void EndsWithOrdinal_StringComparison_ReturnsFalse()
+	public void EndsWithOrdinalStringComparisonReturnsFalse()
 	{
 		string str = "hello world";
 		string value = "hello";
@@ -42,7 +42,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ContainsOrdinal_StringComparison_ReturnsTrue()
+	public void ContainsOrdinalStringComparisonReturnsTrue()
 	{
 		string str = "hello world";
 		string value = "lo wo";
@@ -50,7 +50,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ContainsOrdinal_StringComparison_ReturnsFalse()
+	public void ContainsOrdinalStringComparisonReturnsFalse()
 	{
 		string str = "hello world";
 		string value = "worlds";
@@ -58,7 +58,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemoveSuffix_RemovesSuffixCorrectly()
+	public void RemoveSuffixRemovesSuffixCorrectly()
 	{
 		string str = "filename.txt";
 		string suffix = ".txt";
@@ -67,7 +67,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemoveSuffix_DoesNotRemoveIfSuffixNotFound()
+	public void RemoveSuffixDoesNotRemoveIfSuffixNotFound()
 	{
 		string str = "filename.txt";
 		string suffix = ".csv";
@@ -75,7 +75,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemovePrefix_RemovesPrefixCorrectly()
+	public void RemovePrefixRemovesPrefixCorrectly()
 	{
 		string str = "prefix_filename";
 		string prefix = "prefix_";
@@ -84,7 +84,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemovePrefix_DoesNotRemoveIfPrefixNotFound()
+	public void RemovePrefixDoesNotRemoveIfPrefixNotFound()
 	{
 		string str = "prefix_filename";
 		string prefix = "suffix_";
@@ -92,7 +92,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ReplacesCorrectly()
+	public void ReplaceOrdinalReplacesCorrectly()
 	{
 		string str = "hello world";
 		string oldValue = "world";
@@ -102,7 +102,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_DoesNotReplaceIfOldValueNotFound()
+	public void ReplaceOrdinalDoesNotReplaceIfOldValueNotFound()
 	{
 		string str = "hello world";
 		string oldValue = "earth";
@@ -111,7 +111,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void StartsWithOrdinal_StrongStringComparison_ReturnsTrue()
+	public void StartsWithOrdinalStrongStringComparisonReturnsTrue()
 	{
 		var str = (MyStrongString)"hello world";
 		string value = "hello";
@@ -119,7 +119,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void EndsWithOrdinal_StrongStringComparison_ReturnsTrue()
+	public void EndsWithOrdinalStrongStringComparisonReturnsTrue()
 	{
 		var str = (MyStrongString)"hello world";
 		string value = "world";
@@ -127,7 +127,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ContainsOrdinal_StrongStringComparison_ReturnsTrue()
+	public void ContainsOrdinalStrongStringComparisonReturnsTrue()
 	{
 		var str = (MyStrongString)"hello world";
 		string value = "lo wo";
@@ -135,7 +135,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemoveSuffix_StrongString_RemovesSuffixCorrectly()
+	public void RemoveSuffixStrongStringRemovesSuffixCorrectly()
 	{
 		var str = (MyStrongString)"filename.txt";
 		string suffix = ".txt";
@@ -145,7 +145,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemovePrefix_StrongString_RemovesPrefixCorrectly()
+	public void RemovePrefixStrongStringRemovesPrefixCorrectly()
 	{
 		var str = (MyStrongString)"prefix_filename";
 		string prefix = "prefix_";
@@ -155,7 +155,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ShouldReplaceAllOccurrences()
+	public void ReplaceOrdinalShouldReplaceAllOccurrences()
 	{
 		// Arrange
 		var originalString = (MyStrongString)"Hello, World! Hello, Universe!";
@@ -170,7 +170,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ShouldThrowArgumentNullException_WhenSourceIsNull()
+	public void ReplaceOrdinalShouldThrowArgumentNullExceptionWhenSourceIsNull()
 	{
 		MyStrongString originalString = null!;
 		string oldValue = "Hello";
@@ -180,7 +180,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ShouldThrowArgumentNullException_WhenOldValueIsNull()
+	public void ReplaceOrdinalShouldThrowArgumentNullExceptionWhenOldValueIsNull()
 	{
 		var originalString = (MyStrongString)"Hello, World!";
 		string oldValue = null!;
@@ -190,7 +190,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ShouldThrowArgumentNullException_WhenNewValueIsNull()
+	public void ReplaceOrdinalShouldThrowArgumentNullExceptionWhenNewValueIsNull()
 	{
 		var originalString = (MyStrongString)"Hello, World!";
 		string oldValue = "Hello";
@@ -202,7 +202,7 @@ public class StringExtensionsTests
 	// Additional tests for edge cases and scenarios
 
 	[TestMethod]
-	public void As_ConvertsWeakStringToStrongString()
+	public void AsConvertsWeakStringToStrongString()
 	{
 		string weakString = "hello world";
 		var strongString = weakString.As<MyStrongString>();
@@ -211,7 +211,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void As_ThrowsArgumentNullException_WhenWeakStringIsNull()
+	public void AsThrowsArgumentNullExceptionWhenWeakStringIsNull()
 	{
 		string weakString = null!;
 
@@ -219,7 +219,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void StartsWithOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	public void StartsWithOrdinalThrowsArgumentNullExceptionWhenStringIsNull()
 	{
 		string str = null!;
 		string value = "hello";
@@ -228,7 +228,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void StartsWithOrdinal_ThrowsArgumentNullException_WhenValueIsNull()
+	public void StartsWithOrdinalThrowsArgumentNullExceptionWhenValueIsNull()
 	{
 		string str = "hello world";
 		string value = null!;
@@ -237,7 +237,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void EndsWithOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	public void EndsWithOrdinalThrowsArgumentNullExceptionWhenStringIsNull()
 	{
 		string str = null!;
 		string value = "world";
@@ -246,7 +246,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void EndsWithOrdinal_ThrowsArgumentNullException_WhenValueIsNull()
+	public void EndsWithOrdinalThrowsArgumentNullExceptionWhenValueIsNull()
 	{
 		string str = "hello world";
 		string value = null!;
@@ -255,7 +255,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ContainsOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	public void ContainsOrdinalThrowsArgumentNullExceptionWhenStringIsNull()
 	{
 		string str = null!;
 		string value = "lo wo";
@@ -264,7 +264,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ContainsOrdinal_ThrowsArgumentNullException_WhenValueIsNull()
+	public void ContainsOrdinalThrowsArgumentNullExceptionWhenValueIsNull()
 	{
 		string str = "hello world";
 		string value = null!;
@@ -273,7 +273,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemoveSuffix_ThrowsArgumentNullException_WhenStringIsNull()
+	public void RemoveSuffixThrowsArgumentNullExceptionWhenStringIsNull()
 	{
 		string str = null!;
 		string suffix = ".txt";
@@ -282,7 +282,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemoveSuffix_ThrowsArgumentNullException_WhenSuffixIsNull()
+	public void RemoveSuffixThrowsArgumentNullExceptionWhenSuffixIsNull()
 	{
 		string str = "filename.txt";
 		string suffix = null!;
@@ -291,7 +291,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemovePrefix_ThrowsArgumentNullException_WhenStringIsNull()
+	public void RemovePrefixThrowsArgumentNullExceptionWhenStringIsNull()
 	{
 		string str = null!;
 		string prefix = "prefix_";
@@ -300,7 +300,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void RemovePrefix_ThrowsArgumentNullException_WhenPrefixIsNull()
+	public void RemovePrefixThrowsArgumentNullExceptionWhenPrefixIsNull()
 	{
 		string str = "prefix_filename";
 		string prefix = null!;
@@ -309,7 +309,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ThrowsArgumentNullException_WhenStringIsNull()
+	public void ReplaceOrdinalThrowsArgumentNullExceptionWhenStringIsNull()
 	{
 		string str = null!;
 		string oldValue = "world";
@@ -319,7 +319,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ThrowsArgumentNullException_WhenOldValueIsNull()
+	public void ReplaceOrdinalThrowsArgumentNullExceptionWhenOldValueIsNull()
 	{
 		string str = "hello world";
 		string oldValue = null!;
@@ -329,7 +329,7 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
-	public void ReplaceOrdinal_ThrowsArgumentNullException_WhenNewValueIsNull()
+	public void ReplaceOrdinalThrowsArgumentNullExceptionWhenNewValueIsNull()
 	{
 		string str = "hello world";
 		string oldValue = "world";

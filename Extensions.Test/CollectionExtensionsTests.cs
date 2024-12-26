@@ -4,7 +4,7 @@ namespace ktsu.Extensions.Tests;
 public class CollectionExtensionsTests
 {
 	[TestMethod]
-	public void AddMany_AddsItemsToCollection()
+	public void AddManyAddsItemsToCollection()
 	{
 		var collection = new List<int> { 1, 2 };
 		var itemsToAdd = new List<int> { 3, 4 };
@@ -15,7 +15,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddMany_NullCollection_ThrowsArgumentNullException()
+	public void AddManyNullCollectionThrowsArgumentNullException()
 	{
 		ICollection<int> collection = null!;
 		var itemsToAdd = new List<int> { 1, 2 };
@@ -24,7 +24,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddMany_NullItems_ThrowsArgumentNullException()
+	public void AddManyNullItemsThrowsArgumentNullException()
 	{
 		var collection = new List<int> { 1, 2 };
 		IEnumerable<int> itemsToAdd = null!;
@@ -33,7 +33,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_WithNullItems_ReturnsTrue()
+	public void AnyNullWithNullItemsReturnsTrue()
 	{
 		var collection = new List<string?> { "a", null, "b" };
 
@@ -43,7 +43,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_WithoutNullItems_ReturnsFalse()
+	public void AnyNullWithoutNullItemsReturnsFalse()
 	{
 		var collection = new List<string?> { "a", "b", "c" };
 
@@ -53,7 +53,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_NullCollection_ThrowsArgumentNullException()
+	public void AnyNullNullCollectionThrowsArgumentNullException()
 	{
 		ICollection<string?> collection = null!;
 
@@ -61,7 +61,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void WriteItemsToConsole_WritesCorrectOutput()
+	public void WriteItemsToConsoleWritesCorrectOutput()
 	{
 		var collection = new List<object?> { "a", null, 1 };
 		using var sw = new StringWriter();
@@ -74,7 +74,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddMany_AddEmptyEnumerable_DoesNotChangeCollection()
+	public void AddManyAddEmptyEnumerableDoesNotChangeCollection()
 	{
 		var collection = new List<int> { 1, 2 };
 		var itemsToAdd = Enumerable.Empty<int>();
@@ -85,7 +85,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddMany_CollectionWithNullItems_AddsItems()
+	public void AddManyCollectionWithNullItemsAddsItems()
 	{
 		var collection = new List<string?> { "a", null };
 		var itemsToAdd = new List<string?> { "b", null };
@@ -96,7 +96,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_EmptyCollection_ReturnsFalse()
+	public void AnyNullEmptyCollectionReturnsFalse()
 	{
 		var collection = new List<string?>();
 
@@ -106,7 +106,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_AllNullItems_ReturnsTrue()
+	public void AnyNullAllNullItemsReturnsTrue()
 	{
 		var collection = new List<string?> { null, null };
 
@@ -116,7 +116,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void WriteItemsToConsole_EmptyCollection_NoOutput()
+	public void WriteItemsToConsoleEmptyCollectionNoOutput()
 	{
 		var collection = new List<object?>();
 
@@ -130,7 +130,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void WriteItemsToConsole_WithNullItems_SkipsNulls()
+	public void WriteItemsToConsoleWithNullItemsSkipsNulls()
 	{
 		var collection = new List<object?> { "test", null, "example" };
 
@@ -144,7 +144,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddMany_WithLargeNumberOfItems_AddsAllItems()
+	public void AddManyWithLargeNumberOfItemsAddsAllItems()
 	{
 		var collection = new List<int>();
 		var itemsToAdd = Enumerable.Range(1, 1000);
@@ -156,7 +156,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddMany_EnumerableContainsNulls_AddsNullsToCollection()
+	public void AddManyEnumerableContainsNullsAddsNullsToCollection()
 	{
 		var collection = new List<string?> { "start" };
 		var itemsToAdd = new List<string?> { null, "middle", null, "end" };
@@ -167,7 +167,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_ValueTypeCollection_ReturnsFalse()
+	public void AnyNullValueTypeCollectionReturnsFalse()
 	{
 		var collection = new List<int> { 1, 2, 3 };
 
@@ -177,7 +177,7 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_NullableValueTypeWithNull_ReturnsTrue()
+	public void AnyNullNullableValueTypeWithNullReturnsTrue()
 	{
 		var collection = new List<int?> { 1, null, 3 };
 

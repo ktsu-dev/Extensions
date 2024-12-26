@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 public class EnumerableExtensionsTests
 {
 	[TestMethod]
-	public void WithIndex_EnumeratesWithIndex()
+	public void WithIndexEnumeratesWithIndex()
 	{
 		string[] items = ["a", "b", "c"];
 		var result = items.WithIndex().ToList();
@@ -22,7 +22,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToCollection_CreatesCollection()
+	public void ToCollectionCreatesCollection()
 	{
 		int[] items = [1, 2, 3];
 		var collection = items.ToCollection();
@@ -34,7 +34,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_AppliesAction()
+	public void ForEachAppliesAction()
 	{
 		int[] items = [1, 2, 3];
 		int sum = 0;
@@ -44,21 +44,21 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToCollection_ThrowsOnNull()
+	public void ToCollectionThrowsOnNull()
 	{
 		IEnumerable<int> items = null!;
 		Assert.ThrowsException<ArgumentNullException>(() => items.ToCollection());
 	}
 
 	[TestMethod]
-	public void ForEach_ThrowsOnNullEnumerable()
+	public void ForEachThrowsOnNullEnumerable()
 	{
 		IEnumerable<int> items = null!;
 		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(item => { }));
 	}
 
 	[TestMethod]
-	public void ForEach_ThrowsOnNullAction()
+	public void ForEachThrowsOnNullAction()
 	{
 		int[] items = [1, 2, 3];
 		Assert.ThrowsException<ArgumentNullException>(() => items.ForEach(null!));
@@ -75,7 +75,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepClone_ShouldCloneCollectionCorrectly()
+	public void DeepCloneShouldCloneCollectionCorrectly()
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
@@ -98,7 +98,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepClone_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void DeepCloneShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		List<SampleItem> originalItems = null!;
@@ -108,7 +108,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepClone_WithLockObj_ShouldCloneCollectionCorrectly()
+	public void DeepCloneWithLockObjShouldCloneCollectionCorrectly()
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
@@ -132,7 +132,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepClone_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void DeepCloneWithLockObjShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		List<SampleItem> originalItems = null!;
@@ -143,7 +143,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepClone_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	public void DeepCloneWithLockObjShouldThrowArgumentNullExceptionWhenLockObjIsNull()
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
@@ -159,7 +159,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepClone_WithLockObj_ShouldLockAndCloneCorrectly()
+	public void DeepCloneWithLockObjShouldLockAndCloneCorrectly()
 	{
 		// Arrange
 		var originalItems = new List<SampleItem>
@@ -184,7 +184,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowClone_ShouldCloneCollectionCorrectly()
+	public void ShallowCloneShouldCloneCollectionCorrectly()
 	{
 		// Arrange
 		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
@@ -201,7 +201,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowClone_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void ShallowCloneShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		List<int> originalItems = null!;
@@ -211,7 +211,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowClone_WithLockObj_ShouldCloneCollectionCorrectly()
+	public void ShallowCloneWithLockObjShouldCloneCollectionCorrectly()
 	{
 		// Arrange
 		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
@@ -229,7 +229,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowClone_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void ShallowCloneWithLockObjShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		List<int> originalItems = null!;
@@ -240,7 +240,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowClone_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	public void ShallowCloneWithLockObjShouldThrowArgumentNullExceptionWhenLockObjIsNull()
 	{
 		// Arrange
 		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
@@ -251,7 +251,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowClone_WithLockObj_ShouldLockAndCloneCorrectly()
+	public void ShallowCloneWithLockObjShouldLockAndCloneCorrectly()
 	{
 		// Arrange
 		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
@@ -271,7 +271,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_ShouldApplyActionToEachElement()
+	public void ForEachShouldApplyActionToEachElement()
 	{
 		// Arrange
 		var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -289,7 +289,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_ShouldThrowArgumentNullException_WhenEnumerableIsNull()
+	public void ForEachShouldThrowArgumentNullExceptionWhenEnumerableIsNull()
 	{
 		// Arrange
 		IEnumerable<int> items = null!;
@@ -299,7 +299,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_ShouldThrowArgumentNullException_WhenActionIsNull()
+	public void ForEachShouldThrowArgumentNullExceptionWhenActionIsNull()
 	{
 		// Arrange
 		var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -309,7 +309,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_WithLockObj_ShouldApplyActionToEachElement()
+	public void ForEachWithLockObjShouldApplyActionToEachElement()
 	{
 		// Arrange
 		var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -328,7 +328,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_WithLockObj_ShouldThrowArgumentNullException_WhenEnumerableIsNull()
+	public void ForEachWithLockObjShouldThrowArgumentNullExceptionWhenEnumerableIsNull()
 	{
 		// Arrange
 		IEnumerable<int> items = null!;
@@ -339,7 +339,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	public void ForEachWithLockObjShouldThrowArgumentNullExceptionWhenLockObjIsNull()
 	{
 		// Arrange
 		var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -350,7 +350,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_WithLockObj_ShouldThrowArgumentNullException_WhenActionIsNull()
+	public void ForEachWithLockObjShouldThrowArgumentNullExceptionWhenActionIsNull()
 	{
 		// Arrange
 		var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -361,7 +361,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_WithLockObj_ShouldLockAndApplyActionCorrectly()
+	public void ForEachWithLockObjShouldLockAndApplyActionCorrectly()
 	{
 		// Arrange
 		var items = new List<int> { 1, 2, 3, 4, 5 };
@@ -389,7 +389,7 @@ public class EnumerableExtensionsTests
 	// Additional tests for edge cases and scenarios
 
 	[TestMethod]
-	public void WithIndex_EmptyEnumerable_ReturnsEmpty()
+	public void WithIndexEmptyEnumerableReturnsEmpty()
 	{
 		var items = Enumerable.Empty<string>();
 		var result = items.WithIndex().ToList();
@@ -398,7 +398,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToCollection_EmptyEnumerable_ReturnsEmptyCollection()
+	public void ToCollectionEmptyEnumerableReturnsEmptyCollection()
 	{
 		var items = Enumerable.Empty<int>();
 		var collection = items.ToCollection();
@@ -407,7 +407,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ForEach_EmptyEnumerable_DoesNothing()
+	public void ForEachEmptyEnumerableDoesNothing()
 	{
 		var items = Enumerable.Empty<int>();
 		int sum = 0;
@@ -417,7 +417,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_WithNullItems_ReturnsTrue()
+	public void AnyNullWithNullItemsReturnsTrue()
 	{
 		var items = new List<string?> { "a", null, "b" };
 
@@ -427,7 +427,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_WithoutNullItems_ReturnsFalse()
+	public void AnyNullWithoutNullItemsReturnsFalse()
 	{
 		var items = new List<string?> { "a", "b", "c" };
 
@@ -437,7 +437,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void AnyNull_EmptyEnumerable_ReturnsFalse()
+	public void AnyNullEmptyEnumerableReturnsFalse()
 	{
 		var items = Enumerable.Empty<string?>();
 
@@ -447,7 +447,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void WriteItemsToConsole_WritesCorrectOutput()
+	public void WriteItemsToConsoleWritesCorrectOutput()
 	{
 		var items = new List<object?> { "a", null, 1 };
 		using var sw = new StringWriter();
@@ -460,7 +460,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void WriteItemsToConsole_EmptyEnumerable_NoOutput()
+	public void WriteItemsToConsoleEmptyEnumerableNoOutput()
 	{
 		var items = Enumerable.Empty<object?>();
 
@@ -474,7 +474,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToStringEnumerable_WithNullItems_RemoveHandling()
+	public void ToStringEnumerableWithNullItemsRemoveHandling()
 	{
 		var items = new List<object?> { "a", null, 1 };
 
@@ -484,7 +484,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToStringEnumerable_WithNullItems_IncludeHandling()
+	public void ToStringEnumerableWithNullItemsIncludeHandling()
 	{
 		var items = new List<object?> { "a", null, 1 };
 
@@ -494,7 +494,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToStringEnumerable_WithNullItems_ThrowHandling()
+	public void ToStringEnumerableWithNullItemsThrowHandling()
 	{
 		var items = new List<object?> { "a", null, 1 };
 
@@ -502,7 +502,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void ToStringEnumerable_EmptyEnumerable_ReturnsEmpty()
+	public void ToStringEnumerableEmptyEnumerableReturnsEmpty()
 	{
 		var items = Enumerable.Empty<object?>();
 
@@ -512,7 +512,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void Join_ConcatenatesElementsWithSeparator()
+	public void JoinConcatenatesElementsWithSeparator()
 	{
 		// Arrange
 		var items = new List<string> { "a", "b", "c" };
@@ -526,7 +526,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void Join_ThrowsArgumentNullException_WhenItemsIsNull()
+	public void JoinThrowsArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		List<string> items = null!;
@@ -537,7 +537,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void Join_ThrowsArgumentNullException_WhenSeparatorIsNull()
+	public void JoinThrowsArgumentNullExceptionWhenSeparatorIsNull()
 	{
 		// Arrange
 		var items = new List<string> { "a", "b", "c" };
@@ -548,7 +548,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void Join_WithNullItemHandlingRemove_RemovesNullItems()
+	public void JoinWithNullItemHandlingRemoveRemovesNullItems()
 	{
 		// Arrange
 		var items = new List<string?> { "a", null, "b", "c" };
@@ -562,7 +562,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void Join_WithNullItemHandlingInclude_IncludesNullItems()
+	public void JoinWithNullItemHandlingIncludeIncludesNullItems()
 	{
 		// Arrange
 		var items = new List<string?> { "a", null, "b", "c" };
@@ -576,7 +576,7 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
-	public void Join_WithNullItemHandlingThrow_ThrowsInvalidOperationException()
+	public void JoinWithNullItemHandlingThrowThrowsInvalidOperationException()
 	{
 		// Arrange
 		var items = new List<string?> { "a", null, "b", "c" };

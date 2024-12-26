@@ -40,7 +40,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_FindsMethodInDerivedClass()
+	public void TryFindMethodFindsMethodInDerivedClass()
 	{
 		var type = typeof(DerivedClass);
 		string methodName = "DerivedMethod";
@@ -54,7 +54,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_FindsMethodInBaseClass()
+	public void TryFindMethodFindsMethodInBaseClass()
 	{
 		var type = typeof(DerivedClass);
 		string methodName = "BaseMethod";
@@ -68,7 +68,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_ReturnsFalseIfMethodNotFound()
+	public void TryFindMethodReturnsFalseIfMethodNotFound()
 	{
 		var type = typeof(DerivedClass);
 		string methodName = "NonExistentMethod";
@@ -81,7 +81,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_ThrowsOnNullType()
+	public void TryFindMethodThrowsOnNullType()
 	{
 		Type type = null!;
 		string methodName = "SomeMethod";
@@ -91,7 +91,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_ThrowsOnNullOrEmptyMethodName()
+	public void TryFindMethodThrowsOnNullOrEmptyMethodName()
 	{
 		var type = typeof(DerivedClass);
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -103,7 +103,7 @@ public class ReflectionExtensionsTests
 	// Additional tests for edge cases and scenarios
 
 	[TestMethod]
-	public void TryFindMethod_FindsPrivateMethod()
+	public void TryFindMethodFindsPrivateMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
 		string methodName = "PrivateMethod";
@@ -117,7 +117,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_FindsStaticMethod()
+	public void TryFindMethodFindsStaticMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
 		string methodName = "StaticMethod";
@@ -131,7 +131,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_FindsMethodWithParameters()
+	public void TryFindMethodFindsMethodWithParameters()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
 		string methodName = "MethodWithParameters";
@@ -145,7 +145,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_ThrowsOnAmbiguousMatchForOverloadedMethod()
+	public void TryFindMethodThrowsOnAmbiguousMatchForOverloadedMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
 		string methodName = "OverloadedMethod";
@@ -155,7 +155,7 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethod_FindsGenericMethod()
+	public void TryFindMethodFindsGenericMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
 		string methodName = "GenericMethod";

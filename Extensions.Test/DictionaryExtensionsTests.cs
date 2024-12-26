@@ -8,7 +8,7 @@ using ktsu.Extensions;
 public class DictionaryExtensionsTests
 {
 	[TestMethod]
-	public void GetOrCreate_ShouldReturnExistingValue()
+	public void GetOrCreateShouldReturnExistingValue()
 	{
 		var dictionary = new Dictionary<string, int> { { "key1", 42 } };
 
@@ -18,7 +18,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ShouldAddAndReturnNewValue()
+	public void GetOrCreateShouldAddAndReturnNewValue()
 	{
 		var dictionary = new Dictionary<string, int>();
 
@@ -30,7 +30,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ShouldAddAndReturnDefaultValue()
+	public void GetOrCreateShouldAddAndReturnDefaultValue()
 	{
 		var dictionary = new Dictionary<string, int>();
 
@@ -42,7 +42,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ConcurrentDictionary_ShouldReturnExistingValue()
+	public void GetOrCreateConcurrentDictionaryShouldReturnExistingValue()
 	{
 		var dictionary = new ConcurrentDictionary<string, int>();
 		dictionary.TryAdd("key1", 42);
@@ -53,7 +53,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ConcurrentDictionary_ShouldAddAndReturnDefaultValue()
+	public void GetOrCreateConcurrentDictionaryShouldAddAndReturnDefaultValue()
 	{
 		var dictionary = new ConcurrentDictionary<string, int>();
 
@@ -65,7 +65,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ShouldThrowArgumentNullException_WhenDictionaryIsNull()
+	public void GetOrCreateShouldThrowArgumentNullExceptionWhenDictionaryIsNull()
 	{
 		Dictionary<string, int>? dictionary = null!;
 
@@ -73,7 +73,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ShouldThrowArgumentNullException_WhenKeyIsNull()
+	public void GetOrCreateShouldThrowArgumentNullExceptionWhenKeyIsNull()
 	{
 		var dictionary = new Dictionary<string, int>();
 
@@ -81,7 +81,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void GetOrCreate_ShouldThrowArgumentNullException_WhenDefaultValueIsNull()
+	public void GetOrCreateShouldThrowArgumentNullExceptionWhenDefaultValueIsNull()
 	{
 		var dictionary = new Dictionary<string, DictionaryExtensionsTests>();
 
@@ -99,7 +99,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_ShouldCloneDictionaryCorrectly()
+	public void DeepCloneDictionaryShouldCloneDictionaryCorrectly()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
@@ -123,7 +123,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void DeepCloneDictionaryShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		Dictionary<string, SampleValue> originalDict = null!;
@@ -133,7 +133,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_WithLockObj_ShouldCloneDictionaryCorrectly()
+	public void DeepCloneDictionaryWithLockObjShouldCloneDictionaryCorrectly()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
@@ -158,7 +158,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void DeepCloneDictionaryWithLockObjShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		Dictionary<string, SampleValue> originalDict = null!;
@@ -169,7 +169,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	public void DeepCloneDictionaryWithLockObjShouldThrowArgumentNullExceptionWhenLockObjIsNull()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
@@ -185,7 +185,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_WithLockObj_ShouldLockAndCloneCorrectly()
+	public void DeepCloneDictionaryWithLockObjShouldLockAndCloneCorrectly()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, SampleValue>
@@ -210,7 +210,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_ShouldCloneDictionaryCorrectly()
+	public void ShallowCloneDictionaryShouldCloneDictionaryCorrectly()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
@@ -233,7 +233,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void ShallowCloneDictionaryShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		Dictionary<string, int> originalDict = null!;
@@ -243,7 +243,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_WithLockObj_ShouldCloneDictionaryCorrectly()
+	public void ShallowCloneDictionaryWithLockObjShouldCloneDictionaryCorrectly()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
@@ -267,7 +267,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenItemsIsNull()
+	public void ShallowCloneDictionaryWithLockObjShouldThrowArgumentNullExceptionWhenItemsIsNull()
 	{
 		// Arrange
 		Dictionary<string, int> originalDict = null!;
@@ -278,7 +278,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_WithLockObj_ShouldThrowArgumentNullException_WhenLockObjIsNull()
+	public void ShallowCloneDictionaryWithLockObjShouldThrowArgumentNullExceptionWhenLockObjIsNull()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
@@ -294,7 +294,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_WithLockObj_ShouldLockAndCloneCorrectly()
+	public void ShallowCloneDictionaryWithLockObjShouldLockAndCloneCorrectly()
 	{
 		// Arrange
 		var originalDict = new Dictionary<string, int>
@@ -321,7 +321,7 @@ public class DictionaryExtensionsTests
 	// Additional tests for edge cases and scenarios
 
 	[TestMethod]
-	public void DeepCloneDictionary_ShouldHandleEmptyDictionary()
+	public void DeepCloneDictionaryShouldHandleEmptyDictionary()
 	{
 		var originalDict = new Dictionary<string, SampleValue>();
 
@@ -331,7 +331,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_ShouldHandleEmptyDictionary()
+	public void ShallowCloneDictionaryShouldHandleEmptyDictionary()
 	{
 		var originalDict = new Dictionary<string, int>();
 
@@ -341,7 +341,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void DeepCloneDictionary_WithLockObj_ShouldHandleEmptyDictionary()
+	public void DeepCloneDictionaryWithLockObjShouldHandleEmptyDictionary()
 	{
 		var originalDict = new Dictionary<string, SampleValue>();
 		object lockObj = new();
@@ -352,7 +352,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void ShallowCloneDictionary_WithLockObj_ShouldHandleEmptyDictionary()
+	public void ShallowCloneDictionaryWithLockObjShouldHandleEmptyDictionary()
 	{
 		var originalDict = new Dictionary<string, int>();
 		object lockObj = new();
@@ -363,7 +363,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddOrReplace_ShouldAddNewValue()
+	public void AddOrReplaceShouldAddNewValue()
 	{
 		var dictionary = new ConcurrentDictionary<string, int>();
 
@@ -374,7 +374,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddOrReplace_ShouldReplaceExistingValue()
+	public void AddOrReplaceShouldReplaceExistingValue()
 	{
 		var dictionary = new ConcurrentDictionary<string, int>();
 		dictionary.TryAdd("key1", 42);
@@ -386,7 +386,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddOrReplace_ShouldThrowArgumentNullException_WhenDictionaryIsNull()
+	public void AddOrReplaceShouldThrowArgumentNullExceptionWhenDictionaryIsNull()
 	{
 		ConcurrentDictionary<string, int>? dictionary = null!;
 
@@ -394,7 +394,7 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
-	public void AddOrReplace_ShouldThrowArgumentNullException_WhenKeyIsNull()
+	public void AddOrReplaceShouldThrowArgumentNullExceptionWhenKeyIsNull()
 	{
 		var dictionary = new ConcurrentDictionary<string, int>();
 
