@@ -17,6 +17,9 @@ A utility library of extension methods designed to enhance the functionality of 
 
 - **Collection Extensions**
   - `AddMany`: Adds items from an enumerable to a collection.
+  - `AnyNull`: Checks if the collection contains any null items.
+  - `ToStringCollection`: Converts a collection to a collection of strings, handling null items according to the specified behavior.
+  - `WriteItemsToConsole`: Writes the items of the collection to the console, skipping null items.
 
 - **Dictionary Extensions**
   - `GetOrCreate`: Gets the value associated with the specified key or creates a new value if the key does not exist.
@@ -32,6 +35,8 @@ A utility library of extension methods designed to enhance the functionality of 
   - `RemoveSuffix`: Removes the specified suffix from the current string.
   - `RemovePrefix`: Removes the specified prefix from the current string.
   - `ReplaceOrdinal`: Replaces all occurrences of a string with another string using ordinal comparison.
+  - `DetermineLineEndings`: Determines the line ending style of the specified string.
+  - `NormalizeLineEndings`: Normalizes the line endings in the specified string to the specified style.
 
 - **Reflection Extensions**
   - `TryFindMethod`: Tries to find a method with the specified name and binding flags in the given type.

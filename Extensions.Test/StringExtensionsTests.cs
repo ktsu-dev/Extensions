@@ -3,6 +3,7 @@ namespace ktsu.Extensions.Tests;
 using ktsu.Extensions;
 using ktsu.StrongStrings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 [TestClass]
 public class StringExtensionsTests
@@ -337,4 +338,113 @@ public class StringExtensionsTests
 
 		Assert.ThrowsException<ArgumentNullException>(() => str.ReplaceOrdinal(oldValue, newValue));
 	}
+
+	// Tests for DetermineLineEndingStyle and NormalizeLineEndings
+
+	[TestMethod]
+	public void DetermineLineEndingStyleReturnsUnix()
+	{
+		string input = "line1\nline2\nline3\n";
+		var result = input.DetermineLineEndings();
+		Assert.AreEqual(StringExtensions.LineEndingStyle.Unix, result);
+	}
+
+	[TestMethod]
+	public void DetermineLineEndingStyleReturnsWindows()
+	{
+		string input = "line1\r\nline2\r\nline3\r\n";
+		var result = input.DetermineLineEndings();
+		Assert.AreEqual(StringExtensions.LineEndingStyle.Windows, result);
+	}
+
+	[TestMethod]
+	public void DetermineLineEndingStyleReturnsMac()
+	{
+		string input = "line1\rline2\rline3\r";
+		var result = input.DetermineLineEndings();
+		Assert.AreEqual(StringExtensions.LineEndingStyle.Mac, result);
+	}
+
+	[TestMethod]
+	public void DetermineLineEndingStyleReturnsMixed()
+	{
+		string input = "line1\nline2\r\nline3\r";
+		var result = input.DetermineLineEndings();
+		Assert.AreEqual(StringExtensions.LineEndingStyle.Mixed, result);
+	}
+
+	[TestMethod]
+	public void DetermineLineEndingStyleReturnsNone()
+	{
+		string input = "line1 line2 line3";
+		var result = input.DetermineLineEndings();
+		Assert.AreEqual(StringExtensions.LineEndingStyle.None, result);
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsToUnix()
+	{
+		string input = "line1\r\nline2\rline3\n";
+		string expected = "line1\nline2\nline3\n";
+		string result = input.NormalizeLineEndings(StringExtensions.LineEndingStyle.Unix);
+		Assert.AreEqual(expected, result);
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsToWindows()
+	{
+		string input = "line1\nline2\rline3\r\n";
+		string expected = "line1\r\nline2\r\nline3\r\n";
+		string result = input.NormalizeLineEndings(StringExtensions.LineEndingStyle.Windows);
+		Assert.AreEqual(expected, result);
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsToMac()
+	{
+		string input = "line1\nline2\r\nline3\r";
+		string expected = "line1\rline2\rline3\r";
+		string result = input.NormalizeLineEndings(StringExtensions.LineEndingStyle.Mac);
+		Assert.AreEqual(expected, result);
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsToNone()
+	{
+		string input = "line1\nline2\r\nline3\r";
+		string expected = "line1line2line3";
+		string result = input.NormalizeLineEndings(StringExtensions.LineEndingStyle.None);
+		Assert.AreEqual(expected, result);
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsToMixed()
+	{
+		string input = "line1\r\nline2\rline3\n";
+		string expected = "line1\nline2\nline3\n";
+		string result = input.NormalizeLineEndings(StringExtensions.LineEndingStyle.Mixed);
+		Assert.AreEqual(expected, result);
+	}
+
+	[TestMethod]
+	public void DetermineLineEndingStyleThrowsArgumentNullExceptionWhenInputIsNull()
+	{
+		string input = null!;
+		Assert.ThrowsException<ArgumentNullException>(() => input.DetermineLineEndings());
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsThrowsArgumentNullExceptionWhenInputIsNull()
+	{
+		string input = null!;
+		Assert.ThrowsException<ArgumentNullException>(() => input.NormalizeLineEndings(StringExtensions.LineEndingStyle.Unix));
+	}
+
+	[TestMethod]
+	public void NormalizeLineEndingsThrowsNotImplementedExceptionWhenUnknownStyle()
+	{
+		string input = "line1\nline2\r\nline3\r";
+		Assert.ThrowsException<NotImplementedException>(() => input.NormalizeLineEndings((StringExtensions.LineEndingStyle)999));
+	}
 }
+

@@ -1,11 +1,12 @@
 namespace ktsu.Extensions;
 
+using System.Text.RegularExpressions;
 using ktsu.StrongStrings;
 
 /// <summary>
 /// Extension methods for strings.
 /// </summary>
-public static class StringExtensions
+public static partial class StringExtensions
 {
 	/// <summary>
 	/// Converts a weak string to a strong string of the specified type.
@@ -181,5 +182,131 @@ public static class StringExtensions
 		ArgumentNullException.ThrowIfNull(newValue);
 
 		return s.Replace(oldValue, newValue);
+	}
+
+	/// <summary>
+	/// Creates a regex to match Unix-style line endings (\n).
+	/// </summary>
+	/// <returns>A <see cref="Regex"/> object for Unix-style line endings.</returns>
+	[GeneratedRegex(@"(?<!\r)\n")]
+	private static partial Regex CreateLineEndingRegexUnix();
+
+	/// <summary>
+	/// Creates a regex to match Windows-style line endings (\r\n).
+	/// </summary>
+	/// <returns>A <see cref="Regex"/> object for Windows-style line endings.</returns>
+	[GeneratedRegex(@"\r\n")]
+	private static partial Regex CreateLineEndingRegexWindows();
+
+	/// <summary>
+	/// Creates a regex to match Mac-style line endings (\r).
+	/// </summary>
+	/// <returns>A <see cref="Regex"/> object for Mac-style line endings.</returns>
+	[GeneratedRegex(@"\r(?!\n)")]
+	private static partial Regex CreateLineEndingRegexMac();
+
+	/// <summary>
+	/// Determines the line ending style of the specified string.
+	/// </summary>
+	/// <param name="input">The string to analyze.</param>
+	/// <returns>
+	/// A <see cref="LineEndingStyle"/> value indicating the type of line endings used in the string.
+	/// Returns <see cref="LineEndingStyle.Mixed"/> if multiple types of line endings are found.
+	/// </returns>
+	/// <exception cref="ArgumentNullException">Thrown when the input string is null.</exception>
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Terneries here wouldnt be great")]
+	public static LineEndingStyle DetermineLineEndings(this string input)
+	{
+		ArgumentNullException.ThrowIfNull(input);
+
+		bool hasUnix = CreateLineEndingRegexUnix().IsMatch(input);
+		bool hasWindows = CreateLineEndingRegexWindows().IsMatch(input);
+		bool hasMac = CreateLineEndingRegexMac().IsMatch(input);
+
+		if (hasUnix && hasWindows && hasMac)
+		{
+			return LineEndingStyle.Mixed;
+		}
+		else if (hasUnix && hasWindows)
+		{
+			return LineEndingStyle.Mixed;
+		}
+		else if (hasUnix && hasMac)
+		{
+			return LineEndingStyle.Mixed;
+		}
+		else if (hasWindows && hasMac)
+		{
+			return LineEndingStyle.Mixed;
+		}
+		else if (hasUnix)
+		{
+			return LineEndingStyle.Unix;
+		}
+		else if (hasWindows)
+		{
+			return LineEndingStyle.Windows;
+		}
+		else if (hasMac)
+		{
+			return LineEndingStyle.Mac;
+		}
+		else
+		{
+			return LineEndingStyle.None;
+		}
+	}
+
+	/// <summary>
+	/// Normalizes the line endings in the specified string to the specified style.
+	/// </summary>
+	/// <param name="s">The string to normalize.</param>
+	/// <param name="style">The style of line endings to normalize to.</param>
+	/// <returns>The string with normalized line endings.</returns>
+	/// <exception cref="ArgumentNullException">Thrown when the input string is null.</exception>
+	/// <exception cref="NotImplementedException">Thrown when an unknown line ending style is specified.</exception>
+	public static string NormalizeLineEndings(this string s, LineEndingStyle style)
+	{
+		ArgumentNullException.ThrowIfNull(s);
+
+		return style switch
+		{
+			LineEndingStyle.None => CreateLineEndingRegexUnix().Replace(CreateLineEndingRegexWindows().Replace(CreateLineEndingRegexMac().Replace(s, ""), ""), ""),
+			LineEndingStyle.Unix => CreateLineEndingRegexWindows().Replace(CreateLineEndingRegexMac().Replace(s, "\n"), "\n"),
+			LineEndingStyle.Windows => CreateLineEndingRegexUnix().Replace(CreateLineEndingRegexMac().Replace(s, "\r\n"), "\r\n"),
+			LineEndingStyle.Mac => CreateLineEndingRegexUnix().Replace(CreateLineEndingRegexWindows().Replace(s, "\r"), "\r"),
+			LineEndingStyle.Mixed => CreateLineEndingRegexWindows().Replace(CreateLineEndingRegexMac().Replace(s, "\n"), "\n"),
+			_ => throw new NotImplementedException("Unknown line ending style."),
+		};
+	}
+
+	/// <summary>
+	/// Specifies the different styles of line endings.
+	/// </summary>
+	/// <remarks>
+	/// This enumeration is used to identify and normalize line endings in strings.
+	/// </remarks>
+	public enum LineEndingStyle
+	{
+		/// <summary>
+		/// No line endings.
+		/// </summary>
+		None,
+		/// <summary>
+		/// Unix-style line endings (\n).
+		/// </summary>
+		Unix,
+		/// <summary>
+		/// Windows-style line endings (\r\n).
+		/// </summary>
+		Windows,
+		/// <summary>
+		/// Mac-style line endings (\r).
+		/// </summary>
+		Mac,
+		/// <summary>
+		/// Mixed line endings.
+		/// </summary>
+		Mixed,
 	}
 }
