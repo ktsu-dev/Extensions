@@ -279,34 +279,34 @@ public static partial class StringExtensions
 			_ => throw new NotImplementedException("Unknown line ending style."),
 		};
 	}
+}
 
+/// <summary>
+/// Specifies the different styles of line endings.
+/// </summary>
+/// <remarks>
+/// This enumeration is used to identify and normalize line endings in strings.
+/// </remarks>
+public enum LineEndingStyle
+{
 	/// <summary>
-	/// Specifies the different styles of line endings.
+	/// No line endings.
 	/// </summary>
-	/// <remarks>
-	/// This enumeration is used to identify and normalize line endings in strings.
-	/// </remarks>
-	public enum LineEndingStyle
-	{
-		/// <summary>
-		/// No line endings.
-		/// </summary>
-		None,
-		/// <summary>
-		/// Unix-style line endings (\n).
-		/// </summary>
-		Unix,
-		/// <summary>
-		/// Windows-style line endings (\r\n).
-		/// </summary>
-		Windows,
-		/// <summary>
-		/// Mac-style line endings (\r).
-		/// </summary>
-		Mac,
-		/// <summary>
-		/// Mixed line endings.
-		/// </summary>
-		Mixed,
-	}
+	None,
+	/// <summary>
+	/// Unix-style line endings (\n).
+	/// </summary>
+	Unix,
+	/// <summary>
+	/// Windows-style line endings (\r\n).
+	/// </summary>
+	Windows,
+	/// <summary>
+	/// Mac-style line endings (\r).
+	/// </summary>
+	Mac,
+	/// <summary>
+	/// Mixed line endings.
+	/// </summary>
+	Mixed,
 }
