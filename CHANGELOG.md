@@ -1,6 +1,6 @@
-## v1.3.2 (unknown)
+## v1.3.2 (patch)
 
-Changes since v1.3.2-pre.3:
+Changes since v1.3.1:
 
 - Add automation scripts for metadata management and versioning ([@Matthew Edmondson](https://github.com/Matthew Edmondson))
 
