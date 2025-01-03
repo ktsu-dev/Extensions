@@ -1,9 +1,3 @@
-## v1.3.2 (unknown)
-
-Changes since v1.3.2-pre.4:
-
-- Add mailmap ([@matt-edmondson](https://github.com/matt-edmondson))
-
 ## v1.3.2 (patch)
 
 Changes since v1.3.1:
