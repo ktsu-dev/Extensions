@@ -3,6 +3,13 @@
 Changes since v1.3.1:
 
 - Add automation scripts for metadata management and versioning ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add mailmap ([@matt-edmondson](https://github.com/matt-edmondson))
+
+## v1.3.2 (patch)
+
+Changes since v1.3.1:
+
+- Add automation scripts for metadata management and versioning ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.3.1 (patch)
 
