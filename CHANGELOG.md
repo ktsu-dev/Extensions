@@ -1,3 +1,9 @@
+## v1.3.3-pre.1 (patch)
+
+Changes since v1.3.2:
+
+- Add mailmap ([@matt-edmondson](https://github.com/matt-edmondson))
+
 ## v1.3.2 (patch)
 
 Changes since v1.3.1:
@@ -29,6 +35,13 @@ Changes since v1.2.14:
 
 Changes since v1.2.9:
 
+- Replace LICENSE file with LICENSE.md and update copyright information ([@matt-edmondson](https://github.com/matt-edmondson))
+
+## v1.2.10-pre.1 (patch)
+
+Changes since v1.2.9:
+
+- Renamed metadata files ([@matt-edmondson](https://github.com/matt-edmondson))
 - Replace LICENSE file with LICENSE.md and update copyright information ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.2.8 (patch)
