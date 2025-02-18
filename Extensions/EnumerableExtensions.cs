@@ -2,6 +2,7 @@ namespace ktsu.Extensions;
 
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using ktsu.DeepClone;
 
 /// <summary>

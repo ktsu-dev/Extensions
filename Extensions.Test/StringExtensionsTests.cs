@@ -1,9 +1,11 @@
 namespace ktsu.Extensions.Tests;
 
+using System;
+
 using ktsu.Extensions;
 using ktsu.StrongStrings;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 [TestClass]
 public class StringExtensionsTests

@@ -1,6 +1,7 @@
 namespace ktsu.Extensions;
 
 using System.Text.RegularExpressions;
+
 using ktsu.StrongStrings;
 
 /// <summary>
