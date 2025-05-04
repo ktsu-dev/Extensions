@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 namespace ktsu.Extensions;
 
 using System.Collections.Concurrent;
@@ -65,7 +69,7 @@ public static class DictionaryExtensions
 			return val;
 		}
 
-		bool result = dictionary.TryAdd(key, defaultValue);
+		var result = dictionary.TryAdd(key, defaultValue);
 		Debug.Assert(result);
 		return defaultValue;
 	}

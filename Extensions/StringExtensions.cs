@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 namespace ktsu.Extensions;
 
 using System.Text.RegularExpressions;
@@ -220,9 +224,9 @@ public static partial class StringExtensions
 	{
 		ArgumentNullException.ThrowIfNull(input);
 
-		bool hasUnix = CreateLineEndingRegexUnix().IsMatch(input);
-		bool hasWindows = CreateLineEndingRegexWindows().IsMatch(input);
-		bool hasMac = CreateLineEndingRegexMac().IsMatch(input);
+		var hasUnix = CreateLineEndingRegexUnix().IsMatch(input);
+		var hasWindows = CreateLineEndingRegexWindows().IsMatch(input);
+		var hasMac = CreateLineEndingRegexMac().IsMatch(input);
 
 		if (hasUnix && hasWindows && hasMac)
 		{

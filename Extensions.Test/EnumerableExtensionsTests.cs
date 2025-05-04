@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 namespace ktsu.Extensions.Tests;
 
 using System.Collections.Generic;
@@ -39,7 +43,7 @@ public class EnumerableExtensionsTests
 	public void ForEachAppliesAction()
 	{
 		int[] items = [1, 2, 3];
-		int sum = 0;
+		var sum = 0;
 		items.ForEach(item => sum += item);
 
 		Assert.AreEqual(6, sum);
@@ -92,7 +96,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(originalItems.Count, clonedItems.Count);
-		for (int i = 0; i < originalItems.Count; i++)
+		for (var i = 0; i < originalItems.Count; i++)
 		{
 			Assert.AreNotSame(originalItems[i], clonedItems[i]);
 			Assert.AreEqual(originalItems[i].Value, clonedItems[i].Value);
@@ -126,7 +130,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(originalItems.Count, clonedItems.Count);
-		for (int i = 0; i < originalItems.Count; i++)
+		for (var i = 0; i < originalItems.Count; i++)
 		{
 			Assert.AreNotSame(originalItems[i], clonedItems[i]);
 			Assert.AreEqual(originalItems[i].Value, clonedItems[i].Value);
@@ -171,7 +175,7 @@ public class EnumerableExtensionsTests
 				new() { Value = 3 }
 			};
 		object lockObj = new();
-		bool wasLocked = false;
+		var wasLocked = false;
 
 		// Act
 		lock (lockObj)
@@ -196,7 +200,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(originalItems.Count, clonedItems.Count);
-		for (int i = 0; i < originalItems.Count; i++)
+		for (var i = 0; i < originalItems.Count; i++)
 		{
 			Assert.AreEqual(originalItems[i], clonedItems[i]);
 		}
@@ -224,7 +228,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(originalItems.Count, clonedItems.Count);
-		for (int i = 0; i < originalItems.Count; i++)
+		for (var i = 0; i < originalItems.Count; i++)
 		{
 			Assert.AreEqual(originalItems[i], clonedItems[i]);
 		}
@@ -258,7 +262,7 @@ public class EnumerableExtensionsTests
 		// Arrange
 		var originalItems = new List<int> { 1, 2, 3, 4, 5 };
 		object lockObj = new();
-		bool wasLocked = false;
+		var wasLocked = false;
 
 		// Act
 		lock (lockObj)
@@ -284,7 +288,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(items.Count, results.Count);
-		for (int i = 0; i < items.Count; i++)
+		for (var i = 0; i < items.Count; i++)
 		{
 			Assert.AreEqual(items[i] * 2, results[i]);
 		}
@@ -323,7 +327,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(items.Count, results.Count);
-		for (int i = 0; i < items.Count; i++)
+		for (var i = 0; i < items.Count; i++)
 		{
 			Assert.AreEqual(items[i] * 2, results[i]);
 		}
@@ -369,7 +373,7 @@ public class EnumerableExtensionsTests
 		var items = new List<int> { 1, 2, 3, 4, 5 };
 		var results = new List<int>();
 		object lockObj = new();
-		bool wasLocked = false;
+		var wasLocked = false;
 
 		// Act
 		lock (lockObj)
@@ -381,7 +385,7 @@ public class EnumerableExtensionsTests
 
 		// Assert
 		Assert.AreEqual(items.Count, results.Count);
-		for (int i = 0; i < items.Count; i++)
+		for (var i = 0; i < items.Count; i++)
 		{
 			Assert.AreEqual(items[i] * 2, results[i]);
 		}
@@ -413,7 +417,7 @@ public class EnumerableExtensionsTests
 	public void ForEachEmptyEnumerableDoesNothing()
 	{
 		var items = Enumerable.Empty<int>();
-		int sum = 0;
+		var sum = 0;
 		items.ForEach(item => sum += item);
 
 		Assert.AreEqual(0, sum);
@@ -424,7 +428,7 @@ public class EnumerableExtensionsTests
 	{
 		var items = new List<string?> { "a", null, "b" };
 
-		bool result = items.AnyNull();
+		var result = items.AnyNull();
 
 		Assert.IsTrue(result);
 	}
@@ -434,7 +438,7 @@ public class EnumerableExtensionsTests
 	{
 		var items = new List<string?> { "a", "b", "c" };
 
-		bool result = items.AnyNull();
+		var result = items.AnyNull();
 
 		Assert.IsFalse(result);
 	}
@@ -444,7 +448,7 @@ public class EnumerableExtensionsTests
 	{
 		var items = Enumerable.Empty<string?>();
 
-		bool result = items.AnyNull();
+		var result = items.AnyNull();
 
 		Assert.IsFalse(result);
 	}
@@ -458,7 +462,7 @@ public class EnumerableExtensionsTests
 
 		items.WriteItemsToConsole();
 
-		string expected = $"a{Environment.NewLine}1{Environment.NewLine}";
+		var expected = $"a{Environment.NewLine}1{Environment.NewLine}";
 		Assert.AreEqual(expected, sw.ToString());
 	}
 
@@ -472,7 +476,7 @@ public class EnumerableExtensionsTests
 
 		items.WriteItemsToConsole();
 
-		string expected = string.Empty;
+		var expected = string.Empty;
 		Assert.AreEqual(expected, sw.ToString());
 	}
 
@@ -519,10 +523,10 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var items = new List<string> { "a", "b", "c" };
-		string separator = ",";
+		var separator = ",";
 
 		// Act
-		string result = items.Join(separator);
+		var result = items.Join(separator);
 
 		// Assert
 		Assert.AreEqual("a,b,c", result);
@@ -533,7 +537,7 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		List<string> items = null!;
-		string separator = ",";
+		var separator = ",";
 
 		// Act & Assert
 		Assert.ThrowsException<ArgumentNullException>(() => items.Join(separator));
@@ -555,10 +559,10 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var items = new List<string?> { "a", null, "b", "c" };
-		string separator = ",";
+		var separator = ",";
 
 		// Act
-		string result = items.Join(separator, NullItemHandling.Remove);
+		var result = items.Join(separator, NullItemHandling.Remove);
 
 		// Assert
 		Assert.AreEqual("a,b,c", result);
@@ -569,10 +573,10 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var items = new List<string?> { "a", null, "b", "c" };
-		string separator = ",";
+		var separator = ",";
 
 		// Act
-		string result = items.Join(separator, NullItemHandling.Include);
+		var result = items.Join(separator, NullItemHandling.Include);
 
 		// Assert
 		Assert.AreEqual("a,,b,c", result);
@@ -583,7 +587,7 @@ public class EnumerableExtensionsTests
 	{
 		// Arrange
 		var items = new List<string?> { "a", null, "b", "c" };
-		string separator = ",";
+		var separator = ",";
 
 		// Act & Assert
 		Assert.ThrowsException<InvalidOperationException>(() => items.Join(separator, NullItemHandling.Throw));

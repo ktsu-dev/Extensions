@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 namespace ktsu.Extensions.Tests;
 
 [TestClass]
@@ -37,7 +41,7 @@ public class CollectionExtensionsTests
 	{
 		var collection = new List<string?> { "a", null, "b" };
 
-		bool result = collection.AnyNull();
+		var result = collection.AnyNull();
 
 		Assert.IsTrue(result);
 	}
@@ -47,7 +51,7 @@ public class CollectionExtensionsTests
 	{
 		var collection = new List<string?> { "a", "b", "c" };
 
-		bool result = collection.AnyNull();
+		var result = collection.AnyNull();
 
 		Assert.IsFalse(result);
 	}
@@ -69,7 +73,7 @@ public class CollectionExtensionsTests
 
 		collection.WriteItemsToConsole();
 
-		string expected = $"a{Environment.NewLine}1{Environment.NewLine}";
+		var expected = $"a{Environment.NewLine}1{Environment.NewLine}";
 		Assert.AreEqual(expected, sw.ToString());
 	}
 
@@ -100,7 +104,7 @@ public class CollectionExtensionsTests
 	{
 		var collection = new List<string?>();
 
-		bool result = collection.AnyNull();
+		var result = collection.AnyNull();
 
 		Assert.IsFalse(result);
 	}
@@ -110,7 +114,7 @@ public class CollectionExtensionsTests
 	{
 		var collection = new List<string?> { null, null };
 
-		bool result = collection.AnyNull();
+		var result = collection.AnyNull();
 
 		Assert.IsTrue(result);
 	}
@@ -125,7 +129,7 @@ public class CollectionExtensionsTests
 
 		collection.WriteItemsToConsole();
 
-		string expected = string.Empty;
+		var expected = string.Empty;
 		Assert.AreEqual(expected, sw.ToString());
 	}
 
@@ -139,7 +143,7 @@ public class CollectionExtensionsTests
 
 		collection.WriteItemsToConsole();
 
-		string expected = $"test{Environment.NewLine}example{Environment.NewLine}";
+		var expected = $"test{Environment.NewLine}example{Environment.NewLine}";
 		Assert.AreEqual(expected, sw.ToString());
 	}
 
@@ -171,7 +175,7 @@ public class CollectionExtensionsTests
 	{
 		var collection = new List<int> { 1, 2, 3 };
 
-		bool result = collection.AnyNull();
+		var result = collection.AnyNull();
 
 		Assert.IsFalse(result);
 	}
@@ -181,7 +185,7 @@ public class CollectionExtensionsTests
 	{
 		var collection = new List<int?> { 1, null, 3 };
 
-		bool result = collection.AnyNull();
+		var result = collection.AnyNull();
 
 		Assert.IsTrue(result);
 	}

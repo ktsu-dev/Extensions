@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 #pragma warning disable CA1822 // Mark members as static
 #pragma warning disable IDE0051 // Remove unused private members
 #pragma warning disable IDE0060 // Remove unused parameter
@@ -45,10 +49,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodFindsMethodInDerivedClass()
 	{
 		var type = typeof(DerivedClass);
-		string methodName = "DerivedMethod";
+		var methodName = "DerivedMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsTrue(result);
 		Assert.IsNotNull(methodInfo);
@@ -59,10 +63,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodFindsMethodInBaseClass()
 	{
 		var type = typeof(DerivedClass);
-		string methodName = "BaseMethod";
+		var methodName = "BaseMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsTrue(result);
 		Assert.IsNotNull(methodInfo);
@@ -73,10 +77,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodReturnsFalseIfMethodNotFound()
 	{
 		var type = typeof(DerivedClass);
-		string methodName = "NonExistentMethod";
+		var methodName = "NonExistentMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsFalse(result);
 		Assert.IsNull(methodInfo);
@@ -86,7 +90,7 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodThrowsOnNullType()
 	{
 		Type type = null!;
-		string methodName = "SomeMethod";
+		var methodName = "SomeMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
 		Assert.ThrowsException<ArgumentNullException>(() => type.TryFindMethod(methodName, bindingFlags, out _));
@@ -108,10 +112,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodFindsPrivateMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
-		string methodName = "PrivateMethod";
+		var methodName = "PrivateMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsTrue(result);
 		Assert.IsNotNull(methodInfo);
@@ -122,10 +126,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodFindsStaticMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
-		string methodName = "StaticMethod";
+		var methodName = "StaticMethod";
 		var bindingFlags = BindingFlags.Static | BindingFlags.Public;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsTrue(result);
 		Assert.IsNotNull(methodInfo);
@@ -136,10 +140,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodFindsMethodWithParameters()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
-		string methodName = "MethodWithParameters";
+		var methodName = "MethodWithParameters";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsTrue(result);
 		Assert.IsNotNull(methodInfo);
@@ -150,7 +154,7 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodThrowsOnAmbiguousMatchForOverloadedMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
-		string methodName = "OverloadedMethod";
+		var methodName = "OverloadedMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
 		Assert.ThrowsException<AmbiguousMatchException>(() => type.TryFindMethod(methodName, bindingFlags, out var methodInfo));
@@ -160,10 +164,10 @@ public class ReflectionExtensionsTests
 	public void TryFindMethodFindsGenericMethod()
 	{
 		var type = typeof(DerivedClassWithAdditionalMethods);
-		string methodName = "GenericMethod";
+		var methodName = "GenericMethod";
 		var bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-		bool result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
+		var result = type.TryFindMethod(methodName, bindingFlags, out var methodInfo);
 
 		Assert.IsTrue(result);
 		Assert.IsNotNull(methodInfo);

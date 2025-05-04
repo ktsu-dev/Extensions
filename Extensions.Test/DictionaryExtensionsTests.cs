@@ -1,3 +1,7 @@
+// Copyright (c) ktsu.dev
+// All rights reserved.
+// Licensed under the MIT license.
+
 namespace ktsu.Extensions.Tests;
 
 using System.Collections.Concurrent;
@@ -13,7 +17,7 @@ public class DictionaryExtensionsTests
 	{
 		var dictionary = new Dictionary<string, int> { { "key1", 42 } };
 
-		int result = dictionary.GetOrCreate("key1");
+		var result = dictionary.GetOrCreate("key1");
 
 		Assert.AreEqual(42, result);
 	}
@@ -23,7 +27,7 @@ public class DictionaryExtensionsTests
 	{
 		var dictionary = new Dictionary<string, int>();
 
-		int result = dictionary.GetOrCreate("key1");
+		var result = dictionary.GetOrCreate("key1");
 
 		Assert.AreEqual(0, result);
 		Assert.AreEqual(1, dictionary.Count);
@@ -35,7 +39,7 @@ public class DictionaryExtensionsTests
 	{
 		var dictionary = new Dictionary<string, int>();
 
-		int result = dictionary.GetOrCreate("key1", 99);
+		var result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(99, result);
 		Assert.AreEqual(1, dictionary.Count);
@@ -48,7 +52,7 @@ public class DictionaryExtensionsTests
 		var dictionary = new ConcurrentDictionary<string, int>();
 		dictionary.TryAdd("key1", 42);
 
-		int result = dictionary.GetOrCreate("key1", 99);
+		var result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(42, result);
 	}
@@ -58,7 +62,7 @@ public class DictionaryExtensionsTests
 	{
 		var dictionary = new ConcurrentDictionary<string, int>();
 
-		int result = dictionary.GetOrCreate("key1", 99);
+		var result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(99, result);
 		Assert.AreEqual(1, dictionary.Count);
@@ -196,7 +200,7 @@ public class DictionaryExtensionsTests
 				{ "Three", new SampleValue { Value = 3 } }
 			};
 		object lockObj = new();
-		bool wasLocked = false;
+		var wasLocked = false;
 
 		// Act
 		lock (lockObj)
@@ -305,7 +309,7 @@ public class DictionaryExtensionsTests
 				{ "Three", 3 }
 			};
 		object lockObj = new();
-		bool wasLocked = false;
+		var wasLocked = false;
 
 		// Act
 		lock (lockObj)
