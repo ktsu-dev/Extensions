@@ -1,3 +1,9 @@
+## v1.5.3 (patch)
+
+Changes since v1.5.2:
+
+- Refactor project files and update DESCRIPTION. Changed project SDK references to ktsu.Sdk.Lib and ktsu.Sdk.Test, and revised DESCRIPTION to clarify the purpose of the library. ([@matt-edmondson](https://github.com/matt-edmondson))
+
 ## v1.5.2 (patch)
 
 Changes since v1.5.1:
