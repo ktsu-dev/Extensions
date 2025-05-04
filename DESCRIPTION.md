@@ -1,1 +1,1 @@
-A utility library of extension methods to enhance the functionality of collections, enumerables, dictionaries, strings, and reflection in .NET
+A collection of useful extension methods for .NET types including strings, collections, dictionaries, enumerables, and reflection.
