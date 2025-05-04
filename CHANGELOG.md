@@ -1,3 +1,8 @@
+## v1.5.4-pre.1 (prerelease)
+
+Changes since v1.5.3:
+
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
 ## v1.5.3 (patch)
 
 Changes since v1.5.2:
@@ -6,11 +11,7 @@ Changes since v1.5.2:
 - Remove obsolete build configuration files and update extension classes with copyright information. ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.5.3-pre.1 (prerelease)
 
-Changes since v1.5.2:
-
-- Sync .runsettings ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .editorconfig ([@ktsu[bot]](https://github.com/ktsu[bot]))
+Incremental prerelease update.
 ## v1.5.2 (patch)
 
 Changes since v1.5.1:
