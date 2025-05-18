@@ -7,7 +7,7 @@ namespace ktsu.Extensions;
 using System.Reflection;
 
 /// <summary>
-/// 
+/// Extension methods for reflection operations, providing utilities for working with types and methods.
 /// </summary>
 public static class ReflectionExtensions
 {

@@ -25,4 +25,22 @@ public static class CollectionExtensions
 			collection.Add(item);
 		}
 	}
+
+	/// <summary>
+	/// Replaces all items in a collection with items from an enumerable.
+	/// </summary>
+	/// <typeparam name="T">The type of the items.</typeparam>
+	/// <param name="oldItems">The collection to replace items in.</param>
+	/// <param name="newItems">The enumeration of new items to replace the old items with.</param>
+	/// <exception cref="ArgumentNullException">
+	/// Thrown if the <paramref name="oldItems"/> collection or the <paramref name="newItems"/> enumerable is null.
+	/// </exception>
+	public static void ReplaceWith<T>(this ICollection<T> oldItems, IEnumerable<T> newItems)
+	{
+		ArgumentNullException.ThrowIfNull(oldItems);
+		ArgumentNullException.ThrowIfNull(newItems);
+
+		oldItems.Clear();
+		oldItems.AddMany(newItems);
+	}
 }

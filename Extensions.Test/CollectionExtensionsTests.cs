@@ -189,4 +189,56 @@ public class CollectionExtensionsTests
 
 		Assert.IsTrue(result);
 	}
+
+	[TestMethod]
+	public void ReplaceWithReplacesAllItemsInCollection()
+	{
+		var collection = new List<int> { 1, 2, 3 };
+		var newItems = new List<int> { 4, 5 };
+
+		collection.ReplaceWith(newItems);
+
+		CollectionAssert.AreEqual(new List<int> { 4, 5 }, collection);
+	}
+
+	[TestMethod]
+	public void ReplaceWithEmptyEnumerableClearsCollection()
+	{
+		var collection = new List<int> { 1, 2, 3 };
+		var newItems = Enumerable.Empty<int>();
+
+		collection.ReplaceWith(newItems);
+
+		Assert.AreEqual(0, collection.Count);
+		CollectionAssert.AreEqual(new List<int>(), collection);
+	}
+
+	[TestMethod]
+	public void ReplaceWithNullCollectionThrowsArgumentNullException()
+	{
+		ICollection<int> collection = null!;
+		var newItems = new List<int> { 1, 2 };
+
+		Assert.ThrowsException<ArgumentNullException>(() => collection.ReplaceWith(newItems));
+	}
+
+	[TestMethod]
+	public void ReplaceWithNullItemsThrowsArgumentNullException()
+	{
+		var collection = new List<int> { 1, 2 };
+		IEnumerable<int> newItems = null!;
+
+		Assert.ThrowsException<ArgumentNullException>(() => collection.ReplaceWith(newItems));
+	}
+
+	[TestMethod]
+	public void ReplaceWithNewItemsContainingNullsReplacesCorrectly()
+	{
+		var collection = new List<string?> { "a", "b", "c" };
+		var newItems = new List<string?> { "x", null, "z" };
+
+		collection.ReplaceWith(newItems);
+
+		CollectionAssert.AreEqual(new List<string?> { "x", null, "z" }, collection);
+	}
 }

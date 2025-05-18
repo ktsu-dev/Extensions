@@ -23,6 +23,7 @@
 
 - **Collection Extensions**
   - `AddMany`: Adds items from an enumerable to a collection
+  - `ReplaceWith`: Replaces all items in a collection with items from an enumerable
   - `ToStringCollection`: Converts a collection to a collection of strings
 
 - **Dictionary Extensions**
@@ -127,6 +128,20 @@ cache.AddOrReplace("key2", new List<string> { "item2" });
 var deepClone = cache.DeepClone();
 ```
 
+### Collection Extensions
+
+```csharp
+using ktsu.Extensions;
+
+var collection = new List<string>();
+
+// Add multiple items at once
+collection.AddMany(new[] { "item1", "item2", "item3" });
+
+// Replace all items in the collection
+collection.ReplaceWith(new[] { "new1", "new2" }); // Collection now contains only "new1" and "new2"
+```
+
 ## Advanced Usage
 
 ### Working with StrongStrings
@@ -194,6 +209,7 @@ if (someType.TryFindMethod("MethodName", BindingFlags.Instance | BindingFlags.Pu
 | Method | Description |
 |--------|-------------|
 | `AddMany` | Adds multiple items to a collection |
+| `ReplaceWith` | Replaces all items in a collection with new items |
 | `AnyNull` | Checks if collection contains any null items |
 | `ToStringCollection` | Converts collection to string collection |
 | `WriteItemsToConsole` | Displays collection items in console |
