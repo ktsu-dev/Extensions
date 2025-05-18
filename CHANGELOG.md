@@ -1,6 +1,12 @@
+## v1.5.4 (patch)
+
+Changes since v1.5.3:
+
+- Refactor: Remove unused namespaces and upgrade SDK ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add ReplaceWith method and related tests/documentation ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.5.4-pre.15 (prerelease)
 
-Incremental prerelease update.
+Changes since v1.5.4-pre.14:
 ## v1.5.4-pre.14 (prerelease)
 
 Changes since v1.5.4-pre.13:
