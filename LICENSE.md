@@ -1,6 +1,6 @@
 MIT License
 
-https://github.com/ktsu-dev/ktsu-dev/Extensions
+https://github.com/ktsu-dev/Extensions
 
 Copyright (c) 2023-2025 ktsu-dev
 
