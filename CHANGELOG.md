@@ -1,3 +1,8 @@
+## v1.5.5 (patch)
+
+Changes since v1.5.4:
+
+- Fix icon ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.5.4 (patch)
 
 Changes since v1.5.3:
@@ -48,9 +53,7 @@ Changes since v1.5.4-pre.2:
 Changes since v1.5.4-pre.1:
 ## v1.5.4-pre.1 (prerelease)
 
-Changes since v1.5.3:
-
-- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+Incremental prerelease update.
 ## v1.5.3 (patch)
 
 Changes since v1.5.2:
