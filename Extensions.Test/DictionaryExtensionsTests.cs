@@ -7,7 +7,6 @@ namespace ktsu.Extensions.Tests;
 using System.Collections.Concurrent;
 
 using ktsu.DeepClone;
-using ktsu.Extensions;
 
 [TestClass]
 public class DictionaryExtensionsTests

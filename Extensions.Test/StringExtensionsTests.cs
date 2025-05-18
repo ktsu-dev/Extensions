@@ -4,12 +4,7 @@
 
 namespace ktsu.Extensions.Tests;
 
-using System;
-
-using ktsu.Extensions;
 using ktsu.StrongStrings;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
 public class StringExtensionsTests

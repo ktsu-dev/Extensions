@@ -10,10 +10,6 @@ namespace ktsu.Extensions.Tests;
 
 using System.Reflection;
 
-using ktsu.Extensions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 [TestClass]
 public class ReflectionExtensionsTests
 {

@@ -4,13 +4,7 @@
 
 namespace ktsu.Extensions.Tests;
 
-using System.Collections.Generic;
-using System.Linq;
-
 using ktsu.DeepClone;
-using ktsu.Extensions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
 public class EnumerableExtensionsTests
