@@ -29,14 +29,12 @@ public static class EnumerableExtensions
 	/// <returns>The new collection with the items added.</returns>
 	public static Collection<T> ToCollection<T>(this IEnumerable<T> items)
 	{
-		ArgumentNullException.ThrowIfNull(items);
-
-		var collection = new Collection<T>();
-
-		foreach (var item in items)
+		if (items is null)
 		{
-			collection.Add(item);
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+
+		Collection<T> collection = [.. items];
 
 		return collection;
 	}
@@ -51,8 +49,16 @@ public static class EnumerableExtensions
 	/// <returns>The new collection with the items added.</returns>
 	public static Collection<T> ToCollection<T>(this IEnumerable<T> items, object lockObj)
 	{
-		ArgumentNullException.ThrowIfNull(items);
-		ArgumentNullException.ThrowIfNull(lockObj);
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
+
+		if (lockObj is null)
+		{
+			throw new ArgumentNullException(nameof(lockObj), "Lock object cannot be null.");
+		}
+
 		lock (lockObj)
 		{
 			return ToCollection(items);
@@ -70,10 +76,17 @@ public static class EnumerableExtensions
 	/// </exception>
 	public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 	{
-		ArgumentNullException.ThrowIfNull(enumerable);
-		ArgumentNullException.ThrowIfNull(action);
+		if (enumerable is null)
+		{
+			throw new ArgumentNullException(nameof(enumerable), "Enumerable cannot be null.");
+		}
 
-		foreach (var v in enumerable)
+		if (action is null)
+		{
+			throw new ArgumentNullException(nameof(action), "Action cannot be null.");
+		}
+
+		foreach (T? v in enumerable)
 		{
 			action(v);
 		}
@@ -91,9 +104,20 @@ public static class EnumerableExtensions
 	/// </exception>
 	public static void ForEach<T>(this IEnumerable<T> enumerable, object lockObj, Action<T> action)
 	{
-		ArgumentNullException.ThrowIfNull(enumerable);
-		ArgumentNullException.ThrowIfNull(lockObj);
-		ArgumentNullException.ThrowIfNull(action);
+		if (enumerable is null)
+		{
+			throw new ArgumentNullException(nameof(enumerable), "Enumerable cannot be null.");
+		}
+
+		if (lockObj is null)
+		{
+			throw new ArgumentNullException(nameof(lockObj), "Lock object cannot be null.");
+		}
+
+		if (action is null)
+		{
+			throw new ArgumentNullException(nameof(action), "Action cannot be null.");
+		}
 
 		lock (lockObj)
 		{
@@ -109,7 +133,11 @@ public static class EnumerableExtensions
 	/// <returns>True if the enumerable contains any null items; otherwise, false.</returns>
 	public static bool AnyNull<T>(this IEnumerable<T> items)
 	{
-		ArgumentNullException.ThrowIfNull(items);
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
+
 		return items.Any(item => item is null);
 	}
 
@@ -129,7 +157,10 @@ public static class EnumerableExtensions
 	/// <returns>An enumerable of strings with null items removed.</returns>
 	public static IEnumerable<string> ToStringEnumerable<T>(this IEnumerable<T> items)
 	{
-		ArgumentNullException.ThrowIfNull(items);
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
 
 		return items.ToStringEnumerable(NullItemHandling.Remove)
 			.Select(item => item!);
@@ -145,9 +176,12 @@ public static class EnumerableExtensions
 	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
 	public static IEnumerable<string?> ToStringEnumerable<T>(this IEnumerable<T> items, NullItemHandling nullItemHandling)
 	{
-		ArgumentNullException.ThrowIfNull(items);
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
 
-		if (nullItemHandling == NullItemHandling.Throw)
+		if (nullItemHandling is NullItemHandling.Throw)
 		{
 			if (items.AnyNull())
 			{
@@ -157,7 +191,7 @@ public static class EnumerableExtensions
 
 		return items
 			.Select(item => item?.ToString())
-			.Where(item => nullItemHandling == NullItemHandling.Include || item is not null);
+			.Where(item => nullItemHandling is NullItemHandling.Include || item is not null);
 	}
 
 	/// <summary>
@@ -169,8 +203,15 @@ public static class EnumerableExtensions
 	/// <exception cref="ArgumentNullException">Thrown if the <paramref name="items"/> or <paramref name="separator"/> is null.</exception>
 	public static string Join<T>(this IEnumerable<T> items, string separator)
 	{
-		ArgumentNullException.ThrowIfNull(items);
-		ArgumentNullException.ThrowIfNull(separator);
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
+
+		if (separator is null)
+		{
+			throw new ArgumentNullException(nameof(separator), "Separator cannot be null.");
+		}
 
 		return items.Join(separator, NullItemHandling.Remove);
 	}
@@ -187,9 +228,12 @@ public static class EnumerableExtensions
 	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
 	public static string Join<T>(this IEnumerable<T> items, string separator, NullItemHandling nullItemHandling)
 	{
-		ArgumentNullException.ThrowIfNull(items);
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
 
-		if (nullItemHandling == NullItemHandling.Throw)
+		if (nullItemHandling is NullItemHandling.Throw)
 		{
 			if (items.AnyNull())
 			{
@@ -197,6 +241,6 @@ public static class EnumerableExtensions
 			}
 		}
 
-		return string.Join(separator, items.Where(item => nullItemHandling == NullItemHandling.Include || item is not null).Select(i => i?.ToString()));
+		return string.Join(separator, items.Where(item => nullItemHandling is NullItemHandling.Include || item is not null).Select(i => i?.ToString()));
 	}
 }

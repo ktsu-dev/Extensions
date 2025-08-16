@@ -6,23 +6,13 @@ namespace ktsu.Extensions;
 
 using System.Text.RegularExpressions;
 
-using ktsu.StrongStrings;
-
 /// <summary>
 /// Extension methods for strings.
 /// </summary>
-public static partial class StringExtensions
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "Not available in all frameworks.")]
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Not available in netstandard2.0")]
+public static class StringExtensions
 {
-	/// <summary>
-	/// Converts a weak string to a strong string of the specified type.
-	/// </summary>
-	/// <typeparam name="TDest">The type of the strong string.</typeparam>
-	/// <param name="weakString">The weak string to convert.</param>
-	/// <returns>The converted strong string.</returns>
-	public static TDest As<TDest>(this string weakString)
-		where TDest : AnyStrongString
-		=> AnyStrongString.FromString<TDest>(weakString);
-
 	/// <summary>
 	/// Method that compares two strings using ordinal comparison.
 	/// </summary>
@@ -31,21 +21,21 @@ public static partial class StringExtensions
 	/// <returns>true if str starts with value; otherwise, false.</returns>
 	public static bool StartsWithOrdinal(this string str, string value)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(str);
 		ArgumentNullException.ThrowIfNull(value);
-		return str.StartsWith(value, StringComparison.Ordinal);
-	}
+#else
+		if (str is null)
+		{
+			throw new ArgumentNullException(nameof(str));
+		}
 
-	/// <summary>
-	/// Method that compares two strings using ordinal comparison.
-	/// </summary>
-	/// <param name="str">The string to compare.</param>
-	/// <param name="value">The <paramref name="value"/> to compare to.</param>
-	/// <returns>true if str starts with value; otherwise, false.</returns>
-	public static bool StartsWithOrdinal<TDerived>(this TDerived str, string value) where TDerived : AnyStrongString<TDerived>
-	{
-		ArgumentNullException.ThrowIfNull(str);
-		ArgumentNullException.ThrowIfNull(value);
+		if (value is null)
+		{
+			throw new ArgumentNullException(nameof(value));
+		}
+#endif
+
 		return str.StartsWith(value, StringComparison.Ordinal);
 	}
 
@@ -57,21 +47,21 @@ public static partial class StringExtensions
 	/// <returns>true if str ends with value; otherwise, false.</returns>
 	public static bool EndsWithOrdinal(this string str, string value)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(str);
 		ArgumentNullException.ThrowIfNull(value);
-		return str.EndsWith(value, StringComparison.Ordinal);
-	}
+#else
+		if (str is null)
+		{
+			throw new ArgumentNullException(nameof(str));
+		}
 
-	/// <summary>
-	/// Method that compares two strings using ordinal comparison.
-	/// </summary>
-	/// <param name="str">The string to compare.</param>
-	/// <param name="value">The <paramref name="value"/> to compare to.</param>
-	/// <returns>true if str ends with value; otherwise, false.</returns>
-	public static bool EndsWithOrdinal<TDerived>(this TDerived str, string value) where TDerived : AnyStrongString<TDerived>
-	{
-		ArgumentNullException.ThrowIfNull(str);
-		ArgumentNullException.ThrowIfNull(value);
+		if (value is null)
+		{
+			throw new ArgumentNullException(nameof(value));
+		}
+#endif
+
 		return str.EndsWith(value, StringComparison.Ordinal);
 	}
 
@@ -83,22 +73,26 @@ public static partial class StringExtensions
 	/// <returns>true if str contains value; otherwise, false.</returns>
 	public static bool ContainsOrdinal(this string str, string value)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(str);
 		ArgumentNullException.ThrowIfNull(value);
-		return str.Contains(value, StringComparison.Ordinal);
-	}
+#else
+		if (str is null)
+		{
+			throw new ArgumentNullException(nameof(str));
+		}
 
-	/// <summary>
-	/// Method that compares two strings using ordinal comparison.
-	/// </summary>
-	/// <param name="str">The string to compare.</param>
-	/// <param name="value">The <paramref name="value"/> to compare to.</param>
-	/// <returns>true if str contains value; otherwise, false.</returns>
-	public static bool ContainsOrdinal<TDerived>(this TDerived str, string value) where TDerived : AnyStrongString<TDerived>
-	{
-		ArgumentNullException.ThrowIfNull(str);
-		ArgumentNullException.ThrowIfNull(value);
+		if (value is null)
+		{
+			throw new ArgumentNullException(nameof(value));
+		}
+#endif
+
+#if NETSTANDARD2_0
+		return str.Contains(value);
+#else
 		return str.Contains(value, StringComparison.Ordinal);
+#endif
 	}
 
 	/// <summary>
@@ -109,24 +103,28 @@ public static partial class StringExtensions
 	/// <returns>The string with the suffix removed.</returns>
 	public static string RemoveSuffix(this string s, string suffix)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(s);
 		ArgumentNullException.ThrowIfNull(suffix);
+#else
+		if (s is null)
+		{
+			throw new ArgumentNullException(nameof(s));
+		}
 
-		return s.EndsWithOrdinal(suffix) ? s[..^suffix.Length] : s;
-	}
+		if (suffix is null)
+		{
+			throw new ArgumentNullException(nameof(suffix));
+		}
+#endif
 
-	/// <summary>
-	/// Removes the specified <paramref name="suffix"/> from the current string.
-	/// </summary>
-	/// <param name="s">The string to remove the suffix from.</param>
-	/// <param name="suffix">The suffix to remove.</param>
-	/// <returns>The string with the suffix removed.</returns>
-	public static TDerived RemoveSuffix<TDerived>(this TDerived s, string suffix) where TDerived : AnyStrongString<TDerived>
-	{
-		ArgumentNullException.ThrowIfNull(s);
-		ArgumentNullException.ThrowIfNull(suffix);
+		if (s.Length == 0 || suffix.Length == 0)
+		{
+			return s;
+		}
 
-		return (TDerived)(s.EndsWithOrdinal(suffix) ? s.WeakString[..^suffix.Length] : s);
+		int suffixIndex = s.Length - suffix.Length;
+		return s.EndsWithOrdinal(suffix) ? s.Substring(0, suffixIndex) : s;
 	}
 
 	/// <summary>
@@ -137,24 +135,27 @@ public static partial class StringExtensions
 	/// <returns>The string with the prefix removed.</returns>
 	public static string RemovePrefix(this string s, string prefix)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(s);
 		ArgumentNullException.ThrowIfNull(prefix);
+#else
+		if (s is null)
+		{
+			throw new ArgumentNullException(nameof(s));
+		}
 
-		return s.StartsWithOrdinal(prefix) ? s[prefix.Length..] : s;
-	}
+		if (prefix is null)
+		{
+			throw new ArgumentNullException(nameof(prefix));
+		}
+#endif
 
-	/// <summary>
-	/// Removes the specified <paramref name="prefix"/> from the current string.
-	/// </summary>
-	/// <param name="s">The string to remove the prefix from.</param>
-	/// <param name="prefix">The prefix to remove.</param>
-	/// <returns>The string with the prefix removed.</returns>
-	public static TDerived RemovePrefix<TDerived>(this TDerived s, string prefix) where TDerived : AnyStrongString<TDerived>
-	{
-		ArgumentNullException.ThrowIfNull(s);
-		ArgumentNullException.ThrowIfNull(prefix);
+		if (s.Length == 0 || prefix.Length == 0)
+		{
+			return s;
+		}
 
-		return (TDerived)(s.StartsWithOrdinal(prefix) ? s.WeakString[prefix.Length..] : s);
+		return s.StartsWithOrdinal(prefix) ? s.Substring(prefix.Length) : s;
 	}
 
 	/// <summary>
@@ -166,49 +167,42 @@ public static partial class StringExtensions
 	/// <returns></returns>
 	public static string ReplaceOrdinal(this string s, string oldValue, string newValue)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(s);
 		ArgumentNullException.ThrowIfNull(oldValue);
 		ArgumentNullException.ThrowIfNull(newValue);
+#else
+		if (s is null)
+		{
+			throw new ArgumentNullException(nameof(s));
+		}
 
-		return s.Replace(oldValue, newValue, StringComparison.Ordinal);
-	}
+		if (oldValue is null)
+		{
+			throw new ArgumentNullException(nameof(oldValue));
+		}
 
-	/// <summary>
-	/// Replace all occurrences of a string with another string using ordinal comparison.
-	/// </summary>
-	/// <param name="s">The string to search in.</param>
-	/// <param name="oldValue">The string to replace.</param>
-	/// <param name="newValue">The string to replace with.</param>
-	/// <returns></returns>
-	public static string ReplaceOrdinal<TDerived>(this TDerived s, string oldValue, string newValue) where TDerived : AnyStrongString<TDerived>
-	{
-		ArgumentNullException.ThrowIfNull(s);
-		ArgumentNullException.ThrowIfNull(oldValue);
-		ArgumentNullException.ThrowIfNull(newValue);
+		if (newValue is null)
+		{
+			throw new ArgumentNullException(nameof(newValue));
+		}
+#endif
 
+		if (s.Length == 0 || oldValue.Length == 0)
+		{
+			return s;
+		}
+
+#if NETSTANDARD2_0
 		return s.Replace(oldValue, newValue);
+#else
+		return s.Replace(oldValue, newValue, StringComparison.Ordinal);
+#endif
 	}
 
-	/// <summary>
-	/// Creates a regex to match Unix-style line endings (\n).
-	/// </summary>
-	/// <returns>A <see cref="Regex"/> object for Unix-style line endings.</returns>
-	[GeneratedRegex(@"(?<!\r)\n")]
-	private static partial Regex CreateLineEndingRegexUnix();
-
-	/// <summary>
-	/// Creates a regex to match Windows-style line endings (\r\n).
-	/// </summary>
-	/// <returns>A <see cref="Regex"/> object for Windows-style line endings.</returns>
-	[GeneratedRegex(@"\r\n")]
-	private static partial Regex CreateLineEndingRegexWindows();
-
-	/// <summary>
-	/// Creates a regex to match Mac-style line endings (\r).
-	/// </summary>
-	/// <returns>A <see cref="Regex"/> object for Mac-style line endings.</returns>
-	[GeneratedRegex(@"\r(?!\n)")]
-	private static partial Regex CreateLineEndingRegexMac();
+	private static Regex LineEndingRegexUnix { get; } = new(@"(?<!\r)\n", RegexOptions.Compiled);
+	private static Regex LineEndingRegexWindows { get; } = new(@"\r\n", RegexOptions.Compiled);
+	private static Regex LineEndingRegexMac { get; } = new(@"\r(?!\n)", RegexOptions.Compiled);
 
 	/// <summary>
 	/// Determines the line ending style of the specified string.
@@ -222,11 +216,23 @@ public static partial class StringExtensions
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Terneries here wouldnt be great")]
 	public static LineEndingStyle DetermineLineEndings(this string input)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(input);
+#else
+		if (input is null)
+		{
+			throw new ArgumentNullException(nameof(input));
+		}
+#endif
 
-		var hasUnix = CreateLineEndingRegexUnix().IsMatch(input);
-		var hasWindows = CreateLineEndingRegexWindows().IsMatch(input);
-		var hasMac = CreateLineEndingRegexMac().IsMatch(input);
+		if (input.Length == 0)
+		{
+			return LineEndingStyle.None;
+		}
+
+		bool hasUnix = LineEndingRegexUnix.IsMatch(input);
+		bool hasWindows = LineEndingRegexWindows.IsMatch(input);
+		bool hasMac = LineEndingRegexMac.IsMatch(input);
 
 		if (hasUnix && hasWindows && hasMac)
 		{
@@ -272,15 +278,27 @@ public static partial class StringExtensions
 	/// <exception cref="NotImplementedException">Thrown when an unknown line ending style is specified.</exception>
 	public static string NormalizeLineEndings(this string s, LineEndingStyle style)
 	{
+#if NET6_0_OR_GREATER
 		ArgumentNullException.ThrowIfNull(s);
+#else
+		if (s is null)
+		{
+			throw new ArgumentNullException(nameof(s));
+		}
+#endif
+
+		if (s.Length == 0)
+		{
+			return s;
+		}
 
 		return style switch
 		{
-			LineEndingStyle.None => CreateLineEndingRegexUnix().Replace(CreateLineEndingRegexWindows().Replace(CreateLineEndingRegexMac().Replace(s, ""), ""), ""),
-			LineEndingStyle.Unix => CreateLineEndingRegexWindows().Replace(CreateLineEndingRegexMac().Replace(s, "\n"), "\n"),
-			LineEndingStyle.Windows => CreateLineEndingRegexUnix().Replace(CreateLineEndingRegexMac().Replace(s, "\r\n"), "\r\n"),
-			LineEndingStyle.Mac => CreateLineEndingRegexUnix().Replace(CreateLineEndingRegexWindows().Replace(s, "\r"), "\r"),
-			LineEndingStyle.Mixed => CreateLineEndingRegexWindows().Replace(CreateLineEndingRegexMac().Replace(s, "\n"), "\n"),
+			LineEndingStyle.None => LineEndingRegexUnix.Replace(LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, ""), ""), ""),
+			LineEndingStyle.Unix => LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, "\n"), "\n"),
+			LineEndingStyle.Windows => LineEndingRegexUnix.Replace(LineEndingRegexMac.Replace(s, "\r\n"), "\r\n"),
+			LineEndingStyle.Mac => LineEndingRegexUnix.Replace(LineEndingRegexWindows.Replace(s, "\r"), "\r"),
+			LineEndingStyle.Mixed => LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, "\n"), "\n"),
 			_ => throw new NotImplementedException("Unknown line ending style."),
 		};
 	}

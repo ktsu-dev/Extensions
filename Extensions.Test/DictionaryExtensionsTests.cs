@@ -12,9 +12,10 @@ public class DictionaryExtensionsTests
 	[TestMethod]
 	public void GetOrCreateShouldReturnExistingValue()
 	{
-		var dictionary = new Dictionary<string, int> { { "key1", 42 } };
+		Dictionary<string, int> dictionary = new()
+		{ { "key1", 42 } };
 
-		var result = dictionary.GetOrCreate("key1");
+		int result = dictionary.GetOrCreate("key1");
 
 		Assert.AreEqual(42, result);
 	}
@@ -22,9 +23,9 @@ public class DictionaryExtensionsTests
 	[TestMethod]
 	public void GetOrCreateShouldAddAndReturnNewValue()
 	{
-		var dictionary = new Dictionary<string, int>();
+		Dictionary<string, int> dictionary = [];
 
-		var result = dictionary.GetOrCreate("key1");
+		int result = dictionary.GetOrCreate("key1");
 
 		Assert.AreEqual(0, result);
 		Assert.AreEqual(1, dictionary.Count);
@@ -34,9 +35,9 @@ public class DictionaryExtensionsTests
 	[TestMethod]
 	public void GetOrCreateShouldAddAndReturnDefaultValue()
 	{
-		var dictionary = new Dictionary<string, int>();
+		Dictionary<string, int> dictionary = [];
 
-		var result = dictionary.GetOrCreate("key1", 99);
+		int result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(99, result);
 		Assert.AreEqual(1, dictionary.Count);
@@ -46,10 +47,10 @@ public class DictionaryExtensionsTests
 	[TestMethod]
 	public void GetOrCreateConcurrentDictionaryShouldReturnExistingValue()
 	{
-		var dictionary = new ConcurrentDictionary<string, int>();
+		ConcurrentDictionary<string, int> dictionary = new();
 		dictionary.TryAdd("key1", 42);
 
-		var result = dictionary.GetOrCreate("key1", 99);
+		int result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(42, result);
 	}
@@ -57,9 +58,9 @@ public class DictionaryExtensionsTests
 	[TestMethod]
 	public void GetOrCreateConcurrentDictionaryShouldAddAndReturnDefaultValue()
 	{
-		var dictionary = new ConcurrentDictionary<string, int>();
+		ConcurrentDictionary<string, int> dictionary = new();
 
-		var result = dictionary.GetOrCreate("key1", 99);
+		int result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(99, result);
 		Assert.AreEqual(1, dictionary.Count);
@@ -71,29 +72,29 @@ public class DictionaryExtensionsTests
 	{
 		Dictionary<string, int>? dictionary = null!;
 
-		Assert.ThrowsException<ArgumentNullException>(() => dictionary.GetOrCreate("key1"));
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate("key1"));
 	}
 
 	[TestMethod]
 	public void GetOrCreateShouldThrowArgumentNullExceptionWhenKeyIsNull()
 	{
-		var dictionary = new Dictionary<string, int>();
+		Dictionary<string, int> dictionary = [];
 
-		Assert.ThrowsException<ArgumentNullException>(() => dictionary.GetOrCreate(null!));
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate(null!));
 	}
 
 	[TestMethod]
 	public void GetOrCreateShouldThrowArgumentNullExceptionWhenDefaultValueIsNull()
 	{
-		var dictionary = new Dictionary<string, DictionaryExtensionsTests>();
+		Dictionary<string, DictionaryExtensionsTests> dictionary = [];
 
-		Assert.ThrowsException<ArgumentNullException>(() => dictionary.GetOrCreate("key1", null!));
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate("key1", null!));
 	}
 
 	[TestMethod]
 	public void AddOrReplaceShouldAddNewValue()
 	{
-		var dictionary = new ConcurrentDictionary<string, int>();
+		ConcurrentDictionary<string, int> dictionary = new();
 
 		dictionary.AddOrReplace("key1", 42);
 
@@ -104,7 +105,7 @@ public class DictionaryExtensionsTests
 	[TestMethod]
 	public void AddOrReplaceShouldReplaceExistingValue()
 	{
-		var dictionary = new ConcurrentDictionary<string, int>();
+		ConcurrentDictionary<string, int> dictionary = new();
 		dictionary.TryAdd("key1", 42);
 
 		dictionary.AddOrReplace("key1", 99);
@@ -118,14 +119,14 @@ public class DictionaryExtensionsTests
 	{
 		ConcurrentDictionary<string, int>? dictionary = null!;
 
-		Assert.ThrowsException<ArgumentNullException>(() => dictionary.AddOrReplace("key1", 42));
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.AddOrReplace("key1", 42));
 	}
 
 	[TestMethod]
 	public void AddOrReplaceShouldThrowArgumentNullExceptionWhenKeyIsNull()
 	{
-		var dictionary = new ConcurrentDictionary<string, int>();
+		ConcurrentDictionary<string, int> dictionary = new();
 
-		Assert.ThrowsException<ArgumentNullException>(() => dictionary.AddOrReplace(null!, 42));
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.AddOrReplace(null!, 42));
 	}
 }

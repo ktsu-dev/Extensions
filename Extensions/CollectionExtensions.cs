@@ -15,12 +15,19 @@ public static class CollectionExtensions
 	/// <typeparam name="T">The type of the items.</typeparam>
 	/// <param name="collection">The collection to add the items to.</param>
 	/// <param name="items">The enumeration of items to add to the collection.</param>
-	public static void AddMany<T>(this ICollection<T> collection, IEnumerable<T> items)
+	public static void AddFrom<T>(this ICollection<T> collection, IEnumerable<T> items)
 	{
-		ArgumentNullException.ThrowIfNull(collection);
-		ArgumentNullException.ThrowIfNull(items);
+		if (collection is null)
+		{
+			throw new ArgumentNullException(nameof(collection), "Collection cannot be null.");
+		}
 
-		foreach (var item in items)
+		if (items is null)
+		{
+			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
+		}
+
+		foreach (T? item in items)
 		{
 			collection.Add(item);
 		}
@@ -37,10 +44,17 @@ public static class CollectionExtensions
 	/// </exception>
 	public static void ReplaceWith<T>(this ICollection<T> oldItems, IEnumerable<T> newItems)
 	{
-		ArgumentNullException.ThrowIfNull(oldItems);
-		ArgumentNullException.ThrowIfNull(newItems);
+		if (oldItems is null)
+		{
+			throw new ArgumentNullException(nameof(oldItems), "Old items collection cannot be null.");
+		}
+
+		if (newItems is null)
+		{
+			throw new ArgumentNullException(nameof(newItems), "New items enumerable cannot be null.");
+		}
 
 		oldItems.Clear();
-		oldItems.AddMany(newItems);
+		oldItems.AddFrom(newItems);
 	}
 }
