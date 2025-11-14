@@ -1,6 +1,8 @@
-## v1.5.7
+## v1.5.8 (patch)
 
 Changes since v1.5.7:
+
+- Enhance build configuration and test settings ([@matt-edmondson](https://github.com/matt-edmondson))
 ## v1.5.7 (patch)
 
 Changes since v1.5.6:
