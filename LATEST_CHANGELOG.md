@@ -1,9 +1,7 @@
-## v1.5.9-pre.4 (prerelease)
+## v1.5.9 (patch)
 
-Changes since v1.5.9-pre.3:
+Changes since v1.5.8:
 
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .github\workflows\update-sdks.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Update package references and improve test assertions ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add CLAUDE.md for project guidance and documentation ([@matt-edmondson](https://github.com/matt-edmondson))
+- Update README.md to remove cloning references and enhance extension method descriptions ([@matt-edmondson](https://github.com/matt-edmondson))
