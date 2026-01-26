@@ -1,5 +1,8 @@
 ## v1.5.10-pre.1 (prerelease)
 
+Incremental prerelease update.
+## v1.5.10-pre.1 (prerelease)
+
 Changes since v1.5.9:
 
 - Sync scripts\update-winget-manifests.ps1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
