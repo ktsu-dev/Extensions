@@ -10,7 +10,7 @@
 
 ## Introduction
 
-`ktsu.Extensions` is a utility library that enhances the functionality of standard .NET types through extension methods. It provides a wide range of utilities for explicit shallow and deep cloning, batch operations, string manipulations, and reflection helpers, making it easier to work with common data structures and types in a consistent, null-safe manner.
+`ktsu.Extensions` is a utility library that enhances the functionality of standard .NET types through extension methods. It provides a wide range of utilities for batch operations, string manipulations, and reflection helpers, making it easier to work with common data structures and types in a consistent, null-safe manner.
 
 ## Features
 
@@ -18,23 +18,23 @@
   - `WithIndex`: Enumerates over an enumerable with the index of the item
   - `ToCollection`: Converts an enumerable to a collection
   - `ForEach`: Applies an action to each element of an enumerable
-  - `DeepClone`/`ShallowClone`: Creates clones of a collection of items
   - `AnyNull`: Checks if the enumerable contains any null items
+  - `Join`: Concatenates elements with a separator
+  - `ToStringEnumerable`: Converts items to strings with null handling
+  - `WriteItemsToConsole`: Outputs collection items to the console
 
 - **Collection Extensions**
-  - `AddMany`: Adds items from an enumerable to a collection
+  - `AddFrom`: Adds items from an enumerable to a collection
   - `ReplaceWith`: Replaces all items in a collection with items from an enumerable
-  - `ToStringCollection`: Converts a collection to a collection of strings
 
 - **Dictionary Extensions**
   - `GetOrCreate`: Gets the value for a key or creates a new value if the key doesn't exist
   - `AddOrReplace`: Adds a new value or replaces an existing value
-  - `DeepClone`/`ShallowClone`: Creates clones of a dictionary
 
 - **String Extensions**
-  - `As<TDest>`: Converts between string types
   - Ordinal comparison helpers (`StartsWithOrdinal`, `EndsWithOrdinal`, `ContainsOrdinal`)
   - Prefix/suffix manipulation (`RemoveSuffix`, `RemovePrefix`)
+  - `ReplaceOrdinal`: Replaces text using ordinal comparison
   - Line ending utilities (`DetermineLineEndings`, `NormalizeLineEndings`)
 
 - **Reflection Extensions**
@@ -76,15 +76,19 @@ foreach (var (item, index) in myList.WithIndex())
 // Apply action to each item
 myList.ForEach(item => Console.WriteLine(item));
 
-// Create clones
-var deepClone = myList.DeepClone();
-var shallowClone = myList.ShallowClone();
-
 // Check for nulls
 if (myList.AnyNull())
 {
     Console.WriteLine("List contains null items");
 }
+
+// Join items with a separator
+var items = new[] { "apple", "banana", "cherry" };
+string joined = items.Join(", ");  // "apple, banana, cherry"
+
+// Convert to string enumerable
+var numbers = new[] { 1, 2, 3 };
+var strings = numbers.ToStringEnumerable();  // ["1", "2", "3"]
 ```
 
 ### String Extensions
@@ -117,15 +121,15 @@ using ktsu.Extensions;
 
 var cache = new Dictionary<string, List<string>>();
 
-// Get or create a value
-var items = cache.GetOrCreate("key", () => new List<string>());
+// Get or create a value (uses parameterless constructor)
+var items = cache.GetOrCreate("key");
 items.Add("item1");
 
-// Add or replace a value
-cache.AddOrReplace("key2", new List<string> { "item2" });
+// Get or create with a specific default value
+var otherItems = cache.GetOrCreate("key2", new List<string> { "default" });
 
-// Clone the dictionary
-var deepClone = cache.DeepClone();
+// Add or replace a value
+cache.AddOrReplace("key3", new List<string> { "item2" });
 ```
 
 ### Collection Extensions
@@ -136,29 +140,13 @@ using ktsu.Extensions;
 var collection = new List<string>();
 
 // Add multiple items at once
-collection.AddMany(new[] { "item1", "item2", "item3" });
+collection.AddFrom(new[] { "item1", "item2", "item3" });
 
 // Replace all items in the collection
 collection.ReplaceWith(new[] { "new1", "new2" }); // Collection now contains only "new1" and "new2"
 ```
 
 ## Advanced Usage
-
-### Working with StrongStrings
-
-```csharp
-using ktsu.Extensions;
-using ktsu.StrongStrings;
-
-// Convert a regular string to a strong string
-var strongId = "12345".As<ID>();
-
-// Apply string extensions to strong strings
-if (strongId.StartsWithOrdinal("123"))
-{
-    // Do something with the strong string
-}
-```
 
 ### Null Item Handling
 
@@ -168,10 +156,12 @@ using ktsu.Extensions;
 var items = new[] { "one", null, "three" };
 
 // Convert to strings with null handling
-var strings1 = items.ToStringEnumerable(NullItemHandling.Skip);       // ["one", "three"]
-var strings2 = items.ToStringEnumerable(NullItemHandling.UseEmpty);   // ["one", "", "three"]
-var strings3 = items.ToStringEnumerable(NullItemHandling.UseNull);    // ["one", null, "three"]
-var strings4 = items.ToStringEnumerable(NullItemHandling.UseDefault); // ["one", "(null)", "three"]
+var strings1 = items.ToStringEnumerable(NullItemHandling.Remove);   // ["one", "three"]
+var strings2 = items.ToStringEnumerable(NullItemHandling.Include);  // ["one", null, "three"]
+// NullItemHandling.Throw will throw an exception if null items are found
+
+// Join with null handling
+var joined = items.Join(", ", NullItemHandling.Remove);  // "one, three"
 ```
 
 ### Reflection Helpers
@@ -190,11 +180,22 @@ if (someType.TryFindMethod("MethodName", BindingFlags.Instance | BindingFlags.Pu
 
 ## API Reference
 
+### Enumerable Extensions
+
+| Method | Description |
+|--------|-------------|
+| `WithIndex` | Enumerates with the index of each item |
+| `ToCollection` | Converts an enumerable to a collection |
+| `ForEach` | Applies an action to each element |
+| `AnyNull` | Checks if enumerable contains any null items |
+| `Join` | Concatenates elements with a separator |
+| `ToStringEnumerable` | Converts items to strings with null handling |
+| `WriteItemsToConsole` | Displays enumerable items in console |
+
 ### String Extensions
 
 | Method | Description |
 |--------|-------------|
-| `As<TDest>` | Converts a string to a strong string type |
 | `StartsWithOrdinal` | Checks if string starts with value using ordinal comparison |
 | `EndsWithOrdinal` | Checks if string ends with value using ordinal comparison |
 | `ContainsOrdinal` | Checks if string contains value using ordinal comparison |
@@ -208,11 +209,8 @@ if (someType.TryFindMethod("MethodName", BindingFlags.Instance | BindingFlags.Pu
 
 | Method | Description |
 |--------|-------------|
-| `AddMany` | Adds multiple items to a collection |
+| `AddFrom` | Adds items from an enumerable to a collection |
 | `ReplaceWith` | Replaces all items in a collection with new items |
-| `AnyNull` | Checks if collection contains any null items |
-| `ToStringCollection` | Converts collection to string collection |
-| `WriteItemsToConsole` | Displays collection items in console |
 
 ### Dictionary Extensions
 
@@ -220,8 +218,6 @@ if (someType.TryFindMethod("MethodName", BindingFlags.Instance | BindingFlags.Pu
 |--------|-------------|
 | `GetOrCreate` | Gets existing value or creates new one |
 | `AddOrReplace` | Adds a new value or replaces existing one |
-| `DeepClone` | Creates a deep copy of the dictionary |
-| `ShallowClone` | Creates a shallow copy of the dictionary |
 
 ## Contributing
 
