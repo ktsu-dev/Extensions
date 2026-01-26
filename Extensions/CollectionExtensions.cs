@@ -2,6 +2,8 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ktsu.Extensions.Test")]
+
 namespace ktsu.Extensions;
 
 /// <summary>

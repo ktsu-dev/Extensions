@@ -155,7 +155,7 @@ public class CollectionExtensionsTests
 
 		collection.AddFrom(itemsToAdd);
 
-		Assert.AreEqual(1000, collection.Count);
+		Assert.HasCount(1000, collection);
 		CollectionAssert.AreEqual(itemsToAdd.ToList(), collection);
 	}
 
@@ -209,7 +209,7 @@ public class CollectionExtensionsTests
 
 		collection.ReplaceWith(newItems);
 
-		Assert.AreEqual(0, collection.Count);
+		Assert.IsEmpty(collection);
 		CollectionAssert.AreEqual(new List<int>(), collection);
 	}
 

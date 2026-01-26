@@ -2,7 +2,10 @@
 // All rights reserved.
 // Licensed under the MIT license.
 
+[assembly: DoNotParallelize]
+
 namespace ktsu.Extensions.Tests;
+
 [TestClass]
 public class EnumerableExtensionsTests
 {
@@ -12,7 +15,7 @@ public class EnumerableExtensionsTests
 		string[] items = ["a", "b", "c"];
 		List<(string item, int index)> result = [.. items.WithIndex()];
 
-		Assert.AreEqual(3, result.Count);
+		Assert.HasCount(3, result);
 		Assert.AreEqual(("a", 0), result[0]);
 		Assert.AreEqual(("b", 1), result[1]);
 		Assert.AreEqual(("c", 2), result[2]);
@@ -24,7 +27,7 @@ public class EnumerableExtensionsTests
 		int[] items = [1, 2, 3];
 		System.Collections.ObjectModel.Collection<int> collection = items.ToCollection();
 
-		Assert.AreEqual(3, collection.Count);
+		Assert.HasCount(3, collection);
 		Assert.AreEqual(1, collection[0]);
 		Assert.AreEqual(2, collection[1]);
 		Assert.AreEqual(3, collection[2]);
@@ -72,7 +75,7 @@ public class EnumerableExtensionsTests
 		items.ForEach(i => results.Add(i * 2));
 
 		// Assert
-		Assert.AreEqual(items.Count, results.Count);
+		Assert.HasCount(items.Count, results);
 		for (int i = 0; i < items.Count; i++)
 		{
 			Assert.AreEqual(items[i] * 2, results[i]);
@@ -111,7 +114,7 @@ public class EnumerableExtensionsTests
 		items.ForEach(lockObj, i => results.Add(i * 2));
 
 		// Assert
-		Assert.AreEqual(items.Count, results.Count);
+		Assert.HasCount(items.Count, results);
 		for (int i = 0; i < items.Count; i++)
 		{
 			Assert.AreEqual(items[i] * 2, results[i]);
@@ -169,7 +172,7 @@ public class EnumerableExtensionsTests
 		}
 
 		// Assert
-		Assert.AreEqual(items.Count, results.Count);
+		Assert.HasCount(items.Count, results);
 		for (int i = 0; i < items.Count; i++)
 		{
 			Assert.AreEqual(items[i] * 2, results[i]);
@@ -186,7 +189,7 @@ public class EnumerableExtensionsTests
 		IEnumerable<string> items = [];
 		List<(string item, int index)> result = [.. items.WithIndex()];
 
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -195,7 +198,7 @@ public class EnumerableExtensionsTests
 		IEnumerable<int> items = [];
 		System.Collections.ObjectModel.Collection<int> collection = items.ToCollection();
 
-		Assert.AreEqual(0, collection.Count);
+		Assert.IsEmpty(collection);
 	}
 
 	[TestMethod]
@@ -300,7 +303,7 @@ public class EnumerableExtensionsTests
 
 		IEnumerable<string> result = items.ToStringEnumerable();
 
-		Assert.AreEqual(0, result.Count());
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]

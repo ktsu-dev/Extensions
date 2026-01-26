@@ -28,7 +28,7 @@ public class DictionaryExtensionsTests
 		int result = dictionary.GetOrCreate("key1");
 
 		Assert.AreEqual(0, result);
-		Assert.AreEqual(1, dictionary.Count);
+		Assert.HasCount(1, dictionary);
 		Assert.AreEqual(0, dictionary["key1"]);
 	}
 
@@ -40,7 +40,7 @@ public class DictionaryExtensionsTests
 		int result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(99, result);
-		Assert.AreEqual(1, dictionary.Count);
+		Assert.HasCount(1, dictionary);
 		Assert.AreEqual(99, dictionary["key1"]);
 	}
 
@@ -63,7 +63,7 @@ public class DictionaryExtensionsTests
 		int result = dictionary.GetOrCreate("key1", 99);
 
 		Assert.AreEqual(99, result);
-		Assert.AreEqual(1, dictionary.Count);
+		Assert.HasCount(1, dictionary);
 		Assert.AreEqual(99, dictionary["key1"]);
 	}
 
@@ -98,7 +98,7 @@ public class DictionaryExtensionsTests
 
 		dictionary.AddOrReplace("key1", 42);
 
-		Assert.AreEqual(1, dictionary.Count);
+		Assert.HasCount(1, dictionary);
 		Assert.AreEqual(42, dictionary["key1"]);
 	}
 
@@ -110,7 +110,7 @@ public class DictionaryExtensionsTests
 
 		dictionary.AddOrReplace("key1", 99);
 
-		Assert.AreEqual(1, dictionary.Count);
+		Assert.HasCount(1, dictionary);
 		Assert.AreEqual(99, dictionary["key1"]);
 	}
 
