@@ -1,7 +1,6 @@
-## v1.5.9 (patch)
+## v1.5.10-pre.1 (prerelease)
 
-Changes since v1.5.8:
+Changes since v1.5.9:
 
-- Update package references and improve test assertions ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add CLAUDE.md for project guidance and documentation ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update README.md to remove cloning references and enhance extension method descriptions ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync scripts\update-winget-manifests.ps1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
