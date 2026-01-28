@@ -21,20 +21,8 @@ public static class ReflectionExtensions
 	/// <returns>True if the method was found; otherwise, false.</returns>
 	public static bool TryFindMethod(this Type type, string methodName, BindingFlags bindingFlags, out MethodInfo? methodInfo)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(type);
-		ArgumentNullException.ThrowIfNull(methodName);
-#else
-		if (type is null)
-		{
-			throw new ArgumentNullException(nameof(type), "The type cannot be null.");
-		}
-
-		if (methodName is null)
-		{
-			throw new ArgumentNullException(nameof(methodName), "Method name cannot be null.");
-		}
-#endif
+		Ensure.NotNull(type);
+		Ensure.NotNull(methodName);
 
 		if (string.IsNullOrEmpty(methodName))
 		{

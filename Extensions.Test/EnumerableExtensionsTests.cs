@@ -218,7 +218,7 @@ public class EnumerableExtensionsTests
 
 		bool result = items.AnyNull();
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "AnyNull should return true when the collection contains null items.");
 	}
 
 	[TestMethod]
@@ -228,7 +228,7 @@ public class EnumerableExtensionsTests
 
 		bool result = items.AnyNull();
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "AnyNull should return false when the collection contains no null items.");
 	}
 
 	[TestMethod]
@@ -238,7 +238,7 @@ public class EnumerableExtensionsTests
 
 		bool result = items.AnyNull();
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "AnyNull should return false for an empty enumerable.");
 	}
 
 	[TestMethod]

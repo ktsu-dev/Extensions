@@ -21,20 +21,8 @@ public static class StringExtensions
 	/// <returns>true if str starts with value; otherwise, false.</returns>
 	public static bool StartsWithOrdinal(this string str, string value)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(str);
-		ArgumentNullException.ThrowIfNull(value);
-#else
-		if (str is null)
-		{
-			throw new ArgumentNullException(nameof(str));
-		}
-
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-#endif
+		Ensure.NotNull(str);
+		Ensure.NotNull(value);
 
 		return str.StartsWith(value, StringComparison.Ordinal);
 	}
@@ -47,20 +35,8 @@ public static class StringExtensions
 	/// <returns>true if str ends with value; otherwise, false.</returns>
 	public static bool EndsWithOrdinal(this string str, string value)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(str);
-		ArgumentNullException.ThrowIfNull(value);
-#else
-		if (str is null)
-		{
-			throw new ArgumentNullException(nameof(str));
-		}
-
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-#endif
+		Ensure.NotNull(str);
+		Ensure.NotNull(value);
 
 		return str.EndsWith(value, StringComparison.Ordinal);
 	}
@@ -73,20 +49,8 @@ public static class StringExtensions
 	/// <returns>true if str contains value; otherwise, false.</returns>
 	public static bool ContainsOrdinal(this string str, string value)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(str);
-		ArgumentNullException.ThrowIfNull(value);
-#else
-		if (str is null)
-		{
-			throw new ArgumentNullException(nameof(str));
-		}
-
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-#endif
+		Ensure.NotNull(str);
+		Ensure.NotNull(value);
 
 #if NETSTANDARD2_0
 		return str.Contains(value);
@@ -103,20 +67,8 @@ public static class StringExtensions
 	/// <returns>The string with the suffix removed.</returns>
 	public static string RemoveSuffix(this string s, string suffix)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(s);
-		ArgumentNullException.ThrowIfNull(suffix);
-#else
-		if (s is null)
-		{
-			throw new ArgumentNullException(nameof(s));
-		}
-
-		if (suffix is null)
-		{
-			throw new ArgumentNullException(nameof(suffix));
-		}
-#endif
+		Ensure.NotNull(s);
+		Ensure.NotNull(suffix);
 
 		if (s.Length == 0 || suffix.Length == 0)
 		{
@@ -135,20 +87,8 @@ public static class StringExtensions
 	/// <returns>The string with the prefix removed.</returns>
 	public static string RemovePrefix(this string s, string prefix)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(s);
-		ArgumentNullException.ThrowIfNull(prefix);
-#else
-		if (s is null)
-		{
-			throw new ArgumentNullException(nameof(s));
-		}
-
-		if (prefix is null)
-		{
-			throw new ArgumentNullException(nameof(prefix));
-		}
-#endif
+		Ensure.NotNull(s);
+		Ensure.NotNull(prefix);
 
 		if (s.Length == 0 || prefix.Length == 0)
 		{
@@ -167,26 +107,9 @@ public static class StringExtensions
 	/// <returns></returns>
 	public static string ReplaceOrdinal(this string s, string oldValue, string newValue)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(s);
-		ArgumentNullException.ThrowIfNull(oldValue);
-		ArgumentNullException.ThrowIfNull(newValue);
-#else
-		if (s is null)
-		{
-			throw new ArgumentNullException(nameof(s));
-		}
-
-		if (oldValue is null)
-		{
-			throw new ArgumentNullException(nameof(oldValue));
-		}
-
-		if (newValue is null)
-		{
-			throw new ArgumentNullException(nameof(newValue));
-		}
-#endif
+		Ensure.NotNull(s);
+		Ensure.NotNull(oldValue);
+		Ensure.NotNull(newValue);
 
 		if (s.Length == 0 || oldValue.Length == 0)
 		{
@@ -216,14 +139,7 @@ public static class StringExtensions
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Terneries here wouldnt be great")]
 	public static LineEndingStyle DetermineLineEndings(this string input)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(input);
-#else
-		if (input is null)
-		{
-			throw new ArgumentNullException(nameof(input));
-		}
-#endif
+		Ensure.NotNull(input);
 
 		if (input.Length == 0)
 		{
@@ -278,14 +194,7 @@ public static class StringExtensions
 	/// <exception cref="NotImplementedException">Thrown when an unknown line ending style is specified.</exception>
 	public static string NormalizeLineEndings(this string s, LineEndingStyle style)
 	{
-#if NET6_0_OR_GREATER
-		ArgumentNullException.ThrowIfNull(s);
-#else
-		if (s is null)
-		{
-			throw new ArgumentNullException(nameof(s));
-		}
-#endif
+		Ensure.NotNull(s);
 
 		if (s.Length == 0)
 		{

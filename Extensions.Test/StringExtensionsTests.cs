@@ -12,7 +12,7 @@ public class StringExtensionsTests
 	{
 		string str = "hello world";
 		string value = "hello";
-		Assert.IsTrue(str.StartsWithOrdinal(value));
+		Assert.IsTrue(str.StartsWithOrdinal(value), "StartsWithOrdinal should return true when the string starts with the specified value.");
 	}
 
 	[TestMethod]
@@ -20,7 +20,7 @@ public class StringExtensionsTests
 	{
 		string str = "hello world";
 		string value = "world";
-		Assert.IsFalse(str.StartsWithOrdinal(value));
+		Assert.IsFalse(str.StartsWithOrdinal(value), "StartsWithOrdinal should return false when the string does not start with the specified value.");
 	}
 
 	[TestMethod]
@@ -28,7 +28,7 @@ public class StringExtensionsTests
 	{
 		string str = "hello world";
 		string value = "world";
-		Assert.IsTrue(str.EndsWithOrdinal(value));
+		Assert.IsTrue(str.EndsWithOrdinal(value), "EndsWithOrdinal should return true when the string ends with the specified value.");
 	}
 
 	[TestMethod]
@@ -36,7 +36,7 @@ public class StringExtensionsTests
 	{
 		string str = "hello world";
 		string value = "hello";
-		Assert.IsFalse(str.EndsWithOrdinal(value));
+		Assert.IsFalse(str.EndsWithOrdinal(value), "EndsWithOrdinal should return false when the string does not end with the specified value.");
 	}
 
 	[TestMethod]
@@ -44,7 +44,7 @@ public class StringExtensionsTests
 	{
 		string str = "hello world";
 		string value = "lo wo";
-		Assert.IsTrue(str.ContainsOrdinal(value));
+		Assert.IsTrue(str.ContainsOrdinal(value), "ContainsOrdinal should return true when the string contains the specified value.");
 	}
 
 	[TestMethod]
@@ -52,7 +52,7 @@ public class StringExtensionsTests
 	{
 		string str = "hello world";
 		string value = "worlds";
-		Assert.IsFalse(str.ContainsOrdinal(value));
+		Assert.IsFalse(str.ContainsOrdinal(value), "ContainsOrdinal should return false when the string does not contain the specified value.");
 	}
 
 	[TestMethod]

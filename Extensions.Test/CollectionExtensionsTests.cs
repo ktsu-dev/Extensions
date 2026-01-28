@@ -43,7 +43,7 @@ public class CollectionExtensionsTests
 
 		bool result = collection.AnyNull();
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "AnyNull should return true when the collection contains null items.");
 	}
 
 	[TestMethod]
@@ -53,7 +53,7 @@ public class CollectionExtensionsTests
 
 		bool result = collection.AnyNull();
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "AnyNull should return false when the collection contains no null items.");
 	}
 
 	[TestMethod]
@@ -106,7 +106,7 @@ public class CollectionExtensionsTests
 
 		bool result = collection.AnyNull();
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "AnyNull should return false for an empty collection.");
 	}
 
 	[TestMethod]
@@ -116,7 +116,7 @@ public class CollectionExtensionsTests
 
 		bool result = collection.AnyNull();
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "AnyNull should return true when all items are null.");
 	}
 
 	[TestMethod]
@@ -177,7 +177,7 @@ public class CollectionExtensionsTests
 
 		bool result = collection.AnyNull();
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "AnyNull should return false for a value type collection.");
 	}
 
 	[TestMethod]
@@ -187,7 +187,7 @@ public class CollectionExtensionsTests
 
 		bool result = collection.AnyNull();
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "AnyNull should return true for a nullable value type collection containing null.");
 	}
 
 	[TestMethod]

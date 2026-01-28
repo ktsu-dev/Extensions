@@ -46,7 +46,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryFindMethod should return true when the method exists in the derived class.");
 		Assert.IsNotNull(methodInfo);
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
@@ -60,7 +60,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryFindMethod should return true when the method exists in the base class.");
 		Assert.IsNotNull(methodInfo);
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
@@ -74,7 +74,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsFalse(result);
+		Assert.IsFalse(result, "TryFindMethod should return false when the method does not exist.");
 		Assert.IsNull(methodInfo);
 	}
 
@@ -109,7 +109,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryFindMethod should return true when the private method exists.");
 		Assert.IsNotNull(methodInfo);
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
@@ -123,7 +123,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryFindMethod should return true when the static method exists.");
 		Assert.IsNotNull(methodInfo);
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
@@ -137,7 +137,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryFindMethod should return true when the method with parameters exists.");
 		Assert.IsNotNull(methodInfo);
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
@@ -161,7 +161,7 @@ public class ReflectionExtensionsTests
 
 		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
 
-		Assert.IsTrue(result);
+		Assert.IsTrue(result, "TryFindMethod should return true when the generic method exists.");
 		Assert.IsNotNull(methodInfo);
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
