@@ -1,5 +1,3 @@
-## v1.5.11 (patch)
+## v1.5.11
 
-Changes since v1.5.10:
-
-- Add null checks to collection and dictionary extension methods ([@matt-edmondson](https://github.com/matt-edmondson))
+No significant changes detected since v1.5.11.
