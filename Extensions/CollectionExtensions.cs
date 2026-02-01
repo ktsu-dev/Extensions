@@ -19,15 +19,19 @@ public static class CollectionExtensions
 	/// <param name="items">The enumeration of items to add to the collection.</param>
 	public static void AddFrom<T>(this ICollection<T> collection, IEnumerable<T> items)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (collection is null)
 		{
 			throw new ArgumentNullException(nameof(collection), "Collection cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		foreach (T? item in items)
 		{
@@ -46,15 +50,19 @@ public static class CollectionExtensions
 	/// </exception>
 	public static void ReplaceWith<T>(this ICollection<T> oldItems, IEnumerable<T> newItems)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (oldItems is null)
 		{
 			throw new ArgumentNullException(nameof(oldItems), "Old items collection cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (newItems is null)
 		{
 			throw new ArgumentNullException(nameof(newItems), "New items enumerable cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		oldItems.Clear();
 		oldItems.AddFrom(newItems);

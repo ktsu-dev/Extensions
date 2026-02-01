@@ -33,20 +33,26 @@ public static class DictionaryExtensions
 	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
 	public static TVal GetOrCreate<TKey, TVal>(this IDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull where TVal : notnull, new()
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (dictionary is null)
 		{
 			throw new ArgumentNullException(nameof(dictionary), "The dictionary cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key), "The key cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (defaultValue is null)
 		{
 			throw new ArgumentNullException(nameof(defaultValue), "The default value cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		if (dictionary.TryGetValue(key, out TVal? val))
 		{
@@ -68,20 +74,26 @@ public static class DictionaryExtensions
 	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
 	public static TVal GetOrCreate<TKey, TVal>(this ConcurrentDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull where TVal : new()
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (dictionary is null)
 		{
 			throw new ArgumentNullException(nameof(dictionary), "The dictionary cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key), "The key cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (defaultValue is null)
 		{
 			throw new ArgumentNullException(nameof(defaultValue), "The default value cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		if (dictionary.TryGetValue(key, out TVal? val))
 		{
@@ -105,15 +117,19 @@ public static class DictionaryExtensions
 	public static void AddOrReplace<TKey, TValue>(this IDictionary<TKey, TValue> items, TKey key, TValue value)
 	where TKey : notnull
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "The dictionary cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key), "The key cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		items[key] = value;
 	}

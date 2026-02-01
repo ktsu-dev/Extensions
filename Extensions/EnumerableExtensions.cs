@@ -29,10 +29,12 @@ public static class EnumerableExtensions
 	/// <returns>The new collection with the items added.</returns>
 	public static Collection<T> ToCollection<T>(this IEnumerable<T> items)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		Collection<T> collection = [.. items];
 
@@ -49,15 +51,19 @@ public static class EnumerableExtensions
 	/// <returns>The new collection with the items added.</returns>
 	public static Collection<T> ToCollection<T>(this IEnumerable<T> items, object lockObj)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (lockObj is null)
 		{
 			throw new ArgumentNullException(nameof(lockObj), "Lock object cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		lock (lockObj)
 		{
@@ -76,15 +82,19 @@ public static class EnumerableExtensions
 	/// </exception>
 	public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (enumerable is null)
 		{
 			throw new ArgumentNullException(nameof(enumerable), "Enumerable cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (action is null)
 		{
 			throw new ArgumentNullException(nameof(action), "Action cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		foreach (T? v in enumerable)
 		{
@@ -104,20 +114,26 @@ public static class EnumerableExtensions
 	/// </exception>
 	public static void ForEach<T>(this IEnumerable<T> enumerable, object lockObj, Action<T> action)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (enumerable is null)
 		{
 			throw new ArgumentNullException(nameof(enumerable), "Enumerable cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (lockObj is null)
 		{
 			throw new ArgumentNullException(nameof(lockObj), "Lock object cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (action is null)
 		{
 			throw new ArgumentNullException(nameof(action), "Action cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		lock (lockObj)
 		{
@@ -133,10 +149,12 @@ public static class EnumerableExtensions
 	/// <returns>True if the enumerable contains any null items; otherwise, false.</returns>
 	public static bool AnyNull<T>(this IEnumerable<T> items)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		return items.Any(item => item is null);
 	}
@@ -157,10 +175,12 @@ public static class EnumerableExtensions
 	/// <returns>An enumerable of strings with null items removed.</returns>
 	public static IEnumerable<string> ToStringEnumerable<T>(this IEnumerable<T> items)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		return items.ToStringEnumerable(NullItemHandling.Remove)
 			.Select(item => item!);
@@ -176,10 +196,12 @@ public static class EnumerableExtensions
 	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
 	public static IEnumerable<string?> ToStringEnumerable<T>(this IEnumerable<T> items, NullItemHandling nullItemHandling)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		if (nullItemHandling is NullItemHandling.Throw)
 		{
@@ -203,15 +225,19 @@ public static class EnumerableExtensions
 	/// <exception cref="ArgumentNullException">Thrown if the <paramref name="items"/> or <paramref name="separator"/> is null.</exception>
 	public static string Join<T>(this IEnumerable<T> items, string separator)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (separator is null)
 		{
 			throw new ArgumentNullException(nameof(separator), "Separator cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		return items.Join(separator, NullItemHandling.Remove);
 	}
@@ -228,10 +254,12 @@ public static class EnumerableExtensions
 	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
 	public static string Join<T>(this IEnumerable<T> items, string separator, NullItemHandling nullItemHandling)
 	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (items is null)
 		{
 			throw new ArgumentNullException(nameof(items), "Items cannot be null.");
 		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
 		if (nullItemHandling is NullItemHandling.Throw)
 		{
