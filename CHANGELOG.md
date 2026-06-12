@@ -1,3 +1,7 @@
+## v1.5.15
+
+No significant changes detected since v1.5.15.
+
 ## v1.5.15 (patch)
 
 Changes since v1.5.14:
@@ -26,9 +30,7 @@ Changes since v1.5.14:
 
 ## v1.5.15-pre.1 (prerelease)
 
-Changes since v1.5.14:
-
-- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
+No significant changes detected since v1.5.15.
 
 ## v1.5.14 (patch)
 
