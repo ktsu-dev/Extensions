@@ -1,7 +1,6 @@
-## v1.5.34 (patch)
+## v1.5.35 (patch)
 
-Changes since v1.5.33:
+Changes since v1.5.34:
 
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Bump Polyfill from 11.0.1 to 11.0.2 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
