@@ -1,27 +1,6 @@
-## v1.6.0 (minor)
+## v1.6.1 (patch)
 
-Changes since v1.5.0:
+Changes since v1.6.0:
 
-- [minor] Add NominalWordWrap string extension ([@matt-edmondson](https://github.com/matt-edmondson))
-- chore: update ktsu.Sdk to 2.21.1 [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
-- chore: remove unused SourceLink package versions ([@matt-edmondson](https://github.com/matt-edmondson))
-- chore: remove unused SourceLink package references ([@matt-edmondson](https://github.com/matt-edmondson))
-- Remove legacy build scripts ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add null checks to collection and dictionary extension methods ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update package version for Polyfill and enhance test assertions with descriptive messages ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update README.md to remove cloning references and enhance extension method descriptions ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update package references and improve test assertions ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add CLAUDE.md for project guidance and documentation ([@matt-edmondson](https://github.com/matt-edmondson))
-- Enhance build configuration and test settings ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add new configuration files and update build workflows ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update configuration files and enhance build scripts ([@matt-edmondson](https://github.com/matt-edmondson))
-- Remove deep cloning functionality and update SDK versions ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update package references in Extensions.csproj ([@matt-edmondson](https://github.com/matt-edmondson))
-- Fix icon ([@matt-edmondson](https://github.com/matt-edmondson))
-- Refactor: Remove unused namespaces and upgrade SDK ([@matt-edmondson](https://github.com/matt-edmondson))
-- Add ReplaceWith method and related tests/documentation ([@matt-edmondson](https://github.com/matt-edmondson))
-- Remove obsolete build configuration files and update extension classes with copyright information. ([@matt-edmondson](https://github.com/matt-edmondson))
-- Refactor project files and update DESCRIPTION. Changed project SDK references to ktsu.Sdk.Lib and ktsu.Sdk.Test, and revised DESCRIPTION to clarify the purpose of the library. ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update README to match standard template format ([@matt-edmondson](https://github.com/matt-edmondson))
-- Update packages ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync global.json ([@KtsuTools](https://github.com/KtsuTools))
 
