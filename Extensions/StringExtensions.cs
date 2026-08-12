@@ -2,6 +2,7 @@
 
 namespace ktsu.Extensions;
 
+using System.Text;
 using System.Text.RegularExpressions;
 
 /// <summary>
@@ -208,6 +209,183 @@ public static class StringExtensions
 			LineEndingStyle.Mixed => LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, "\n"), "\n"),
 			_ => throw new NotImplementedException("Unknown line ending style."),
 		};
+	}
+
+	/// <summary>
+	/// Performs a best-effort word wrap on word boundaries, given a wrap width and a nominal glyph width.
+	/// </summary>
+	/// <param name="text">The text to wrap.</param>
+	/// <param name="wrapWidth">The width to wrap at, in the same units as <paramref name="nominalGlyphWidth"/> (for example, pixels).</param>
+	/// <param name="nominalGlyphWidth">The nominal (assumed uniform) width of a single glyph, in the same units as <paramref name="wrapWidth"/>.</param>
+	/// <returns>
+	/// The wrapped lines. Existing line breaks (Unix, Windows, or Mac) are honored as forced breaks and blank lines are
+	/// preserved. Runs of whitespace within a line are collapsed to a single space. A break may also occur after a visible
+	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
+	/// a break lands there and is otherwise removed. Words that still cannot fit are hard-broken as a last resort so that
+	/// no line exceeds the computed width, except that honoring a soft hyphen at a line boundary may add a single
+	/// overhanging character.
+	/// </returns>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="wrapWidth"/> or <paramref name="nominalGlyphWidth"/> is not greater than zero.</exception>
+	public static IEnumerable<string> NominalWordWrap(this string text, float wrapWidth, float nominalGlyphWidth)
+	{
+		Ensure.NotNull(text);
+
+		if (wrapWidth <= 0)
+		{
+			throw new ArgumentOutOfRangeException(nameof(wrapWidth), wrapWidth, "Wrap width must be greater than zero.");
+		}
+
+		if (nominalGlyphWidth <= 0)
+		{
+			throw new ArgumentOutOfRangeException(nameof(nominalGlyphWidth), nominalGlyphWidth, "Nominal glyph width must be greater than zero.");
+		}
+
+		if (text.Length == 0)
+		{
+			return [];
+		}
+
+		int maxCharsPerLine = Math.Max(1, (int)Math.Floor(wrapWidth / nominalGlyphWidth));
+		return NominalWordWrapIterator(text, maxCharsPerLine);
+	}
+
+	/// <summary>
+	/// The Unicode soft hyphen (U+00AD): an invisible break opportunity that renders as a hyphen only when a break lands there.
+	/// </summary>
+	private const char SoftHyphen = '­';
+
+	private static IEnumerable<string> NominalWordWrapIterator(string text, int maxCharsPerLine)
+	{
+		string normalized = text.NormalizeLineEndings(LineEndingStyle.Unix);
+		string[] segments = normalized.Split('\n');
+
+		foreach (string segment in segments)
+		{
+			// A flat list of break-units for the segment: (text, precededBySpace, hyphenWhenBrokenBefore, canBreakBefore).
+			List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> atoms = BuildAtoms(segment);
+			if (atoms.Count == 0)
+			{
+				// Preserve blank/forced-break lines.
+				yield return string.Empty;
+				continue;
+			}
+
+			StringBuilder line = new();
+			foreach ((string atomText, bool glueSpace, bool hyphenBefore, bool canBreak) in atoms)
+			{
+				bool atLineStart = line.Length == 0;
+				int separatorLength = (!atLineStart && glueSpace) ? 1 : 0;
+				int projectedLength = line.Length + separatorLength + atomText.Length;
+
+				if (!atLineStart && projectedLength > maxCharsPerLine && canBreak)
+				{
+					// Break before this atom. A soft-hyphen boundary renders the hyphen on the upper line.
+					if (hyphenBefore)
+					{
+						line.Append('-');
+					}
+
+					yield return line.ToString();
+					line.Clear();
+					atLineStart = true;
+				}
+				else if (!atLineStart)
+				{
+					if (glueSpace)
+					{
+						line.Append(' ');
+					}
+
+					line.Append(atomText);
+					continue;
+				}
+
+				// At the start of a fresh line: place the atom, hard-breaking it if it still cannot fit.
+				string remaining = atomText;
+				while (remaining.Length > maxCharsPerLine)
+				{
+					yield return remaining.Substring(0, maxCharsPerLine);
+					remaining = remaining.Substring(maxCharsPerLine);
+				}
+
+				line.Append(remaining);
+			}
+
+			if (line.Length > 0)
+			{
+				yield return line.ToString();
+			}
+		}
+	}
+
+	private static List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> BuildAtoms(string segment)
+	{
+		List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> atoms = [];
+		string[] words = segment.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+
+		foreach (string word in words)
+		{
+			List<(string Text, bool HyphenBefore)> chunks = ChunkWord(word);
+			for (int c = 0; c < chunks.Count; c++)
+			{
+				bool isFirstAtomOverall = atoms.Count == 0;
+				bool isWordStart = c == 0;
+
+				// (Text, GlueSpace, HyphenBefore, CanBreak) — positional to satisfy the target tuple element names.
+				atoms.Add((
+					chunks[c].Text,
+					isWordStart && !isFirstAtomOverall,
+					chunks[c].HyphenBefore,
+					!isFirstAtomOverall));
+			}
+		}
+
+		return atoms;
+	}
+
+	private static List<(string Text, bool HyphenBefore)> ChunkWord(string word)
+	{
+		// Split a whitespace-delimited word into break-units at hyphenation opportunities:
+		// after a visible hyphen (kept on the left chunk) or at a soft hyphen (removed unless a break lands there).
+		List<(string Text, bool HyphenBefore)> chunks = [];
+		StringBuilder current = new();
+		bool hyphenBefore = false;
+
+		foreach (char ch in word)
+		{
+			if (ch == SoftHyphen)
+			{
+				if (current.Length > 0)
+				{
+					chunks.Add((current.ToString(), hyphenBefore));
+					current.Clear();
+					hyphenBefore = true;
+				}
+				else if (chunks.Count > 0)
+				{
+					// Consecutive soft hyphens: keep marking the next chunk as hyphenated when broken.
+					hyphenBefore = true;
+				}
+
+				continue;
+			}
+
+			current.Append(ch);
+			if (ch == '-')
+			{
+				chunks.Add((current.ToString(), hyphenBefore));
+				current.Clear();
+				hyphenBefore = false;
+			}
+		}
+
+		if (current.Length > 0)
+		{
+			chunks.Add((current.ToString(), hyphenBefore));
+		}
+
+		return chunks;
 	}
 }
 

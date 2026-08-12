@@ -333,5 +333,165 @@ public class StringExtensionsTests
 		string input = "line1\nline2\r\nline3\r";
 		Assert.ThrowsExactly<NotImplementedException>(() => input.NormalizeLineEndings((LineEndingStyle)999));
 	}
+
+	// Tests for NominalWordWrap
+
+	[TestMethod]
+	public void NominalWordWrapWrapsOnWordBoundaries()
+	{
+		// wrapWidth 110 / glyph 10 => 11 chars per line.
+		string input = "hello world foo";
+		List<string> result = [.. input.NominalWordWrap(110f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "hello world", "foo" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapPutsEachWordOnItsOwnLineWhenNarrow()
+	{
+		// wrapWidth 50 / glyph 10 => 5 chars per line.
+		string input = "hello world foo";
+		List<string> result = [.. input.NominalWordWrap(50f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "hello", "world", "foo" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapCollapsesRunsOfWhitespace()
+	{
+		string input = "hello   \t  world";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "hello world" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapHonorsForcedLineBreaks()
+	{
+		string input = "hello\nworld";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "hello", "world" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapPreservesBlankLines()
+	{
+		string input = "hello\n\nworld";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "hello", "", "world" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapHonorsWindowsLineBreaks()
+	{
+		string input = "hello\r\nworld";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "hello", "world" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapHardBreaksWordLongerThanLine()
+	{
+		// wrapWidth 50 / glyph 10 => 5 chars per line.
+		string input = "abcdefgh";
+		List<string> result = [.. input.NominalWordWrap(50f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "abcde", "fgh" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapPacksRemainderOfHardBrokenWordWithFollowingWords()
+	{
+		// wrapWidth 50 / glyph 10 => 5 chars per line.
+		string input = "abcdefgh hi";
+		List<string> result = [.. input.NominalWordWrap(50f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "abcde", "fgh", "hi" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapReturnsEmptySequenceForEmptyInput()
+	{
+		string input = "";
+		List<string> result = [.. input.NominalWordWrap(100f, 10f)];
+		Assert.AreEqual(0, result.Count);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapClampsToAtLeastOneCharacterPerLine()
+	{
+		// wrapWidth 5 / glyph 10 => 0, clamped to 1 char per line.
+		string input = "ab";
+		List<string> result = [.. input.NominalWordWrap(5f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "a", "b" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapThrowsArgumentNullExceptionWhenTextIsNull()
+	{
+		string input = null!;
+		Assert.ThrowsExactly<ArgumentNullException>(() => input.NominalWordWrap(100f, 10f).ToList());
+	}
+
+	[TestMethod]
+	public void NominalWordWrapThrowsArgumentOutOfRangeExceptionWhenWrapWidthNotPositive()
+	{
+		string input = "hello";
+		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => input.NominalWordWrap(0f, 10f).ToList());
+	}
+
+	[TestMethod]
+	public void NominalWordWrapThrowsArgumentOutOfRangeExceptionWhenGlyphWidthNotPositive()
+	{
+		string input = "hello";
+		Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => input.NominalWordWrap(100f, 0f).ToList());
+	}
+
+	[TestMethod]
+	public void NominalWordWrapBreaksAfterVisibleHyphen()
+	{
+		// wrapWidth 50 / glyph 10 => 5 chars per line.
+		string input = "foo-bar-baz";
+		List<string> result = [.. input.NominalWordWrap(50f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foo-", "bar-", "baz" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapKeepsVisibleHyphenWhenNotBroken()
+	{
+		string input = "foo-bar";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foo-bar" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapPrefersHyphenBoundaryOverHardBreak()
+	{
+		// wrapWidth 80 / glyph 10 => 8 chars per line; each hyphen chunk fits, so no hard break.
+		string input = "foobar-bazqux";
+		List<string> result = [.. input.NominalWordWrap(80f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foobar-", "bazqux" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapDoesNotBreakOnUnderscores()
+	{
+		// wrapWidth 50 / glyph 10 => 5 chars per line; underscores are not break points, so the word is hard-broken.
+		string input = "foo_bar_baz";
+		List<string> result = [.. input.NominalWordWrap(50f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foo_b", "ar_ba", "z" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapStripsSoftHyphenWhenNotBroken()
+	{
+		string input = "foo­bar";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foobar" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapRendersSoftHyphenWhenBroken()
+	{
+		// wrapWidth 60 / glyph 10 => 6 chars per line; break lands at the soft hyphen.
+		string input = "AAAAA­BBBBB";
+		List<string> result = [.. input.NominalWordWrap(60f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "AAAAA-", "BBBBB" }, result);
+	}
 }
 

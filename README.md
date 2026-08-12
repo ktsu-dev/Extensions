@@ -36,6 +36,7 @@
   - Prefix/suffix manipulation (`RemoveSuffix`, `RemovePrefix`)
   - `ReplaceOrdinal`: Replaces text using ordinal comparison
   - Line ending utilities (`DetermineLineEndings`, `NormalizeLineEndings`)
+  - `NominalWordWrap`: Best-effort word wrapping on word and hyphen boundaries for a given wrap width and nominal glyph width
 
 - **Reflection Extensions**
   - `TryFindMethod`: Searches for methods across inheritance hierarchies
@@ -112,6 +113,16 @@ string withoutSuffix = text.RemoveSuffix("!");        // "Hello, World"
 string mixedText = "Line1\r\nLine2\nLine3";
 var lineEndingStyle = mixedText.DetermineLineEndings();  // LineEndingStyle.Mixed
 string normalized = mixedText.NormalizeLineEndings(LineEndingStyle.Unix);  // All \n
+
+// Best-effort word wrap. Line length is wrapWidth / nominalGlyphWidth, so with a
+// wrap width of 110 and a nominal glyph width of 10 each line holds up to 11 chars.
+var lines = "the quick brown fox".NominalWordWrap(wrapWidth: 110f, nominalGlyphWidth: 10f);
+// ["the quick", "brown fox"]
+
+// Existing line breaks are honored, whitespace runs collapse, and a break may fall
+// after a hyphen or at a soft hyphen (­ renders as "-" only when it wraps).
+var wrapped = "context-sensitive".NominalWordWrap(wrapWidth: 90f, nominalGlyphWidth: 10f);
+// ["context-", "sensitive"]
 ```
 
 ### Dictionary Extensions
@@ -204,6 +215,7 @@ if (someType.TryFindMethod("MethodName", BindingFlags.Instance | BindingFlags.Pu
 | `ReplaceOrdinal` | Replaces text using ordinal comparison |
 | `DetermineLineEndings` | Identifies line ending style in a string |
 | `NormalizeLineEndings` | Converts line endings to a specific style |
+| `NominalWordWrap` | Best-effort word wrap on word and hyphen boundaries for a wrap width and nominal glyph width |
 
 ### Collection Extensions
 
