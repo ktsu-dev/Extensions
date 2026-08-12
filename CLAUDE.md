@@ -35,7 +35,7 @@ dotnet pack --configuration Release --output ./staging
 The library is organized by the type being extended:
 
 - **EnumerableExtensions.cs** - `IEnumerable<T>` extensions: `WithIndex()`, `ToCollection()`, `ForEach()`, `AnyNull()`, `Join()`, `ToStringEnumerable()`
-- **StringExtensions.cs** - String extensions: ordinal comparisons (`StartsWithOrdinal`, `EndsWithOrdinal`, `ContainsOrdinal`), prefix/suffix manipulation, line ending normalization
+- **StringExtensions.cs** - String extensions: ordinal comparisons (`StartsWithOrdinal`, `EndsWithOrdinal`, `ContainsOrdinal`), prefix/suffix manipulation, line ending normalization, best-effort word wrapping (`NominalWordWrap`)
 - **CollectionExtensions.cs** - `ICollection<T>` extensions: `AddFrom()`, `ReplaceWith()`
 - **DictionaryExtensions.cs** - Dictionary extensions: `GetOrCreate()`, `AddOrReplace()` with `ConcurrentDictionary` support
 - **ReflectionExtensions.cs** - Reflection extensions: `TryFindMethod()` for inheritance-aware method discovery
