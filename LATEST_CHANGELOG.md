@@ -1,4 +1,6 @@
-## v1.6.1
+## v1.6.2 (patch)
 
-No significant changes detected since v1.6.1.
+Changes since v1.6.1:
+
+- Stop Update SDKs failing when there is nothing to update ([@matt-edmondson](https://github.com/matt-edmondson))
 
