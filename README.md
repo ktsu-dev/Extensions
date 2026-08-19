@@ -2,11 +2,13 @@
 
 > A comprehensive utility library of extension methods for collections, strings, dictionaries, and reflection in .NET.
 
-[![License](https://img.shields.io/github/license/ktsu-dev/Extensions)](https://github.com/ktsu-dev/Extensions/blob/main/LICENSE.md)
-[![NuGet](https://img.shields.io/nuget/v/ktsu.Extensions.svg)](https://www.nuget.org/packages/ktsu.Extensions/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/ktsu.Extensions.svg)](https://www.nuget.org/packages/ktsu.Extensions/)
-[![Build Status](https://github.com/ktsu-dev/Extensions/workflows/build/badge.svg)](https://github.com/ktsu-dev/Extensions/actions)
-[![GitHub Stars](https://img.shields.io/github/stars/ktsu-dev/Extensions?style=social)](https://github.com/ktsu-dev/Extensions/stargazers)
+[![License](https://img.shields.io/github/license/ktsu-dev/Extensions.svg?label=License&logo=nuget)](LICENSE.md)
+[![NuGet Version](https://img.shields.io/nuget/v/ktsu.Extensions?label=Stable&logo=nuget)](https://nuget.org/packages/ktsu.Extensions)
+[![NuGet Version](https://img.shields.io/nuget/vpre/ktsu.Extensions?label=Latest&logo=nuget)](https://nuget.org/packages/ktsu.Extensions)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/ktsu.Extensions?label=Downloads&logo=nuget)](https://nuget.org/packages/ktsu.Extensions)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/ktsu-dev/Extensions?label=Commits&logo=github)](https://github.com/ktsu-dev/Extensions/commits/main)
+[![GitHub contributors](https://img.shields.io/github/contributors/ktsu-dev/Extensions?label=Contributors&logo=github)](https://github.com/ktsu-dev/Extensions/graphs/contributors)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ktsu-dev/Extensions/dotnet.yml?label=Build&logo=github)](https://github.com/ktsu-dev/Extensions/actions)
 
 ## Introduction
 
