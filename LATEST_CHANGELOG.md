@@ -1,6 +1,6 @@
-## v1.6.5 (patch)
+## v1.6.6 (patch)
 
-Changes since v1.6.4:
+Changes since v1.6.5:
 
-- Bump the ktsu group with 9 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Always run CI on pull requests ([@matt-edmondson](https://github.com/matt-edmondson))
 
