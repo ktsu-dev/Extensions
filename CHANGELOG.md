@@ -1,6 +1,8 @@
-## v1.6.8
+## v1.6.9 (patch)
 
-No significant changes detected since v1.6.8.
+Changes since v1.6.8:
+
+- Bump MSTest.Sdk from 4.3.3 to 4.4.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
 ## v1.6.8 (patch)
 
