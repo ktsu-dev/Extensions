@@ -1,6 +1,6 @@
-## v1.6.13 (patch)
+## v1.6.14 (patch)
 
-Changes since v1.6.12:
+Changes since v1.6.13:
 
-- Gate Dependabot auto-merge on CI actually being green ([@Claude](https://github.com/Claude))
+- Bump MSTest.Sdk from 4.4.0 to 4.4.1 ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
