@@ -62,7 +62,9 @@ public static class CollectionExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+		// Materialize first: newItems may be the collection itself or a lazy query over it, which Clear would empty
+		T[] snapshot = [.. newItems];
 		oldItems.Clear();
-		oldItems.AddFrom(newItems);
+		oldItems.AddFrom(snapshot);
 	}
 }
