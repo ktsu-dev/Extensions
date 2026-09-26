@@ -3,7 +3,6 @@
 namespace ktsu.Extensions;
 
 using System.Collections.Concurrent;
-using System.Diagnostics;
 
 /// <summary>
 /// Extension methods for dictionaries.
@@ -93,14 +92,8 @@ public static class DictionaryExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
-		if (dictionary.TryGetValue(key, out TVal? val))
-		{
-			return val;
-		}
-
-		bool result = dictionary.TryAdd(key, defaultValue);
-		Debug.Assert(result);
-		return defaultValue;
+		// GetOrAdd is atomic, so when two callers race on a missing key both get the stored value
+		return dictionary.GetOrAdd(key, defaultValue);
 	}
 
 	/// <summary>

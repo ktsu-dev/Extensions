@@ -66,6 +66,50 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryShouldReturnStoredValueWhenAnotherCallerAddsFirst()
+	{
+		// The comparer adds a rival value for the key the second time it hashes it, which is the
+		// moment between a lookup that missed and the add that follows it
+		RacingComparer comparer = new();
+		ConcurrentDictionary<string, List<int>> dictionary = new(comparer);
+		List<int> rival = [];
+		comparer.OnSecondHash = () => dictionary.TryAdd("key1", rival);
+
+		List<int> result = dictionary.GetOrCreate("key1", []);
+
+		Assert.AreSame(dictionary["key1"], result);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryShouldReturnSameInstanceToParallelCallers()
+	{
+		ConcurrentDictionary<string, ConcurrentBag<int>> dictionary = new();
+
+		Parallel.For(0, 1000, i => dictionary.GetOrCreate("key1", []).Add(i));
+
+		Assert.HasCount(1000, dictionary["key1"]);
+	}
+
+	private sealed class RacingComparer : IEqualityComparer<string>
+	{
+		private int hashCount;
+
+		public Action? OnSecondHash { get; set; }
+
+		public bool Equals(string? x, string? y) => string.Equals(x, y, StringComparison.Ordinal);
+
+		public int GetHashCode(string obj)
+		{
+			if (++hashCount == 2)
+			{
+				OnSecondHash?.Invoke();
+			}
+
+			return StringComparer.Ordinal.GetHashCode(obj);
+		}
+	}
+
+	[TestMethod]
 	public void GetOrCreateShouldThrowArgumentNullExceptionWhenDictionaryIsNull()
 	{
 		Dictionary<string, int>? dictionary = null!;
