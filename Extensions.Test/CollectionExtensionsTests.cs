@@ -239,4 +239,24 @@ public class CollectionExtensionsTests
 
 		CollectionAssert.AreEqual(new List<string?> { "x", null, "z" }, collection);
 	}
+
+	[TestMethod]
+	public void ReplaceWithLazyQueryOverSameCollectionKeepsMatchingItems()
+	{
+		List<int> collection = [1, 2, 3, 4];
+
+		collection.ReplaceWith(collection.Where(x => x > 2));
+
+		CollectionAssert.AreEqual(new List<int> { 3, 4 }, collection);
+	}
+
+	[TestMethod]
+	public void ReplaceWithSameCollectionKeepsItems()
+	{
+		List<int> collection = [1, 2, 3];
+
+		collection.ReplaceWith(collection);
+
+		CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, collection);
+	}
 }
