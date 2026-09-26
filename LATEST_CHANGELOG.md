@@ -1,4 +1,7 @@
-## v1.6.18
+## v1.6.19 (patch)
 
-No significant changes detected since v1.6.18.
+Changes since v1.6.18:
+
+- fix: read ReplaceWith's new items before clearing the collection [patch] ([@Claude](https://github.com/Claude))
+- fix: make the ConcurrentDictionary GetOrCreate overload atomic [patch] ([@Claude](https://github.com/Claude))
 
