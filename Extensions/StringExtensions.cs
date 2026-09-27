@@ -126,6 +126,10 @@ public static class StringExtensions
 	private static Regex LineEndingRegexWindows { get; } = new(@"\r\n", RegexOptions.Compiled);
 	private static Regex LineEndingRegexMac { get; } = new(@"\r(?!\n)", RegexOptions.Compiled);
 
+	// One pass over every kind of line ending. Normalizing in several passes lets an earlier pass
+	// build a sequence the next one reads differently: turning "\r\n\n" into "\r\n" by way of "\r\n".
+	private static Regex AnyLineEndingRegex { get; } = new(@"\r\n|\r|\n", RegexOptions.Compiled);
+
 	/// <summary>
 	/// Determines the line ending style of the specified string.
 	/// </summary>
@@ -202,11 +206,11 @@ public static class StringExtensions
 
 		return style switch
 		{
-			LineEndingStyle.None => LineEndingRegexUnix.Replace(LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, ""), ""), ""),
-			LineEndingStyle.Unix => LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, "\n"), "\n"),
-			LineEndingStyle.Windows => LineEndingRegexUnix.Replace(LineEndingRegexMac.Replace(s, "\r\n"), "\r\n"),
-			LineEndingStyle.Mac => LineEndingRegexUnix.Replace(LineEndingRegexWindows.Replace(s, "\r"), "\r"),
-			LineEndingStyle.Mixed => LineEndingRegexWindows.Replace(LineEndingRegexMac.Replace(s, "\n"), "\n"),
+			LineEndingStyle.None => AnyLineEndingRegex.Replace(s, ""),
+			LineEndingStyle.Unix => AnyLineEndingRegex.Replace(s, "\n"),
+			LineEndingStyle.Windows => AnyLineEndingRegex.Replace(s, "\r\n"),
+			LineEndingStyle.Mac => AnyLineEndingRegex.Replace(s, "\r"),
+			LineEndingStyle.Mixed => AnyLineEndingRegex.Replace(s, "\n"),
 			_ => throw new NotImplementedException("Unknown line ending style."),
 		};
 	}
