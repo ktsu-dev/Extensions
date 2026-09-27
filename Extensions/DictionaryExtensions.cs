@@ -67,6 +67,35 @@ public static class DictionaryExtensions
 	/// <typeparam name="TVal">The type of the values in the dictionary.</typeparam>
 	/// <param name="dictionary">The dictionary to get the value from.</param>
 	/// <param name="key">The key to get the value for.</param>
+	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
+	public static TVal GetOrCreate<TKey, TVal>(this ConcurrentDictionary<TKey, TVal> dictionary, TKey key) where TKey : notnull where TVal : new()
+	{
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
+		if (dictionary is null)
+		{
+			throw new ArgumentNullException(nameof(dictionary), "The dictionary cannot be null.");
+		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
+
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
+		if (key is null)
+		{
+			throw new ArgumentNullException(nameof(key), "The key cannot be null.");
+		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
+
+		// Without this overload the call binds to the IDictionary one, whose lookup-then-Add throws
+		// when another caller adds the key in between. GetOrAdd is atomic.
+		return dictionary.GetOrAdd(key, _ => new TVal());
+	}
+
+	/// <summary>
+	/// Method that gets a value from a dictionary if it exists, otherwise creates a new value and adds it to the dictionary.
+	/// </summary>
+	/// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
+	/// <typeparam name="TVal">The type of the values in the dictionary.</typeparam>
+	/// <param name="dictionary">The dictionary to get the value from.</param>
+	/// <param name="key">The key to get the value for.</param>
 	/// <param name="defaultValue">The default value to add when an existing value is not found.</param>
 	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
 	public static TVal GetOrCreate<TKey, TVal>(this ConcurrentDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull where TVal : new()

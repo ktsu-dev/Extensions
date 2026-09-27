@@ -90,6 +90,31 @@ public class DictionaryExtensionsTests
 		Assert.HasCount(1000, dictionary["key1"]);
 	}
 
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithoutDefaultShouldReturnStoredValueWhenAnotherCallerAddsFirst()
+	{
+		// The comparer adds a rival value for the key the second time it hashes it, which is the
+		// moment between a lookup that missed and the add that follows it
+		RacingComparer comparer = new();
+		ConcurrentDictionary<string, List<int>> dictionary = new(comparer);
+		List<int> rival = [];
+		comparer.OnSecondHash = () => dictionary.TryAdd("key1", rival);
+
+		List<int> result = dictionary.GetOrCreate("key1");
+
+		Assert.AreSame(dictionary["key1"], result);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithoutDefaultShouldReturnSameInstanceToParallelCallers()
+	{
+		ConcurrentDictionary<string, ConcurrentBag<int>> dictionary = new();
+
+		Parallel.For(0, 1000, i => dictionary.GetOrCreate("key1").Add(i));
+
+		Assert.HasCount(1000, dictionary["key1"]);
+	}
+
 	private sealed class RacingComparer : IEqualityComparer<string>
 	{
 		private int hashCount;
@@ -121,6 +146,22 @@ public class DictionaryExtensionsTests
 	public void GetOrCreateShouldThrowArgumentNullExceptionWhenKeyIsNull()
 	{
 		Dictionary<string, int> dictionary = [];
+
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate(null!));
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithoutDefaultShouldThrowArgumentNullExceptionWhenDictionaryIsNull()
+	{
+		ConcurrentDictionary<string, int>? dictionary = null!;
+
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate("key1"));
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithoutDefaultShouldThrowArgumentNullExceptionWhenKeyIsNull()
+	{
+		ConcurrentDictionary<string, int> dictionary = new();
 
 		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate(null!));
 	}
