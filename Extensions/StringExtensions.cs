@@ -127,8 +127,8 @@ public static class StringExtensions
 	private static Regex LineEndingRegexMac { get; } = new(@"\r(?!\n)", RegexOptions.Compiled);
 
 	// One pass over every kind of line ending. Normalizing in several passes lets an earlier pass
-	// build a sequence the next one reads differently: turning "\r\n\n" into "\r\n" by way of "\r\n".
-	private static Regex AnyLineEndingRegex { get; } = new(@"\r\n|\r|\n", RegexOptions.Compiled);
+	// build a sequence the next one reads differently: under Mac, "\r\n\n" became "\r" + "\n", a new CRLF.
+	private static Regex AnyLineEndingRegex { get; } = new(@"\r\n|\r|\n", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
 
 	/// <summary>
 	/// Determines the line ending style of the specified string.
