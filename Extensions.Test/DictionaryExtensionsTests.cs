@@ -151,6 +151,22 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithoutDefaultShouldThrowArgumentNullExceptionWhenDictionaryIsNull()
+	{
+		ConcurrentDictionary<string, int>? dictionary = null!;
+
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate("key1"));
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithoutDefaultShouldThrowArgumentNullExceptionWhenKeyIsNull()
+	{
+		ConcurrentDictionary<string, int> dictionary = new();
+
+		Assert.ThrowsExactly<ArgumentNullException>(() => dictionary.GetOrCreate(null!));
+	}
+
+	[TestMethod]
 	public void GetOrCreateShouldThrowArgumentNullExceptionWhenDefaultValueIsNull()
 	{
 		Dictionary<string, DictionaryExtensionsTests> dictionary = [];
