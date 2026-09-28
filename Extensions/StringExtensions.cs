@@ -227,7 +227,8 @@ public static class StringExtensions
 	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
 	/// a break lands there and is otherwise removed. Words that still cannot fit are hard-broken as a last resort so that
 	/// no line exceeds the computed width, except that honoring a soft hyphen at a line boundary may add a single
-	/// overhanging character.
+	/// overhanging character. A hard break never splits a surrogate pair, so at a width of one character a line may
+	/// hold a whole pair (two UTF-16 code units).
 	/// </returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
 	/// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="wrapWidth"/> or <paramref name="nominalGlyphWidth"/> is not greater than zero.</exception>
@@ -309,8 +310,15 @@ public static class StringExtensions
 				string remaining = atomText;
 				while (remaining.Length > maxCharsPerLine)
 				{
-					yield return remaining.Substring(0, maxCharsPerLine);
-					remaining = remaining.Substring(maxCharsPerLine);
+					int cut = maxCharsPerLine;
+					if (char.IsHighSurrogate(remaining[cut - 1]) && char.IsLowSurrogate(remaining[cut]))
+					{
+						// Never split a surrogate pair. At a width of one, let the pair overhang instead.
+						cut = cut > 1 ? cut - 1 : 2;
+					}
+
+					yield return remaining.Substring(0, cut);
+					remaining = remaining.Substring(cut);
 				}
 
 				line.Append(remaining);
