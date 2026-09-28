@@ -304,6 +304,34 @@ public class StringExtensionsTests
 		Assert.AreEqual(expected, result);
 	}
 
+	// A CRLF followed by an LF, and a CR followed by a CRLF, are two line breaks each. Normalizing in
+	// several passes used to merge the first into a new CRLF under Mac, losing a break and leaving a
+	// Windows ending in Mac output.
+
+	[TestMethod]
+	[DataRow("a\r\n\nb", LineEndingStyle.Unix, "a\n\nb")]
+	[DataRow("a\r\n\nb", LineEndingStyle.Windows, "a\r\n\r\nb")]
+	[DataRow("a\r\n\nb", LineEndingStyle.Mac, "a\r\rb")]
+	[DataRow("a\r\n\nb", LineEndingStyle.None, "ab")]
+	[DataRow("a\r\n\nb", LineEndingStyle.Mixed, "a\n\nb")]
+	[DataRow("a\r\r\nb", LineEndingStyle.Unix, "a\n\nb")]
+	[DataRow("a\r\r\nb", LineEndingStyle.Windows, "a\r\n\r\nb")]
+	[DataRow("a\r\r\nb", LineEndingStyle.Mac, "a\r\rb")]
+	[DataRow("a\r\r\nb", LineEndingStyle.None, "ab")]
+	[DataRow("a\r\r\nb", LineEndingStyle.Mixed, "a\n\nb")]
+	public void NormalizeLineEndingsKeepsEveryBreakOfAdjacentMixedEndings(string input, LineEndingStyle style, string expected) =>
+		Assert.AreEqual(expected, input.NormalizeLineEndings(style));
+
+	[TestMethod]
+	[DataRow(LineEndingStyle.Unix)]
+	[DataRow(LineEndingStyle.Windows)]
+	[DataRow(LineEndingStyle.Mac)]
+	public void NormalizeLineEndingsOfAdjacentMixedEndingsIsDetectedAsTheTargetStyle(LineEndingStyle style)
+	{
+		Assert.AreEqual(style, "a\r\n\nb".NormalizeLineEndings(style).DetermineLineEndings());
+		Assert.AreEqual(style, "a\r\r\nb".NormalizeLineEndings(style).DetermineLineEndings());
+	}
+
 	[TestMethod]
 	public void NormalizeLineEndingsToMixed()
 	{
