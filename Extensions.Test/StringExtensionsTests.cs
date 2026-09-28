@@ -493,7 +493,7 @@ public class StringExtensionsTests
 	{
 		string input = "hello world foo\nbar baz";
 		List<string> result = [.. input.NominalWordWrap(wrapWidth, nominalGlyphWidth)];
-		CollectionAssert.AreEqual(new List<string> { "hello world foo", "bar baz" }, result);
+		Assert.AreSequenceEqual(new List<string> { "hello world foo", "bar baz" }, result);
 	}
 
 	[TestMethod]
