@@ -471,6 +471,32 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	public void NominalWordWrapThrowsArgumentOutOfRangeExceptionWhenWrapWidthIsNaN()
+	{
+		string input = "hello world foo";
+		ArgumentOutOfRangeException exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => input.NominalWordWrap(float.NaN, 1f).ToList());
+		Assert.AreEqual("wrapWidth", exception.ParamName);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapThrowsArgumentOutOfRangeExceptionWhenGlyphWidthIsNaN()
+	{
+		string input = "hello world foo";
+		ArgumentOutOfRangeException exception = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => input.NominalWordWrap(10f, float.NaN).ToList());
+		Assert.AreEqual("nominalGlyphWidth", exception.ParamName);
+	}
+
+	[TestMethod]
+	[DataRow(float.PositiveInfinity, 1f)]
+	[DataRow(float.MaxValue, float.Epsilon)]
+	public void NominalWordWrapKeepsEachLineWholeWhenWidthRatioIsUnbounded(float wrapWidth, float nominalGlyphWidth)
+	{
+		string input = "hello world foo\nbar baz";
+		List<string> result = [.. input.NominalWordWrap(wrapWidth, nominalGlyphWidth)];
+		CollectionAssert.AreEqual(new List<string> { "hello world foo", "bar baz" }, result);
+	}
+
+	[TestMethod]
 	public void NominalWordWrapBreaksAfterVisibleHyphen()
 	{
 		// wrapWidth 50 / glyph 10 => 5 chars per line.

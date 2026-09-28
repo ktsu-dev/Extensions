@@ -235,12 +235,13 @@ public static class StringExtensions
 	{
 		Ensure.NotNull(text);
 
-		if (wrapWidth <= 0)
+		// NaN fails every comparison, so it has to be rejected explicitly.
+		if (float.IsNaN(wrapWidth) || wrapWidth <= 0)
 		{
 			throw new ArgumentOutOfRangeException(nameof(wrapWidth), wrapWidth, "Wrap width must be greater than zero.");
 		}
 
-		if (nominalGlyphWidth <= 0)
+		if (float.IsNaN(nominalGlyphWidth) || nominalGlyphWidth <= 0)
 		{
 			throw new ArgumentOutOfRangeException(nameof(nominalGlyphWidth), nominalGlyphWidth, "Nominal glyph width must be greater than zero.");
 		}
@@ -250,7 +251,10 @@ public static class StringExtensions
 			return [];
 		}
 
-		int maxCharsPerLine = Math.Max(1, (int)Math.Floor(wrapWidth / nominalGlyphWidth));
+		// Clamp before casting: float-to-int conversion does not saturate before .NET 9, so an infinite or huge ratio
+		// would otherwise become int.MinValue and wrap one character per line.
+		double ratio = Math.Floor((double)wrapWidth / nominalGlyphWidth);
+		int maxCharsPerLine = ratio >= int.MaxValue ? int.MaxValue : Math.Max(1, (int)ratio);
 		return NominalWordWrapIterator(text, maxCharsPerLine);
 	}
 
