@@ -28,7 +28,7 @@ public static class DictionaryExtensions
 	/// <param name="key">The key to get the value for.</param>
 	/// <param name="defaultValue">The default value to add when an existing value is not found.</param>
 	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
-	public static TVal GetOrCreate<TKey, TVal>(this IDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull where TVal : notnull, new()
+	public static TVal GetOrCreate<TKey, TVal>(this IDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull where TVal : notnull
 	{
 #pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (dictionary is null)
@@ -98,7 +98,7 @@ public static class DictionaryExtensions
 	/// <param name="key">The key to get the value for.</param>
 	/// <param name="defaultValue">The default value to add when an existing value is not found.</param>
 	/// <returns>The value for the key if it exists, otherwise a new value.</returns>
-	public static TVal GetOrCreate<TKey, TVal>(this ConcurrentDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull where TVal : new()
+	public static TVal GetOrCreate<TKey, TVal>(this ConcurrentDictionary<TKey, TVal> dictionary, TKey key, TVal defaultValue) where TKey : notnull
 	{
 #pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
 		if (dictionary is null)

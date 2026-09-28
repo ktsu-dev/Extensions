@@ -42,6 +42,52 @@ public class DictionaryExtensionsTests
 		Assert.AreEqual(99, dictionary["key1"]);
 	}
 
+	// The overloads that take a default value never construct one, so they must not demand a
+	// parameterless constructor. Strings and interfaces have none, and these tests would not compile
+	// if the constraint came back.
+
+	[TestMethod]
+	public void GetOrCreateWithDefaultShouldAcceptAStringValue()
+	{
+		Dictionary<int, string> dictionary = [];
+
+		Assert.AreEqual("one", dictionary.GetOrCreate(1, "one"));
+		Assert.AreEqual("one", dictionary.GetOrCreate(1, "uno"));
+		Assert.HasCount(1, dictionary);
+	}
+
+	[TestMethod]
+	public void GetOrCreateWithDefaultShouldAcceptAnInterfaceValue()
+	{
+		Dictionary<int, IList<int>> dictionary = [];
+		List<int> first = [1];
+
+		Assert.AreSame(first, dictionary.GetOrCreate(1, first));
+		Assert.AreSame(first, dictionary.GetOrCreate(1, []));
+		Assert.HasCount(1, dictionary);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithDefaultShouldAcceptAStringValue()
+	{
+		ConcurrentDictionary<int, string> dictionary = new();
+
+		Assert.AreEqual("one", dictionary.GetOrCreate(1, "one"));
+		Assert.AreEqual("one", dictionary.GetOrCreate(1, "uno"));
+		Assert.HasCount(1, dictionary);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryWithDefaultShouldAcceptAnInterfaceValue()
+	{
+		ConcurrentDictionary<int, IList<int>> dictionary = new();
+		List<int> first = [1];
+
+		Assert.AreSame(first, dictionary.GetOrCreate(1, first));
+		Assert.AreSame(first, dictionary.GetOrCreate(1, []));
+		Assert.HasCount(1, dictionary);
+	}
+
 	[TestMethod]
 	public void GetOrCreateConcurrentDictionaryShouldReturnExistingValue()
 	{
