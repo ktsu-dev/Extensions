@@ -1,6 +1,10 @@
-## v1.7.0
+## v1.8.0 (minor)
 
-No significant changes detected since v1.7.0.
+Changes since v1.7.0:
+
+- Give the single-pass line ending regex a match timeout ([@Claude](https://github.com/Claude))
+- Normalize line endings in one pass, so Mac keeps every break ([@Claude](https://github.com/Claude))
+- Drop the unused new() constraint from GetOrCreate(key, defaultValue) ([@Claude](https://github.com/Claude))
 
 ## v1.7.0 (minor)
 
