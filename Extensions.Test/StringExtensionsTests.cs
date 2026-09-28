@@ -454,17 +454,17 @@ public class StringExtensionsTests
 	{
 		// Each 😀 is a surrogate pair: two UTF-16 code units.
 		List<string> emoji = [.. "😀😀😀".NominalWordWrap(3f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "😀", "😀", "😀" }, emoji);
+		Assert.AreSequenceEqual(new List<string> { "😀", "😀", "😀" }, emoji);
 
 		List<string> mixed = [.. "ab😀cd".NominalWordWrap(3f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "ab", "😀c", "d" }, mixed);
+		Assert.AreSequenceEqual(new List<string> { "ab", "😀c", "d" }, mixed);
 	}
 
 	[TestMethod]
 	public void NominalWordWrapLetsASurrogatePairOverhangAtWidthOne()
 	{
 		List<string> result = [.. "a😀b".NominalWordWrap(1f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "a", "😀", "b" }, result);
+		Assert.AreSequenceEqual(new List<string> { "a", "😀", "b" }, result);
 	}
 
 	[TestMethod]
