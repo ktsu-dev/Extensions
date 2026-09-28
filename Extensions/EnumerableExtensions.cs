@@ -259,6 +259,13 @@ public static class EnumerableExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+#pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
+		if (separator is null)
+		{
+			throw new ArgumentNullException(nameof(separator), "Separator cannot be null.");
+		}
+#pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
+
 		if (nullItemHandling is NullItemHandling.Throw)
 		{
 			if (items.AnyNull())
