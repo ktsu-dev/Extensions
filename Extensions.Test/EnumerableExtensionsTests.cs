@@ -341,6 +341,21 @@ public class EnumerableExtensionsTests
 	}
 
 	[TestMethod]
+	[DataRow(NullItemHandling.Remove)]
+	[DataRow(NullItemHandling.Include)]
+	[DataRow(NullItemHandling.Throw)]
+	public void JoinWithNullItemHandlingThrowsArgumentNullExceptionWhenSeparatorIsNull(NullItemHandling nullItemHandling)
+	{
+		// Arrange
+		List<string> items = ["a", "b", "c"];
+		string separator = null!;
+
+		// Act & Assert
+		ArgumentNullException exception = Assert.ThrowsExactly<ArgumentNullException>(() => items.Join(separator, nullItemHandling));
+		Assert.AreEqual("separator", exception.ParamName);
+	}
+
+	[TestMethod]
 	public void JoinWithNullItemHandlingRemoveRemovesNullItems()
 	{
 		// Arrange
