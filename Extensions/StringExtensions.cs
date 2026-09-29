@@ -378,9 +378,11 @@ public static class StringExtensions
 					current.Clear();
 					hyphenBefore = true;
 				}
-				else if (chunks.Count > 0)
+				else if (chunks.Count > 0 && chunks[^1].Text[^1] != '-')
 				{
 					// Consecutive soft hyphens: keep marking the next chunk as hyphenated when broken.
+					// A soft hyphen straight after a visible hyphen adds nothing: the visible hyphen already
+					// ends the previous chunk, so a break there must not render a second one.
 					hyphenBefore = true;
 				}
 

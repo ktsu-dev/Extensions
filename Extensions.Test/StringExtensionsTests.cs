@@ -565,5 +565,29 @@ public class StringExtensionsTests
 		List<string> result = [.. input.NominalWordWrap(60f, 10f)];
 		CollectionAssert.AreEqual(new List<string> { "AAAAA-", "BBBBB" }, result);
 	}
-}
 
+	[TestMethod]
+	public void NominalWordWrapDoesNotDoubleAVisibleHyphenFollowedByASoftHyphen()
+	{
+		// 5 chars per line; the break lands after "well-", where a soft hyphen follows the visible one.
+		string input = "well-\u00ADknown";
+		List<string> result = [.. input.NominalWordWrap(5f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "well-", "known" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapDoesNotDoubleAVisibleHyphenFollowedBySeveralSoftHyphens()
+	{
+		string input = "well-\u00AD\u00ADknown";
+		List<string> result = [.. input.NominalWordWrap(5f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "well-", "known" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapKeepsAVisibleHyphenFollowedByASoftHyphenOnOneLineWhenItFits()
+	{
+		string input = "well-\u00ADknown";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "well-known" }, result);
+	}
+}
