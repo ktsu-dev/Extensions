@@ -1,3 +1,13 @@
+## v1.8.1 (patch)
+
+Changes since v1.8.0:
+
+- test: use Assert.AreSequenceEqual in the surrogate-pair wrap tests (MSTEST0068) ([@Claude](https://github.com/Claude))
+- test: use Assert.AreSequenceEqual in the unbounded-ratio wrap test (MSTEST0068) ([@Claude](https://github.com/Claude))
+- fix: keep surrogate pairs whole when NominalWordWrap hard-breaks a word [patch] ([@Claude](https://github.com/Claude))
+- fix: reject NaN widths in NominalWordWrap and clamp an unbounded width ratio [patch] ([@Claude](https://github.com/Claude))
+- fix: make Join(items, separator, nullItemHandling) reject a null separator [patch] ([@Claude](https://github.com/Claude))
+
 ## v1.8.0 (minor)
 
 Changes since v1.7.0:
@@ -24,8 +34,10 @@ Changes since v1.6.0:
 - docs: correct README, DESCRIPTION and TAGS metadata ([@matt-edmondson](https://github.com/matt-edmondson))
 - Stop Update SDKs failing when there is nothing to update ([@matt-edmondson](https://github.com/matt-edmondson))
 - Fix build errors from ktsu.Sdk analyzer update [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .editorconfig ([@KtsuTools](https://github.com/KtsuTools))
 - Sync global.json ([@KtsuTools](https://github.com/KtsuTools))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 
 ## v1.6.19 (patch)
 
@@ -145,8 +157,10 @@ Changes since v1.6.1:
 Changes since v1.6.0:
 
 - Fix build errors from ktsu.Sdk analyzer update [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - Sync .editorconfig ([@KtsuTools](https://github.com/KtsuTools))
 - Sync global.json ([@KtsuTools](https://github.com/KtsuTools))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 
 ## v1.6.0 (minor)
 
@@ -156,8 +170,10 @@ Changes since v1.5.0:
 - chore: update ktsu.Sdk to 2.21.1 [patch] ([@matt-edmondson](https://github.com/matt-edmondson))
 - chore: remove unused SourceLink package versions ([@matt-edmondson](https://github.com/matt-edmondson))
 - chore: remove unused SourceLink package references ([@matt-edmondson](https://github.com/matt-edmondson))
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 - Remove legacy build scripts ([@matt-edmondson](https://github.com/matt-edmondson))
 - Add null checks to collection and dictionary extension methods ([@matt-edmondson](https://github.com/matt-edmondson))
+- Remove .github\workflows\project.yml ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update package version for Polyfill and enhance test assertions with descriptive messages ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update README.md to remove cloning references and enhance extension method descriptions ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update package references and improve test assertions ([@matt-edmondson](https://github.com/matt-edmondson))
@@ -320,31 +336,13 @@ Changes since v1.5.15:
 
 Changes since v1.5.14:
 
-- Sync .github\workflows\update-sdks.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .github\dependabot.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync .gitattributes ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
-- Bump Polyfill from 10.8.0 to 10.8.1 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the ktsu group with 3 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 10.7.0 to 10.8.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 10.6.0 to 10.7.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 10.5.1 to 10.6.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump MSTest.Sdk from 4.2.2 to 4.2.3 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the microsoft group with 2 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 10.5.0 to 10.5.1 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 10.4.0 to 10.5.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 10.3.0 to 10.4.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump Polyfill from 9.7.6 to 10.3.0 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump MSTest.Sdk from 4.1.0 to 4.2.2 ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the system group with 2 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
-- Bump the microsoft group with 2 updates ([@dependabot[bot]](https://github.com/dependabot[bot]))
 - Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 
 ## v1.5.15-pre.1 (prerelease)
 
-No significant changes detected since v1.5.15.
+Changes since v1.5.14:
+
+- Sync .github\workflows\dotnet.yml ([@KtsuTools](https://github.com/KtsuTools))
 
 ## v1.5.14 (patch)
 
@@ -358,7 +356,11 @@ Changes since v1.5.13:
 
 ## v1.5.14-pre.1 (prerelease)
 
-No significant changes detected since v1.5.14.
+Changes since v1.5.13:
+
+- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.13 (patch)
 
@@ -399,7 +401,12 @@ Changes since v1.5.12-pre.1:
 
 ## v1.5.12-pre.1 (prerelease)
 
-No significant changes detected since v1.5.12.
+Changes since v1.5.11:
+
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync global.json ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.11 (patch)
 
@@ -411,6 +418,7 @@ Changes since v1.5.10:
 
 Changes since v1.5.9:
 
+- Remove .github\workflows\project.yml ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update package version for Polyfill and enhance test assertions with descriptive messages ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.5.10-pre.2 (prerelease)
@@ -421,7 +429,10 @@ Changes since v1.5.10-pre.1:
 
 ## v1.5.10-pre.1 (prerelease)
 
-No significant changes detected since v1.5.10.
+Changes since v1.5.9:
+
+- Merge remote-tracking branch 'refs/remotes/origin/main' ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync scripts\update-winget-manifests.ps1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.9 (patch)
 
@@ -445,7 +456,10 @@ Changes since v1.5.9-pre.1:
 
 ## v1.5.9-pre.1 (prerelease)
 
-No significant changes detected since v1.5.9.
+Changes since v1.5.8:
+
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.8 (patch)
 
@@ -481,7 +495,14 @@ Changes since v1.5.6-pre.1:
 
 ## v1.5.6-pre.1 (prerelease)
 
-No significant changes detected since v1.5.6.
+Changes since v1.5.5:
+
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .editorconfig ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .gitattributes ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .gitignore ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .mailmap ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .runsettings ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.5 (patch)
 
@@ -554,7 +575,9 @@ No significant changes detected since v1.5.4-pre.1.
 
 ## v1.5.4-pre.1 (prerelease)
 
-No significant changes detected since v1.5.4.
+Changes since v1.5.3:
+
+- Sync scripts\PSBuild.psm1 ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.3 (patch)
 
@@ -565,7 +588,11 @@ Changes since v1.5.2:
 
 ## v1.5.3-pre.1 (prerelease)
 
-No significant changes detected since v1.5.3.
+Changes since v1.5.2:
+
+- Sync .github\workflows\dotnet.yml ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .editorconfig ([@ktsu[bot]](https://github.com/ktsu[bot]))
+- Sync .runsettings ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.2 (patch)
 
@@ -575,7 +602,9 @@ Changes since v1.5.1:
 
 ## v1.5.2-pre.1 (prerelease)
 
-No significant changes detected since v1.5.2.
+Changes since v1.5.1:
+
+- Sync .editorconfig ([@ktsu[bot]](https://github.com/ktsu[bot]))
 
 ## v1.5.1 (patch)
 
@@ -615,7 +644,9 @@ Changes since v1.4.1-pre.1:
 
 ## v1.4.1-pre.1 (prerelease)
 
-No significant changes detected since v1.4.1.
+Changes since v1.4.0:
+
+- Bump ktsu.StrongStrings from 1.2.26 to 1.3.0 in the ktsu group ([@dependabot[bot]](https://github.com/dependabot[bot]))
 
 ## v1.4.0 (minor)
 
@@ -803,7 +834,7 @@ Changes since v1.3.2-pre.1:
 
 ## v1.3.2-pre.1 (prerelease)
 
-No significant changes detected since v1.3.2.
+No significant changes detected since v1.3.1.
 
 ## v1.3.1 (patch)
 
@@ -876,9 +907,10 @@ Changes since v1.2.9:
 
 ## v1.2.10-pre.1 (prerelease)
 
-Changes since v1.2.10:
+Changes since v1.2.9:
 
 - Renamed metadata files ([@matt-edmondson](https://github.com/matt-edmondson))
+- Replace LICENSE file with LICENSE.md and update copyright information ([@matt-edmondson](https://github.com/matt-edmondson))
 
 ## v1.2.9 (patch)
 
@@ -1193,6 +1225,7 @@ Changes since 1.0.7:
 - Update LICENSE ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update nuget.config ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update nuget.config ([@matt-edmondson](https://github.com/matt-edmondson))
+- Add github package support ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update readme ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update descriptions and readme ([@matt-edmondson](https://github.com/matt-edmondson))
 - Update LICENSE ([@matt-edmondson](https://github.com/matt-edmondson))
