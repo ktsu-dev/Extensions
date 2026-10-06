@@ -191,7 +191,7 @@ public static class EnumerableExtensions
 	/// <param name="items">The enumerable to convert.</param>
 	/// <param name="nullItemHandling">Specifies how to handle null items.</param>
 	/// <returns>An enumerable of strings.</returns>
-	/// <exception cref="InvalidOperationException">Thrown if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
+	/// <exception cref="InvalidOperationException">Thrown while enumerating the result if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
 	public static IEnumerable<string?> ToStringEnumerable<T>(this IEnumerable<T> items, NullItemHandling nullItemHandling)
 	{
 #pragma warning disable KTSU0004 // Use Ensure.NotNull instead of manual null check
@@ -201,16 +201,10 @@ public static class EnumerableExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
-		if (nullItemHandling is NullItemHandling.Throw)
-		{
-			if (items.AnyNull())
-			{
-				throw new InvalidOperationException("The enumerable contains a null item.");
-			}
-		}
-
+		// The argument check above stays eager; the null check happens during the one enumeration the
+		// caller makes, so a single-pass source is not consumed early and a null added later is caught.
 		return items
-			.Select(item => item?.ToString())
+			.Select(item => ThrowIfNullItem(item, nullItemHandling)?.ToString())
 			.Where(item => nullItemHandling is NullItemHandling.Include || item is not null);
 	}
 
@@ -266,14 +260,21 @@ public static class EnumerableExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
-		if (nullItemHandling is NullItemHandling.Throw)
-		{
-			if (items.AnyNull())
-			{
-				throw new InvalidOperationException("The enumerable contains a null item.");
-			}
-		}
-
-		return string.Join(separator, items.Where(item => nullItemHandling is NullItemHandling.Include || item is not null).Select(i => i?.ToString()));
+		return string.Join(separator, items
+			.Select(item => ThrowIfNullItem(item, nullItemHandling))
+			.Where(item => nullItemHandling is NullItemHandling.Include || item is not null)
+			.Select(i => i?.ToString()));
 	}
+
+	/// <summary>
+	/// Returns <paramref name="item"/> unchanged, or throws if it is null and <paramref name="nullItemHandling"/> is <see cref="NullItemHandling.Throw"/>.
+	/// </summary>
+	/// <remarks>
+	/// Checking each item as it is projected keeps the source to a single enumeration, unlike a separate
+	/// <see cref="AnyNull{T}(IEnumerable{T})"/> pass, which consumes a one-shot sequence before it can be read.
+	/// </remarks>
+	private static T ThrowIfNullItem<T>(T item, NullItemHandling nullItemHandling) =>
+		item is null && nullItemHandling is NullItemHandling.Throw
+			? throw new InvalidOperationException("The enumerable contains a null item.")
+			: item;
 }

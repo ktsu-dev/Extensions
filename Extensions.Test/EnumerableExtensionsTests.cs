@@ -4,6 +4,9 @@
 
 namespace ktsu.Extensions.Tests;
 
+using System.Collections.Concurrent;
+using System.Globalization;
+
 [TestClass]
 public class EnumerableExtensionsTests
 {
@@ -392,5 +395,65 @@ public class EnumerableExtensionsTests
 
 		// Act & Assert
 		Assert.ThrowsExactly<InvalidOperationException>(() => items.Join(separator, NullItemHandling.Throw));
+	}
+
+	[TestMethod]
+	public void JoinWithNullItemHandlingThrowReadsAOneShotSequence()
+	{
+		using BlockingCollection<string> items = ["x", "y"];
+		items.CompleteAdding();
+
+		Assert.AreEqual("x,y", items.GetConsumingEnumerable().Join(",", NullItemHandling.Throw));
+	}
+
+	[TestMethod]
+	public void JoinWithNullItemHandlingThrowEnumeratesTheSourceOnce()
+	{
+		int calls = 0;
+		IEnumerable<string> items = Enumerable.Range(0, 3).Select(i =>
+		{
+			calls++;
+			return i.ToString(CultureInfo.InvariantCulture);
+		});
+
+		Assert.AreEqual("0,1,2", items.Join(",", NullItemHandling.Throw));
+		Assert.AreEqual(3, calls);
+	}
+
+	[TestMethod]
+	public void ToStringEnumerableWithNullItemHandlingThrowReadsAOneShotSequence()
+	{
+		using BlockingCollection<string> items = ["x", "y"];
+		items.CompleteAdding();
+
+		CollectionAssert.AreEqual(
+			new List<string?> { "x", "y" },
+			items.GetConsumingEnumerable().ToStringEnumerable(NullItemHandling.Throw).ToList());
+	}
+
+	[TestMethod]
+	public void ToStringEnumerableWithNullItemHandlingThrowEnumeratesTheSourceOnce()
+	{
+		int calls = 0;
+		IEnumerable<int> items = Enumerable.Range(0, 3).Select(i =>
+		{
+			calls++;
+			return i;
+		});
+
+		List<string?> result = [.. items.ToStringEnumerable(NullItemHandling.Throw)];
+
+		Assert.HasCount(3, result);
+		Assert.AreEqual(3, calls);
+	}
+
+	[TestMethod]
+	public void ToStringEnumerableWithNullItemHandlingThrowCatchesANullAddedBeforeEnumeration()
+	{
+		List<string?> items = ["a", "b"];
+		IEnumerable<string?> result = items.ToStringEnumerable(NullItemHandling.Throw);
+		items.Add(null);
+
+		Assert.ThrowsExactly<InvalidOperationException>(() => result.ToList());
 	}
 }
