@@ -590,4 +590,47 @@ public class StringExtensionsTests
 		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
 		CollectionAssert.AreEqual(new List<string> { "well-known" }, result);
 	}
+
+	[TestMethod]
+	public void NominalWordWrapKeepsADoubleHyphenDashTogether()
+	{
+		// 12 chars per line; "It was late-" would fit, but the break must not fall between the two hyphens.
+		string input = "It was late--too late to call";
+		List<string> result = [.. input.NominalWordWrap(12f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "It was", "late--too", "late to call" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapBreaksAfterTheLastHyphenOfARun()
+	{
+		string input = "It was late--too";
+		List<string> result = [.. input.NominalWordWrap(13f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "It was late--", "too" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapDoesNotBreakAfterAWordInitialHyphen()
+	{
+		List<string> number = [.. "ab -5".NominalWordWrap(4f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "ab", "-5" }, number);
+
+		List<string> flag = [.. "Use the --force flag".NominalWordWrap(10f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "Use the", "--force", "flag" }, flag);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapStillBreaksAfterAHyphenThatFollowsALeadingOne()
+	{
+		// "-5-6": the second hyphen has a digit before it, so it is still a break opportunity.
+		List<string> result = [.. "-5-6".NominalWordWrap(3f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "-5-", "6" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapDoesNotAddAHyphenAtASoftHyphenAfterALeadingDash()
+	{
+		// The soft hyphen after "--" is a break opportunity, but the visible dash already ends the upper line.
+		List<string> result = [.. "ab --\u00ADforce".NominalWordWrap(5f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "ab --", "force" }, result);
+	}
 }
