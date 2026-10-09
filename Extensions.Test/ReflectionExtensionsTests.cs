@@ -141,13 +141,90 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
-	public void TryFindMethodThrowsOnAmbiguousMatchForOverloadedMethod()
+	public void TryFindMethodPicksFewestParametersForOverloadedMethod()
 	{
 		Type type = typeof(DerivedClassWithAdditionalMethods);
 		string methodName = "OverloadedMethod";
 		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
 
-		Assert.ThrowsExactly<AmbiguousMatchException>(() => type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo));
+		bool result = type.TryFindMethod(methodName, bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result, "TryFindMethod should return true for an overloaded method name.");
+		Assert.IsNotNull(methodInfo);
+		Assert.IsEmpty(methodInfo.GetParameters());
+	}
+
+	[TestMethod]
+	public void TryFindMethodDoesNotThrowForOverloadedFrameworkMethod()
+	{
+		bool result = typeof(string).TryFindMethod(nameof(string.Split), BindingFlags.Instance | BindingFlags.Public, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result, "TryFindMethod should return true for string.Split.");
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(nameof(string.Split), methodInfo.Name);
+	}
+
+	[TestMethod]
+	public void TryFindMethodFindsOverloadedPrivateMethodInBaseClass()
+	{
+		Type type = typeof(DerivedFromPrivateOverloads);
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+		bool result = type.TryFindMethod("Foo", bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result, "TryFindMethod should return true for an overloaded private method on a base class.");
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(typeof(BaseWithPrivateOverloads), methodInfo.DeclaringType);
+	}
+
+	[TestMethod]
+	public void TryFindMethodResolvesOverloadsTheSameWayEveryTime()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		typeof(string).TryFindMethod(nameof(string.Split), bindingFlags, out MethodInfo? first);
+		typeof(string).TryFindMethod(nameof(string.Split), bindingFlags, out MethodInfo? second);
+
+		Assert.AreEqual(first, second);
+	}
+
+	[TestMethod]
+	public void TryFindMethodFindsMethodInheritedFromBaseInterface()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = typeof(IDerivedInterface).TryFindMethod(nameof(IBaseInterface.BaseOp), bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result, "TryFindMethod should find a method declared on a base interface.");
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(typeof(IBaseInterface), methodInfo.DeclaringType);
+	}
+
+	[TestMethod]
+	public void TryFindMethodFindsMethodTwoInterfaceLevelsUp()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = typeof(IGrandchildInterface).TryFindMethod(nameof(IBaseInterface.BaseOp), bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result, "TryFindMethod should find a method declared two interface levels up.");
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(typeof(IBaseInterface), methodInfo.DeclaringType);
+	}
+
+	[TestMethod]
+	public void TryFindMethodFindsMethodsOnGenericCollectionInterfaces()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		Assert.IsTrue(typeof(IList<int>).TryFindMethod(nameof(IList<>.Add), bindingFlags, out MethodInfo? add));
+		Assert.AreEqual(typeof(ICollection<int>), add?.DeclaringType);
+
+		Assert.IsTrue(typeof(IList<int>).TryFindMethod(nameof(IList<>.GetEnumerator), bindingFlags, out MethodInfo? getEnumerator));
+		Assert.AreEqual(typeof(IEnumerable<int>), getEnumerator?.DeclaringType);
+
+		Assert.IsTrue(typeof(ICollection<int>).TryFindMethod(nameof(ICollection<>.Add), bindingFlags, out MethodInfo? collectionAdd));
+		Assert.AreEqual(typeof(ICollection<int>), collectionAdd?.DeclaringType);
 	}
 
 	[TestMethod]
@@ -193,5 +270,36 @@ public class ReflectionExtensionsTests
 		public void GenericMethod<T>(T param)
 		{
 		}
+	}
+
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Test class")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051:Remove unused private members", Justification = "Test class")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Test class")]
+	public class BaseWithPrivateOverloads
+	{
+		private void Foo(int value)
+		{
+		}
+
+		private void Foo(string value)
+		{
+		}
+	}
+
+	public class DerivedFromPrivateOverloads : BaseWithPrivateOverloads
+	{
+	}
+
+	public interface IBaseInterface
+	{
+		public void BaseOp();
+	}
+
+	public interface IDerivedInterface : IBaseInterface
+	{
+	}
+
+	public interface IGrandchildInterface : IDerivedInterface
+	{
 	}
 }
