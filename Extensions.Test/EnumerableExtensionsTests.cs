@@ -456,4 +456,42 @@ public class EnumerableExtensionsTests
 
 		Assert.ThrowsExactly<InvalidOperationException>(() => result.ToList());
 	}
+
+	private sealed class NullToString
+	{
+		public override string? ToString() => null;
+	}
+
+	[TestMethod]
+	[DataRow(NullItemHandling.Remove)]
+	[DataRow(NullItemHandling.Include)]
+	[DataRow(NullItemHandling.Throw)]
+	public void ToStringEnumerableKeepsAnItemWhoseToStringIsNullAsEmpty(NullItemHandling nullItemHandling)
+	{
+		object[] items = [new NullToString(), "x"];
+
+		List<string?> result = [.. items.ToStringEnumerable(nullItemHandling)];
+
+		CollectionAssert.AreEqual(new List<string?> { string.Empty, "x" }, result);
+	}
+
+	[TestMethod]
+	public void ToStringEnumerableWithoutHandlingKeepsAnItemWhoseToStringIsNullAsEmpty()
+	{
+		object[] items = [new NullToString(), "x"];
+
+		List<string> result = [.. items.ToStringEnumerable()];
+
+		CollectionAssert.AreEqual(new List<string> { string.Empty, "x" }, result);
+	}
+
+	[TestMethod]
+	[DataRow(NullItemHandling.Remove)]
+	[DataRow(NullItemHandling.Include)]
+	public void JoinMatchesToStringEnumerableForTheSameHandling(NullItemHandling nullItemHandling)
+	{
+		object?[] items = [new NullToString(), null, "x"];
+
+		Assert.AreEqual(string.Join(",", items.ToStringEnumerable(nullItemHandling)), items.Join(",", nullItemHandling));
+	}
 }
