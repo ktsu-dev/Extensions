@@ -364,19 +364,25 @@ public static class StringExtensions
 	{
 		// Split a whitespace-delimited word into break-units at hyphenation opportunities:
 		// after a visible hyphen (kept on the left chunk) or at a soft hyphen (removed unless a break lands there).
+		// A visible hyphen is a break opportunity only when it ends its run of hyphens and some other character
+		// comes before it in the word, so "--" stays together and "-5" or "--force" is never split after the dash.
 		List<(string Text, bool HyphenBefore)> chunks = [];
 		StringBuilder current = new();
 		bool hyphenBefore = false;
+		bool seenNonHyphen = false;
 
-		foreach (char ch in word)
+		for (int i = 0; i < word.Length; i++)
 		{
+			char ch = word[i];
 			if (ch == SoftHyphen)
 			{
 				if (current.Length > 0)
 				{
+					// A visible hyphen that did not end the chunk (a leading "--" before a soft hyphen) already shows at a break here.
+					bool endsInHyphen = current[^1] == '-';
 					chunks.Add((current.ToString(), hyphenBefore));
 					current.Clear();
-					hyphenBefore = true;
+					hyphenBefore = !endsInHyphen;
 				}
 				else if (chunks.Count > 0 && chunks[^1].Text[^1] != '-')
 				{
@@ -390,7 +396,11 @@ public static class StringExtensions
 			}
 
 			current.Append(ch);
-			if (ch == '-')
+			if (ch != '-')
+			{
+				seenNonHyphen = true;
+			}
+			else if (seenNonHyphen && (i + 1 >= word.Length || word[i + 1] != '-'))
 			{
 				chunks.Add((current.ToString(), hyphenBefore));
 				current.Clear();
