@@ -190,7 +190,10 @@ public static class EnumerableExtensions
 	/// <typeparam name="T">The type of the items in the enumerable.</typeparam>
 	/// <param name="items">The enumerable to convert.</param>
 	/// <param name="nullItemHandling">Specifies how to handle null items.</param>
-	/// <returns>An enumerable of strings.</returns>
+	/// <returns>
+	/// An enumerable of strings. <paramref name="nullItemHandling"/> applies to null items only; a non-null item whose
+	/// <see cref="object.ToString"/> returns null is always kept, as an empty string.
+	/// </returns>
 	/// <exception cref="InvalidOperationException">Thrown while enumerating the result if <paramref name="nullItemHandling"/> is set to <see cref="NullItemHandling.Throw"/> and the enumerable contains null items.</exception>
 	public static IEnumerable<string?> ToStringEnumerable<T>(this IEnumerable<T> items, NullItemHandling nullItemHandling)
 	{
@@ -203,9 +206,11 @@ public static class EnumerableExtensions
 
 		// The argument check above stays eager; the null check happens during the one enumeration the
 		// caller makes, so a single-pass source is not consumed early and a null added later is caught.
+		// Null handling tests the item, not its string: an item whose ToString() returns null becomes "".
 		return items
-			.Select(item => ThrowIfNullItem(item, nullItemHandling)?.ToString())
-			.Where(item => nullItemHandling is NullItemHandling.Include || item is not null);
+			.Select(item => ThrowIfNullItem(item, nullItemHandling))
+			.Where(item => nullItemHandling is NullItemHandling.Include || item is not null)
+			.Select(item => item is null ? null : item.ToString() ?? string.Empty);
 	}
 
 	/// <summary>
@@ -260,10 +265,7 @@ public static class EnumerableExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
-		return string.Join(separator, items
-			.Select(item => ThrowIfNullItem(item, nullItemHandling))
-			.Where(item => nullItemHandling is NullItemHandling.Include || item is not null)
-			.Select(i => i?.ToString()));
+		return string.Join(separator, items.ToStringEnumerable(nullItemHandling));
 	}
 
 	/// <summary>
