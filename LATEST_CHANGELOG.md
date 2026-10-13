@@ -1,8 +1,7 @@
-## v1.9.3 (patch)
+## v1.9.4 (patch)
 
-Changes since v1.9.2:
+Changes since v1.9.3:
 
-- [patch] Keep items whose ToString() is null in ToStringEnumerable and Join ([@Claude](https://github.com/Claude))
-- [patch] Keep hyphen runs and word-initial hyphens together in NominalWordWrap ([@Claude](https://github.com/Claude))
-- [patch] Resolve overloads in TryFindMethod and search inherited interfaces ([@Claude](https://github.com/Claude))
+- Draw one hyphen where a soft hyphen comes before a visible one [patch] ([@Claude](https://github.com/Claude))
+- Keep no-break spaces inside words in NominalWordWrap [patch] ([@Claude](https://github.com/Claude))
 
