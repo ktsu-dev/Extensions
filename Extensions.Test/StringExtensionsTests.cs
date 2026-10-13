@@ -655,4 +655,19 @@ public class StringExtensionsTests
 		List<string> result = [.. "ab --\u00ADforce".NominalWordWrap(5f, 1f)];
 		CollectionAssert.AreEqual(new List<string> { "ab --", "force" }, result);
 	}
+
+	[TestMethod]
+	public void NominalWordWrapDoesNotBreakAtANoBreakSpace()
+	{
+		// 10 chars per line; "Total: 100 kg" would break before "kg", but U+00A0 keeps the number with its unit.
+		List<string> result = [.. "Total: 100\u00A0kg".NominalWordWrap(10f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "Total:", "100\u00A0kg" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapKeepsNoBreakSpacesUnchanged()
+	{
+		List<string> result = [.. "a\u00A0b c\u2007d e\u202Ff".NominalWordWrap(100f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "a\u00A0b c\u2007d e\u202Ff" }, result);
+	}
 }
