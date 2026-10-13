@@ -223,7 +223,8 @@ public static class StringExtensions
 	/// <param name="nominalGlyphWidth">The nominal (assumed uniform) width of a single glyph, in the same units as <paramref name="wrapWidth"/>.</param>
 	/// <returns>
 	/// The wrapped lines. Existing line breaks (Unix, Windows, or Mac) are honored as forced breaks and blank lines are
-	/// preserved. Runs of whitespace within a line are collapsed to a single space. A break may also occur after a visible
+	/// preserved. Runs of whitespace within a line are collapsed to a single space. The no-break spaces U+00A0, U+2007 and
+	/// U+202F are not break points and are kept unchanged. A break may also occur after a visible
 	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
 	/// a break lands there and is otherwise removed. Words that still cannot fit are hard-broken as a last resort so that
 	/// no line exceeds the computed width, except that honoring a soft hyphen at a line boundary may add a single
@@ -338,9 +339,7 @@ public static class StringExtensions
 	private static List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> BuildAtoms(string segment)
 	{
 		List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> atoms = [];
-		string[] words = segment.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
-
-		foreach (string word in words)
+		foreach (string word in SplitAtBreakingWhiteSpace(segment))
 		{
 			List<(string Text, bool HyphenBefore)> chunks = ChunkWord(word);
 			for (int c = 0; c < chunks.Count; c++)
@@ -358,6 +357,40 @@ public static class StringExtensions
 		}
 
 		return atoms;
+	}
+
+	/// <summary>
+	/// Splits a segment into words at whitespace that allows a line break, dropping empty entries.
+	/// The no-break spaces U+00A0, U+2007 and U+202F are whitespace but forbid a break, so they stay inside their word.
+	/// </summary>
+	private static List<string> SplitAtBreakingWhiteSpace(string segment)
+	{
+		List<string> words = [];
+		int start = -1;
+		for (int i = 0; i < segment.Length; i++)
+		{
+			char ch = segment[i];
+			bool breaking = char.IsWhiteSpace(ch) && ch is not '\u00A0' and not '\u2007' and not '\u202F';
+			if (breaking)
+			{
+				if (start >= 0)
+				{
+					words.Add(segment.Substring(start, i - start));
+					start = -1;
+				}
+			}
+			else if (start < 0)
+			{
+				start = i;
+			}
+		}
+
+		if (start >= 0)
+		{
+			words.Add(segment.Substring(start));
+		}
+
+		return words;
 	}
 
 	private static List<(string Text, bool HyphenBefore)> ChunkWord(string word)
