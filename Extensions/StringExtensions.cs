@@ -395,6 +395,16 @@ public static class StringExtensions
 				continue;
 			}
 
+			if (ch == '-' && current.Length == 0 && hyphenBefore)
+			{
+				// A visible hyphen straight after a soft hyphen: the visible one wins, as in the mirror case above.
+				// Reopen the chunk the soft hyphen closed, so the hyphen (and any run it starts) ends that chunk instead
+				// of starting a new one that a break would draw as a second hyphen.
+				current.Append(chunks[^1].Text);
+				hyphenBefore = chunks[^1].HyphenBefore;
+				chunks.RemoveAt(chunks.Count - 1);
+			}
+
 			current.Append(ch);
 			if (ch != '-')
 			{

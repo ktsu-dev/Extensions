@@ -592,6 +592,28 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	public void NominalWordWrapDoesNotDoubleASoftHyphenFollowedByAVisibleHyphen()
+	{
+		// 6 chars per line; the break lands where a soft hyphen comes before the visible one (mirror of the case above).
+		List<string> result = [.. "a well­-known".NominalWordWrap(6f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "a", "well-", "known" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapKeepsAHyphenRunAfterASoftHyphenTogether()
+	{
+		List<string> result = [.. "well­--known".NominalWordWrap(6f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "well--", "known" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapDropsASoftHyphenBeforeAVisibleHyphenWhenItFits()
+	{
+		List<string> result = [.. "well­-known".NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "well-known" }, result);
+	}
+
+	[TestMethod]
 	public void NominalWordWrapKeepsADoubleHyphenDashTogether()
 	{
 		// 12 chars per line; "It was late-" would fit, but the break must not fall between the two hyphens.
