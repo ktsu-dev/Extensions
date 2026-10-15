@@ -1042,7 +1042,7 @@ Changes since v1.0.0:
 - Update package references and add ILCompiler dependency (matt-edmondson)
 - Add new tests and refactor extension methods (matt-edmondson)
 - Add collection handling and conversion extensions (matt-edmondson)
-- Add string.As<StrongStrong>() (matt-edmondson)
+- Add string.As\<StrongStrong\>() (matt-edmondson)
 - Migrate ktsu.io to ktsu namespace (matt-edmondson)
 - Update VERSION (matt-edmondson)
 - Migrate ktsu.io to ktsu namespace (matt-edmondson)
@@ -1208,7 +1208,7 @@ Changes since v1.0.14:
 
 Changes since v1.0.13:
 
-- Add string.As<StrongStrong>() (matt-edmondson)
+- Add string.As\<StrongStrong\>() (matt-edmondson)
 
 ## v1.0.13 (patch)
 
@@ -1253,11 +1253,21 @@ Changes since v1.0.8:
 
 ## v1.0.8 (patch)
 
-Changes since 1.0.7:
+Changes since v1.0.0:
 
 - Migrate ktsu.io to ktsu namespace (matt-edmondson)
 - Update VERSION (matt-edmondson)
 - Migrate ktsu.io to ktsu namespace (matt-edmondson)
+- Add a locket overload of ForEach (matt-edmondson)
+- Fix Dictionary return types (matt-edmondson)
+- Add ShallowClone to enumerables and dictionaries (matt-edmondson)
+- Add DeepClone for dictionaries (matt-edmondson)
+- Add DeepClone enumerable extension (matt-edmondson)
+- Add an overload to ToCollection that takes an object to acquire a lock on while enumerating (matt-edmondson)
+- Add CollectionExtensions with AddMany method (matt-edmondson)
+- Add new unit tests (matt-edmondson)
+- Minor code style changes (matt-edmondson)
+- Add support for GetOrCreate on concurrent dictionaries (matt-edmondson)
 
 ## v1.0.0 (major)
 
