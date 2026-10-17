@@ -98,6 +98,26 @@ public class CollectionExtensionsTests
 	}
 
 	[TestMethod]
+	public void AddFromItselfDoublesTheCollection()
+	{
+		List<int> collection = [1, 2];
+
+		collection.AddFrom(collection);
+
+		CollectionAssert.AreEqual(new List<int> { 1, 2, 1, 2 }, collection);
+	}
+
+	[TestMethod]
+	public void AddFromALazyQueryOverItselfAddsTheQueriedItems()
+	{
+		List<int> collection = [1, 2];
+
+		collection.AddFrom(collection.Where(x => x > 0));
+
+		CollectionAssert.AreEqual(new List<int> { 1, 2, 1, 2 }, collection);
+	}
+
+	[TestMethod]
 	public void AnyNullEmptyCollectionReturnsFalse()
 	{
 		List<string?> collection = [];
