@@ -253,9 +253,14 @@ public static class StringExtensions
 			return [];
 		}
 
+		// A width of exactly n glyphs often divides to n - ε, because values like 0.7f are not exact in binary, so
+		// flooring the raw quotient wraps one character early. A small relative tolerance absorbs that error without
+		// rounding up a width that falls genuinely short of the next glyph.
+		double raw = (double)wrapWidth / nominalGlyphWidth;
+
 		// Clamp before casting: float-to-int conversion does not saturate before .NET 9, so an infinite or huge ratio
 		// would otherwise become int.MinValue and wrap one character per line.
-		double ratio = Math.Floor((double)wrapWidth / nominalGlyphWidth);
+		double ratio = Math.Floor(raw + (raw * 1e-6));
 		int maxCharsPerLine = ratio >= int.MaxValue ? int.MaxValue : Math.Max(1, (int)ratio);
 		return NominalWordWrapIterator(text, maxCharsPerLine);
 	}

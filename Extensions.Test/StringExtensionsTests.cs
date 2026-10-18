@@ -450,6 +450,44 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	[DataRow(0.1f)]
+	[DataRow(0.7f)]
+	[DataRow(6.6f)]
+	[DataRow(7.2f)]
+	[DataRow(13.3f)]
+	public void NominalWordWrapFitsExactlyNGlyphsInAWidthOfNGlyphs(float nominalGlyphWidth)
+	{
+		string input = new('a', 201);
+
+		for (int n = 1; n <= 200; n++)
+		{
+			string firstLine = input.NominalWordWrap(n * nominalGlyphWidth, nominalGlyphWidth).First();
+			Assert.AreEqual(n, firstLine.Length, $"A width of {n} glyphs of {nominalGlyphWidth} should hold {n} characters.");
+		}
+	}
+
+	[TestMethod]
+	public void NominalWordWrapKeepsAWordThatExactlyFillsTheWidthOnOneLine()
+	{
+		List<string> result = [.. "hello world".NominalWordWrap(11 * 0.7f, 0.7f)];
+		Assert.AreSequenceEqual(new List<string> { "hello world" }, result);
+	}
+
+	[TestMethod]
+	[DataRow(0.7f)]
+	[DataRow(6.6f)]
+	public void NominalWordWrapDoesNotRoundUpAWidthHalfAGlyphShort(float nominalGlyphWidth)
+	{
+		string input = new('a', 201);
+
+		for (int n = 1; n < 200; n++)
+		{
+			string firstLine = input.NominalWordWrap((n + 0.5f) * nominalGlyphWidth, nominalGlyphWidth).First();
+			Assert.AreEqual(n, firstLine.Length, $"A width of {n + 0.5f} glyphs of {nominalGlyphWidth} should hold {n} characters.");
+		}
+	}
+
+	[TestMethod]
 	public void NominalWordWrapHardBreakDoesNotSplitSurrogatePairs()
 	{
 		// Each 😀 is a surrogate pair: two UTF-16 code units.
