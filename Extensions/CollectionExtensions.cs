@@ -31,7 +31,10 @@ public static class CollectionExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
-		foreach (T? item in items)
+		// Materialize first: items may be the collection itself or a lazy query over it, whose enumerator
+		// the first Add would invalidate
+		T[] snapshot = [.. items];
+		foreach (T? item in snapshot)
 		{
 			collection.Add(item);
 		}
