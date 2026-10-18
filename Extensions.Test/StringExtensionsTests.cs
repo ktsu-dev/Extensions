@@ -470,7 +470,7 @@ public class StringExtensionsTests
 	public void NominalWordWrapKeepsAWordThatExactlyFillsTheWidthOnOneLine()
 	{
 		List<string> result = [.. "hello world".NominalWordWrap(11 * 0.7f, 0.7f)];
-		CollectionAssert.AreEqual(new List<string> { "hello world" }, result);
+		Assert.AreSequenceEqual(new List<string> { "hello world" }, result);
 	}
 
 	[TestMethod]
