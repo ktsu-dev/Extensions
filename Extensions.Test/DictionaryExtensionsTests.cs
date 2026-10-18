@@ -31,6 +31,26 @@ public class DictionaryExtensionsTests
 	}
 
 	[TestMethod]
+	public void GetOrCreateShouldConstructOnlyOnAMiss()
+	{
+		Dictionary<string, CountedConstruction> dictionary = [];
+		CountedConstruction.Constructed = 0;
+
+		CountedConstruction first = dictionary.GetOrCreate("key1");
+		CountedConstruction second = dictionary.GetOrCreate("key1");
+
+		Assert.AreEqual(1, CountedConstruction.Constructed);
+		Assert.AreSame(first, second);
+	}
+
+	private sealed class CountedConstruction
+	{
+		public static int Constructed { get; set; }
+
+		public CountedConstruction() => Constructed++;
+	}
+
+	[TestMethod]
 	public void GetOrCreateShouldAddAndReturnDefaultValue()
 	{
 		Dictionary<string, int> dictionary = [];
