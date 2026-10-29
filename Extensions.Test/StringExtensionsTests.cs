@@ -608,7 +608,7 @@ public class StringExtensionsTests
 	public void NominalWordWrapRendersSoftHyphenOnALineItFillsExactly()
 	{
 		List<string> result = [.. "AAAA\u00ADBBBBB".NominalWordWrap(5f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "AAAA-", "BBBBB" }, result);
+		Assert.AreSequenceEqual(new List<string> { "AAAA-", "BBBBB" }, result);
 	}
 
 	[TestMethod]
@@ -616,7 +616,7 @@ public class StringExtensionsTests
 	{
 		// The upper line is already full at the only break opportunity, so the hyphen would make it 6 characters.
 		List<string> result = [.. "AAAAA\u00ADBBBBB".NominalWordWrap(5f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "AAAAA", "BBBBB" }, result);
+		Assert.AreSequenceEqual(new List<string> { "AAAAA", "BBBBB" }, result);
 	}
 
 	[TestMethod]
@@ -624,7 +624,7 @@ public class StringExtensionsTests
 	{
 		// "xx abc-" would be 7 characters, so the break falls back to the space before "abc".
 		List<string> result = [.. "xx abc\u00ADde".NominalWordWrap(6f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "xx", "abcde" }, result);
+		Assert.AreSequenceEqual(new List<string> { "xx", "abcde" }, result);
 	}
 
 	[TestMethod]
@@ -632,7 +632,7 @@ public class StringExtensionsTests
 	{
 		// "abcde" is full when "fg" arrives, so the break moves back to the soft hyphen after "abc".
 		List<string> result = [.. "abc\u00ADde\u00ADfg".NominalWordWrap(5f, 1f)];
-		CollectionAssert.AreEqual(new List<string> { "abc-", "defg" }, result);
+		Assert.AreSequenceEqual(new List<string> { "abc-", "defg" }, result);
 	}
 
 	[TestMethod]
@@ -646,7 +646,7 @@ public class StringExtensionsTests
 				List<string> result = [.. input.NominalWordWrap(width, 1f)];
 				foreach (string line in result)
 				{
-					Assert.IsTrue(line.Length <= width, $"\"{line}\" from \"{input}\" is longer than {width}.");
+					Assert.IsLessThanOrEqualTo(width, line.Length, $"\"{line}\" from \"{input}\" is longer than {width}.");
 				}
 
 				Assert.AreEqual(input.Replace("\u00AD", string.Empty, StringComparison.Ordinal).Replace(" ", string.Empty, StringComparison.Ordinal), string.Concat(result).Replace("-", string.Empty, StringComparison.Ordinal).Replace(" ", string.Empty, StringComparison.Ordinal), $"\"{input}\" at width {width} lost or gained text.");

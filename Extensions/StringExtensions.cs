@@ -292,8 +292,9 @@ public static class StringExtensions
 			// The atoms on the current line after its first, with the line length before each (and its separator), so a
 			// break that would not leave room for a rendered hyphen can fall back to an earlier boundary.
 			List<(int Index, int StartLength)> lineAtoms = [];
-			for (int i = 0; i < atoms.Count; i++)
+			for (int i = 0, next; i < atoms.Count; i = next)
 			{
+				next = i + 1;
 				(string atomText, bool glueSpace, bool hyphenBefore, bool canBreak) = atoms[i];
 				bool atLineStart = line.Length == 0;
 				int separatorLength = (!atLineStart && glueSpace) ? 1 : 0;
@@ -319,7 +320,7 @@ public static class StringExtensions
 							yield return line.ToString();
 							line.Clear();
 							lineAtoms.Clear();
-							i = restartIndex - 1;
+							next = restartIndex;
 							continue;
 						}
 					}
