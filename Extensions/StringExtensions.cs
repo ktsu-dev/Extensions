@@ -226,9 +226,10 @@ public static class StringExtensions
 	/// preserved. Runs of whitespace within a line are collapsed to a single space. The no-break spaces U+00A0, U+2007 and
 	/// U+202F are not break points and are kept unchanged. A break may also occur after a visible
 	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
-	/// a break lands there and is otherwise removed. Words that still cannot fit are hard-broken as a last resort so that
-	/// no line exceeds the computed width, except that honoring a soft hyphen at a line boundary may add a single
-	/// overhanging character. A hard break never splits a surrogate pair, so at a width of one character a line may
+	/// a break lands there and is otherwise removed. A soft hyphen is only broken at when its rendered hyphen fits on the
+	/// upper line; otherwise an earlier break point is used, or, when there is none, the line breaks there without the
+	/// hyphen. Words that still cannot fit are hard-broken as a last resort so that no line exceeds the computed width.
+	/// A hard break never splits a surrogate pair, so at a width of one character a line may
 	/// hold a whole pair (two UTF-16 code units).
 	/// </returns>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null.</exception>
@@ -287,26 +288,54 @@ public static class StringExtensions
 			}
 
 			StringBuilder line = new();
-			foreach ((string atomText, bool glueSpace, bool hyphenBefore, bool canBreak) in atoms)
+
+			// The atoms on the current line after its first, with the line length before each (and its separator), so a
+			// break that would not leave room for a rendered hyphen can fall back to an earlier boundary.
+			List<(int Index, int StartLength)> lineAtoms = [];
+			for (int i = 0; i < atoms.Count; i++)
 			{
+				(string atomText, bool glueSpace, bool hyphenBefore, bool canBreak) = atoms[i];
 				bool atLineStart = line.Length == 0;
 				int separatorLength = (!atLineStart && glueSpace) ? 1 : 0;
 				int projectedLength = line.Length + separatorLength + atomText.Length;
 
 				if (!atLineStart && projectedLength > maxCharsPerLine && canBreak)
 				{
-					// Break before this atom. A soft-hyphen boundary renders the hyphen on the upper line.
-					if (hyphenBefore)
+					// Break before this atom. A soft-hyphen boundary renders the hyphen on the upper line, so it is only
+					// taken when the hyphen fits. Otherwise break at the latest earlier boundary that leaves room, and carry
+					// the atoms after it down; failing that, break here without the hyphen, as a hard break would.
+					if (hyphenBefore && line.Length + 1 > maxCharsPerLine)
+					{
+						int fallback = lineAtoms.FindLastIndex(a => !atoms[a.Index].HyphenBefore || a.StartLength + 1 <= maxCharsPerLine);
+						if (fallback >= 0)
+						{
+							(int restartIndex, int startLength) = lineAtoms[fallback];
+							line.Length = startLength;
+							if (atoms[restartIndex].HyphenBefore)
+							{
+								line.Append('-');
+							}
+
+							yield return line.ToString();
+							line.Clear();
+							lineAtoms.Clear();
+							i = restartIndex - 1;
+							continue;
+						}
+					}
+					else if (hyphenBefore)
 					{
 						line.Append('-');
 					}
 
 					yield return line.ToString();
 					line.Clear();
+					lineAtoms.Clear();
 					atLineStart = true;
 				}
 				else if (!atLineStart)
 				{
+					lineAtoms.Add((i, line.Length));
 					if (glueSpace)
 					{
 						line.Append(' ');
