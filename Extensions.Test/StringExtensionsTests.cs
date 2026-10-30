@@ -605,6 +605,56 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	public void NominalWordWrapRendersSoftHyphenOnALineItFillsExactly()
+	{
+		List<string> result = [.. "AAAA\u00ADBBBBB".NominalWordWrap(5f, 1f)];
+		Assert.AreSequenceEqual(new List<string> { "AAAA-", "BBBBB" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapBreaksWithoutTheHyphenWhenAFullFirstLineLeavesNoRoomForIt()
+	{
+		// The upper line is already full at the only break opportunity, so the hyphen would make it 6 characters.
+		List<string> result = [.. "AAAAA\u00ADBBBBB".NominalWordWrap(5f, 1f)];
+		Assert.AreSequenceEqual(new List<string> { "AAAAA", "BBBBB" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapCarriesAWordDownWhenItsSoftHyphenWouldOverflowAFullLine()
+	{
+		// "xx abc-" would be 7 characters, so the break falls back to the space before "abc".
+		List<string> result = [.. "xx abc\u00ADde".NominalWordWrap(6f, 1f)];
+		Assert.AreSequenceEqual(new List<string> { "xx", "abcde" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapFallsBackToAnEarlierSoftHyphenThatLeavesRoom()
+	{
+		// "abcde" is full when "fg" arrives, so the break moves back to the soft hyphen after "abc".
+		List<string> result = [.. "abc\u00ADde\u00ADfg".NominalWordWrap(5f, 1f)];
+		Assert.AreSequenceEqual(new List<string> { "abc-", "defg" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapNeverExceedsTheWidthAtASoftHyphen()
+	{
+		string[] inputs = ["AAAAA\u00ADBBBBB", "xx abc\u00ADde", "tr\u00ADans\u00ADla\u00ADtion", "in\u00ADter\u00ADna\u00ADtion\u00ADal\u00ADi\u00ADza\u00ADtion is a long word"];
+		foreach (string input in inputs)
+		{
+			for (int width = 1; width <= 12; width++)
+			{
+				List<string> result = [.. input.NominalWordWrap(width, 1f)];
+				foreach (string line in result)
+				{
+					Assert.IsLessThanOrEqualTo(width, line.Length, $"\"{line}\" from \"{input}\" is longer than {width}.");
+				}
+
+				Assert.AreEqual(input.Replace("\u00AD", string.Empty, StringComparison.Ordinal).Replace(" ", string.Empty, StringComparison.Ordinal), string.Concat(result).Replace("-", string.Empty, StringComparison.Ordinal).Replace(" ", string.Empty, StringComparison.Ordinal), $"\"{input}\" at width {width} lost or gained text.");
+			}
+		}
+	}
+
+	[TestMethod]
 	public void NominalWordWrapDoesNotDoubleAVisibleHyphenFollowedByASoftHyphen()
 	{
 		// 5 chars per line; the break lands after "well-", where a soft hyphen follows the visible one.
