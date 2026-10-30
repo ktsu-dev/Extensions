@@ -2,6 +2,8 @@
 
 Changes since v1.9.3:
 
+- Advance the wrap loop through a next index instead of rewinding the counter (Claude)
+- Keep a soft-hyphen break within the wrap width [patch] (Claude)
 - Use Assert.AreSequenceEqual in the exact-fill word-wrap test (Claude)
 - Stop NominalWordWrap wrapping one character early at exact widths (Claude)
 - Construct GetOrCreate's new value only when the key is missing (Claude)
