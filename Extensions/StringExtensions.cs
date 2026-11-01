@@ -228,7 +228,9 @@ public static class StringExtensions
 	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
 	/// a break lands there and is otherwise removed. A soft hyphen is only broken at when its rendered hyphen fits on the
 	/// upper line; otherwise an earlier break point is used, or, when there is none, the line breaks there without the
-	/// hyphen. Words that still cannot fit are hard-broken as a last resort so that no line exceeds the computed width.
+	/// hyphen. A zero-width space (U+200B) is a break point that draws nothing: it is removed from the output, takes
+	/// no width, and a break there adds no hyphen. Words that still cannot fit are hard-broken as a last resort so that
+	/// no line exceeds the computed width.
 	/// A hard break never splits a surrogate pair, so at a width of one character a line may
 	/// hold a whole pair (two UTF-16 code units).
 	/// </returns>
@@ -270,6 +272,11 @@ public static class StringExtensions
 	/// The Unicode soft hyphen (U+00AD): an invisible break opportunity that renders as a hyphen only when a break lands there.
 	/// </summary>
 	private const char SoftHyphen = '­';
+
+	/// <summary>
+	/// The Unicode zero-width space (U+200B): an invisible break opportunity that never renders and takes no width.
+	/// </summary>
+	private const char ZeroWidthSpace = '\u200B';
 
 	private static IEnumerable<string> NominalWordWrapIterator(string text, int maxCharsPerLine)
 	{
@@ -431,7 +438,8 @@ public static class StringExtensions
 	private static List<(string Text, bool HyphenBefore)> ChunkWord(string word)
 	{
 		// Split a whitespace-delimited word into break-units at hyphenation opportunities:
-		// after a visible hyphen (kept on the left chunk) or at a soft hyphen (removed unless a break lands there).
+		// after a visible hyphen (kept on the left chunk), at a soft hyphen (removed unless a break lands there), or at
+		// a zero-width space (always removed, and never drawn as a hyphen).
 		// A visible hyphen is a break opportunity only when it ends its run of hyphens and some other character
 		// comes before it in the word, so "--" stays together and "-5" or "--force" is never split after the dash.
 		List<(string Text, bool HyphenBefore)> chunks = [];
@@ -442,6 +450,20 @@ public static class StringExtensions
 		for (int i = 0; i < word.Length; i++)
 		{
 			char ch = word[i];
+			if (ch == ZeroWidthSpace)
+			{
+				// Close the current chunk so a plain break may land here. With nothing pending, the boundary already
+				// exists (or the word has not started), so the character is simply dropped.
+				if (current.Length > 0)
+				{
+					chunks.Add((current.ToString(), hyphenBefore));
+					current.Clear();
+					hyphenBefore = false;
+				}
+
+				continue;
+			}
+
 			if (ch == SoftHyphen)
 			{
 				if (current.Length > 0)

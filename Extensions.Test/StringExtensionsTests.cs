@@ -588,6 +588,40 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	public void NominalWordWrapBreaksAtZeroWidthSpace()
+	{
+		// wrapWidth 7 / glyph 1 => 7 chars per line; the zero-width space is the only break point in the first word.
+		string input = "alpha\u200Bbeta gamma";
+		List<string> result = [.. input.NominalWordWrap(7, 1)];
+		CollectionAssert.AreEqual(new List<string> { "alpha", "beta", "gamma" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapBreaksAMarkedUrlOnlyAtItsZeroWidthSpaces()
+	{
+		string input = "see https://\u200Bexample.com/\u200Ba/\u200Bvery/\u200Blong/\u200Bpath now";
+		List<string> result = [.. input.NominalWordWrap(12, 1)];
+		CollectionAssert.AreEqual(new List<string> { "see https://", "example.com/", "a/very/long/", "path now" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapStripsZeroWidthSpaceWhenNotBroken()
+	{
+		string input = "\u200Bfoo\u200B\u200Bbar\u200B baz";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foobar baz" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapGivesZeroWidthSpaceNoWidth()
+	{
+		// Six visible glyphs fit a six-character line even with zero-width spaces between them.
+		string input = "ab\u200Bcd\u200Bef";
+		List<string> result = [.. input.NominalWordWrap(6, 1)];
+		CollectionAssert.AreEqual(new List<string> { "abcdef" }, result);
+	}
+
+	[TestMethod]
 	public void NominalWordWrapStripsSoftHyphenWhenNotBroken()
 	{
 		string input = "foo­bar";
