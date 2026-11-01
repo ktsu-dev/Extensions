@@ -16,7 +16,8 @@ public static class ReflectionExtensions
 	/// <para>
 	/// The search starts at <paramref name="type"/> and moves to each base class in turn, stopping at the first
 	/// level that declares a method with the given name. When <paramref name="type"/> is an interface, the
-	/// interfaces it inherits are searched after it, more-derived interfaces first.
+	/// interfaces it inherits are searched after it, breadth-first by inheritance distance: its direct base
+	/// interfaces first, then their direct bases, and so on, stopping at the nearest level that declares the name.
 	/// </para>
 	/// <para>
 	/// When the name is overloaded at that level, the overload with the fewest parameters is returned. A
@@ -61,8 +62,8 @@ public static class ReflectionExtensions
 
 	/// <summary>
 	/// Yields the groups of types to search, nearest first: the type and its base classes one at a time, or for an
-	/// interface, the interface itself followed by its inherited interfaces grouped by how many interfaces they in
-	/// turn inherit, so that a derived interface is always searched before the interfaces it extends.
+	/// interface, the interface itself followed by its inherited interfaces grouped by inheritance distance, so
+	/// that each level holds exactly the interfaces one step further from <paramref name="type"/> than the last.
 	/// </summary>
 	private static IEnumerable<Type[]> SearchLevels(Type type)
 	{
@@ -70,14 +71,17 @@ public static class ReflectionExtensions
 		{
 			yield return [type];
 
-			IEnumerable<Type[]> inheritedLevels = type.GetInterfaces()
-				.GroupBy(i => i.GetInterfaces().Length)
-				.OrderByDescending(g => g.Key)
-				.Select(g => g.ToArray());
-
-			foreach (Type[] level in inheritedLevels)
+			HashSet<Type> visited = [type];
+			Type[] level = DirectInterfaces(type);
+			while (level.Length > 0)
 			{
+				visited.UnionWith(level);
 				yield return level;
+
+				level = [.. level
+					.SelectMany(DirectInterfaces)
+					.Where(i => !visited.Contains(i))
+					.Distinct()];
 			}
 
 			yield break;
@@ -87,5 +91,15 @@ public static class ReflectionExtensions
 		{
 			yield return [methodOwner];
 		}
+	}
+
+	/// <summary>
+	/// Returns the interfaces <paramref name="type"/> inherits directly: those in
+	/// <see cref="Type.GetInterfaces"/> that no other member of that set already inherits.
+	/// </summary>
+	private static Type[] DirectInterfaces(Type type)
+	{
+		Type[] all = type.GetInterfaces();
+		return [.. all.Where(candidate => !all.Any(other => other != candidate && other.GetInterfaces().Contains(candidate)))];
 	}
 }
