@@ -223,7 +223,8 @@ public static class StringExtensions
 	/// <param name="nominalGlyphWidth">The nominal (assumed uniform) width of a single glyph, in the same units as <paramref name="wrapWidth"/>.</param>
 	/// <returns>
 	/// The wrapped lines. Existing line breaks (Unix, Windows, or Mac) are honored as forced breaks and blank lines are
-	/// preserved. Runs of whitespace within a line are collapsed to a single space. The no-break spaces U+00A0, U+2007 and
+	/// preserved, as are the other mandatory breaks: vertical tab, form feed, next line (U+0085), line separator (U+2028)
+	/// and paragraph separator (U+2029). Runs of whitespace within a line are collapsed to a single space. The no-break spaces U+00A0, U+2007 and
 	/// U+202F are not break points and are kept unchanged. A break may also occur after a visible
 	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
 	/// a break lands there and is otherwise removed. A soft hyphen is only broken at when its rendered hyphen fits on the
@@ -271,10 +272,17 @@ public static class StringExtensions
 	/// </summary>
 	private const char SoftHyphen = '­';
 
+	/// <summary>
+	/// The characters that force a line break (Unicode line-break classes BK and NL in UAX #14) once CR and CRLF have been
+	/// normalized to LF: line feed, vertical tab, form feed, next line (U+0085), line separator (U+2028) and paragraph
+	/// separator (U+2029).
+	/// </summary>
+	private static readonly char[] MandatoryLineBreaks = ['\n', '\v', '\f', '\u0085', '\u2028', '\u2029'];
+
 	private static IEnumerable<string> NominalWordWrapIterator(string text, int maxCharsPerLine)
 	{
 		string normalized = text.NormalizeLineEndings(LineEndingStyle.Unix);
-		string[] segments = normalized.Split('\n');
+		string[] segments = normalized.Split(MandatoryLineBreaks);
 
 		foreach (string segment in segments)
 		{
