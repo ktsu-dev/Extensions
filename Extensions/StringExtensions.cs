@@ -292,10 +292,24 @@ public static class StringExtensions
 			// The atoms on the current line after its first, with the line length before each (and its separator), so a
 			// break that would not leave room for a rendered hyphen can fall back to an earlier boundary.
 			List<(int Index, int StartLength)> lineAtoms = [];
+
+			// Whether the current line is only the hyphen run a hard break cut off the end of a chunk ("self-" at width 4
+			// leaves "-"). The boundary after it is not taken, so the line never ends up holding nothing but hyphens.
+			bool lineIsHyphenRemainder = false;
 			for (int i = 0, next; i < atoms.Count; i = next)
 			{
 				next = i + 1;
 				(string atomText, bool glueSpace, bool hyphenBefore, bool canBreak) = atoms[i];
+				bool joinRemainder = lineIsHyphenRemainder && !glueSpace;
+				lineIsHyphenRemainder = false;
+				if (joinRemainder)
+				{
+					// The next chunk of the same word continues on the hyphen's line, and is hard-broken from there as usual.
+					atomText = line.ToString() + atomText;
+					line.Clear();
+					lineAtoms.Clear();
+				}
+
 				bool atLineStart = line.Length == 0;
 				int separatorLength = (!atLineStart && glueSpace) ? 1 : 0;
 				int projectedLength = line.Length + separatorLength + atomText.Length;
@@ -347,21 +361,14 @@ public static class StringExtensions
 				}
 
 				// At the start of a fresh line: place the atom, hard-breaking it if it still cannot fit.
-				string remaining = atomText;
-				while (remaining.Length > maxCharsPerLine)
+				List<string> fullLines = HardBreak(atomText, maxCharsPerLine, out string remaining);
+				foreach (string fullLine in fullLines)
 				{
-					int cut = maxCharsPerLine;
-					if (char.IsHighSurrogate(remaining[cut - 1]) && char.IsLowSurrogate(remaining[cut]))
-					{
-						// Never split a surrogate pair. At a width of one, let the pair overhang instead.
-						cut = cut > 1 ? cut - 1 : 2;
-					}
-
-					yield return remaining.Substring(0, cut);
-					remaining = remaining.Substring(cut);
+					yield return fullLine;
 				}
 
 				line.Append(remaining);
+				lineIsHyphenRemainder = fullLines.Count > 0 && remaining.Length > 0 && remaining.Trim('-').Length == 0;
 			}
 
 			if (line.Length > 0)
@@ -369,6 +376,33 @@ public static class StringExtensions
 				yield return line.ToString();
 			}
 		}
+	}
+
+	/// <summary>
+	/// Cuts text that is wider than a line into full lines, never splitting a surrogate pair.
+	/// </summary>
+	/// <param name="text">The text to place at the start of a line.</param>
+	/// <param name="maxCharsPerLine">The line width in characters.</param>
+	/// <param name="remaining">The text left over for the last, partly filled line.</param>
+	/// <returns>The full lines cut from the start of the text, in order.</returns>
+	private static List<string> HardBreak(string text, int maxCharsPerLine, out string remaining)
+	{
+		List<string> fullLines = [];
+		remaining = text;
+		while (remaining.Length > maxCharsPerLine)
+		{
+			int cut = maxCharsPerLine;
+			if (char.IsHighSurrogate(remaining[cut - 1]) && char.IsLowSurrogate(remaining[cut]))
+			{
+				// Never split a surrogate pair. At a width of one, let the pair overhang instead.
+				cut = cut > 1 ? cut - 1 : 2;
+			}
+
+			fullLines.Add(remaining.Substring(0, cut));
+			remaining = remaining.Substring(cut);
+		}
+
+		return fullLines;
 	}
 
 	private static List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> BuildAtoms(string segment)

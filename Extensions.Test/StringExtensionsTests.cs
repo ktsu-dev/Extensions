@@ -579,6 +579,26 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	[DataRow("self-explanatory", 4f, new[] { "self", "-exp", "lana", "tory" })]
+	[DataRow("abcde-fghij", 5f, new[] { "abcde", "-fghi", "j" })]
+	[DataRow("well-known e-mail", 4f, new[] { "well", "-kno", "wn", "e-", "mail" })]
+	public void NominalWordWrapNeverLeavesALineOfOnlyHyphens(string input, float maxChars, string[] expected)
+	{
+		// A hard break that cuts only the trailing hyphen off a chunk keeps the next chunk of the word on the hyphen's line (#182).
+		List<string> result = [.. input.NominalWordWrap(maxChars, 1f)];
+		CollectionAssert.AreEqual(expected, result);
+		Assert.IsFalse(result.Any(line => line.Length > 0 && line.Trim('-').Length == 0), "No line should hold only hyphens.");
+		Assert.IsFalse(result.Any(line => line.Length > maxChars), "No line should be wider than the width.");
+	}
+
+	[TestMethod]
+	public void NominalWordWrapAtWidthOneKeepsTheHyphenOnItsOwnLine()
+	{
+		List<string> result = [.. "x-ray".NominalWordWrap(1f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "x", "-", "r", "a", "y" }, result);
+	}
+
+	[TestMethod]
 	public void NominalWordWrapDoesNotBreakOnUnderscores()
 	{
 		// wrapWidth 50 / glyph 10 => 5 chars per line; underscores are not break points, so the word is hard-broken.
