@@ -305,7 +305,7 @@ public static class StringExtensions
 				if (joinRemainder)
 				{
 					// The next chunk of the same word continues on the hyphen's line, and is hard-broken from there as usual.
-					atomText = line.ToString() + atomText;
+					atomText = line + atomText;
 					line.Clear();
 					lineAtoms.Clear();
 				}
