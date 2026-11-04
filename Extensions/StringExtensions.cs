@@ -229,7 +229,9 @@ public static class StringExtensions
 	/// hyphen (the hyphen stays on the upper line) or at a soft hyphen (<c>­</c>), which renders as a hyphen only when
 	/// a break lands there and is otherwise removed. A soft hyphen is only broken at when its rendered hyphen fits on the
 	/// upper line; otherwise an earlier break point is used, or, when there is none, the line breaks there without the
-	/// hyphen. Words that still cannot fit are hard-broken as a last resort so that no line exceeds the computed width.
+	/// hyphen. A zero-width space (U+200B) is a break point that draws nothing: it is removed from the output, takes
+	/// no width, and a break there adds no hyphen. Words that still cannot fit are hard-broken as a last resort so that
+	/// no line exceeds the computed width.
 	/// A hard break never splits a surrogate pair, so at a width of one character a line may
 	/// hold a whole pair (two UTF-16 code units).
 	/// </returns>
@@ -279,6 +281,11 @@ public static class StringExtensions
 	/// </summary>
 	private static readonly char[] MandatoryLineBreaks = ['\n', '\v', '\f', '\u0085', '\u2028', '\u2029'];
 
+	/// <summary>
+	/// The Unicode zero-width space (U+200B): an invisible break opportunity that never renders and takes no width.
+	/// </summary>
+	private const char ZeroWidthSpace = '\u200B';
+
 	private static IEnumerable<string> NominalWordWrapIterator(string text, int maxCharsPerLine)
 	{
 		string normalized = text.NormalizeLineEndings(LineEndingStyle.Unix);
@@ -300,10 +307,24 @@ public static class StringExtensions
 			// The atoms on the current line after its first, with the line length before each (and its separator), so a
 			// break that would not leave room for a rendered hyphen can fall back to an earlier boundary.
 			List<(int Index, int StartLength)> lineAtoms = [];
+
+			// Whether the current line is only the hyphen run a hard break cut off the end of a chunk ("self-" at width 4
+			// leaves "-"). The boundary after it is not taken, so the line never ends up holding nothing but hyphens.
+			bool lineIsHyphenRemainder = false;
 			for (int i = 0, next; i < atoms.Count; i = next)
 			{
 				next = i + 1;
 				(string atomText, bool glueSpace, bool hyphenBefore, bool canBreak) = atoms[i];
+				bool joinRemainder = lineIsHyphenRemainder && !glueSpace;
+				lineIsHyphenRemainder = false;
+				if (joinRemainder)
+				{
+					// The next chunk of the same word continues on the hyphen's line, and is hard-broken from there as usual.
+					atomText = line + atomText;
+					line.Clear();
+					lineAtoms.Clear();
+				}
+
 				bool atLineStart = line.Length == 0;
 				int separatorLength = (!atLineStart && glueSpace) ? 1 : 0;
 				int projectedLength = line.Length + separatorLength + atomText.Length;
@@ -355,21 +376,14 @@ public static class StringExtensions
 				}
 
 				// At the start of a fresh line: place the atom, hard-breaking it if it still cannot fit.
-				string remaining = atomText;
-				while (remaining.Length > maxCharsPerLine)
+				List<string> fullLines = HardBreak(atomText, maxCharsPerLine, out string remaining);
+				foreach (string fullLine in fullLines)
 				{
-					int cut = maxCharsPerLine;
-					if (char.IsHighSurrogate(remaining[cut - 1]) && char.IsLowSurrogate(remaining[cut]))
-					{
-						// Never split a surrogate pair. At a width of one, let the pair overhang instead.
-						cut = cut > 1 ? cut - 1 : 2;
-					}
-
-					yield return remaining.Substring(0, cut);
-					remaining = remaining.Substring(cut);
+					yield return fullLine;
 				}
 
 				line.Append(remaining);
+				lineIsHyphenRemainder = fullLines.Count > 0 && remaining.Length > 0 && remaining.Trim('-').Length == 0;
 			}
 
 			if (line.Length > 0)
@@ -377,6 +391,33 @@ public static class StringExtensions
 				yield return line.ToString();
 			}
 		}
+	}
+
+	/// <summary>
+	/// Cuts text that is wider than a line into full lines, never splitting a surrogate pair.
+	/// </summary>
+	/// <param name="text">The text to place at the start of a line.</param>
+	/// <param name="maxCharsPerLine">The line width in characters.</param>
+	/// <param name="remaining">The text left over for the last, partly filled line.</param>
+	/// <returns>The full lines cut from the start of the text, in order.</returns>
+	private static List<string> HardBreak(string text, int maxCharsPerLine, out string remaining)
+	{
+		List<string> fullLines = [];
+		remaining = text;
+		while (remaining.Length > maxCharsPerLine)
+		{
+			int cut = maxCharsPerLine;
+			if (char.IsHighSurrogate(remaining[cut - 1]) && char.IsLowSurrogate(remaining[cut]))
+			{
+				// Never split a surrogate pair. At a width of one, let the pair overhang instead.
+				cut = cut > 1 ? cut - 1 : 2;
+			}
+
+			fullLines.Add(remaining.Substring(0, cut));
+			remaining = remaining.Substring(cut);
+		}
+
+		return fullLines;
 	}
 
 	private static List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> BuildAtoms(string segment)
@@ -439,7 +480,8 @@ public static class StringExtensions
 	private static List<(string Text, bool HyphenBefore)> ChunkWord(string word)
 	{
 		// Split a whitespace-delimited word into break-units at hyphenation opportunities:
-		// after a visible hyphen (kept on the left chunk) or at a soft hyphen (removed unless a break lands there).
+		// after a visible hyphen (kept on the left chunk), at a soft hyphen (removed unless a break lands there), or at
+		// a zero-width space (always removed, and never drawn as a hyphen).
 		// A visible hyphen is a break opportunity only when it ends its run of hyphens and some other character
 		// comes before it in the word, so "--" stays together and "-5" or "--force" is never split after the dash.
 		List<(string Text, bool HyphenBefore)> chunks = [];
@@ -450,6 +492,20 @@ public static class StringExtensions
 		for (int i = 0; i < word.Length; i++)
 		{
 			char ch = word[i];
+			if (ch == ZeroWidthSpace)
+			{
+				// Close the current chunk so a plain break may land here. With nothing pending, the boundary already
+				// exists (or the word has not started), so the character is simply dropped.
+				if (current.Length > 0)
+				{
+					chunks.Add((current.ToString(), hyphenBefore));
+					current.Clear();
+					hyphenBefore = false;
+				}
+
+				continue;
+			}
+
 			if (ch == SoftHyphen)
 			{
 				if (current.Length > 0)

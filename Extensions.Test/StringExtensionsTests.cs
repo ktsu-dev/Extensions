@@ -605,12 +605,66 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	[DataRow("self-explanatory", 4f, new[] { "self", "-exp", "lana", "tory" })]
+	[DataRow("abcde-fghij", 5f, new[] { "abcde", "-fghi", "j" })]
+	[DataRow("well-known e-mail", 4f, new[] { "well", "-kno", "wn", "e-", "mail" })]
+	public void NominalWordWrapNeverLeavesALineOfOnlyHyphens(string input, float maxChars, string[] expected)
+	{
+		// A hard break that cuts only the trailing hyphen off a chunk keeps the next chunk of the word on the hyphen's line (#182).
+		List<string> result = [.. input.NominalWordWrap(maxChars, 1f)];
+		CollectionAssert.AreEqual(expected, result);
+		Assert.IsFalse(result.Any(line => line.Length > 0 && line.Trim('-').Length == 0), "No line should hold only hyphens.");
+		Assert.IsFalse(result.Any(line => line.Length > maxChars), "No line should be wider than the width.");
+	}
+
+	[TestMethod]
+	public void NominalWordWrapAtWidthOneKeepsTheHyphenOnItsOwnLine()
+	{
+		List<string> result = [.. "x-ray".NominalWordWrap(1f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "x", "-", "r", "a", "y" }, result);
+	}
+
+	[TestMethod]
 	public void NominalWordWrapDoesNotBreakOnUnderscores()
 	{
 		// wrapWidth 50 / glyph 10 => 5 chars per line; underscores are not break points, so the word is hard-broken.
 		string input = "foo_bar_baz";
 		List<string> result = [.. input.NominalWordWrap(50f, 10f)];
 		CollectionAssert.AreEqual(new List<string> { "foo_b", "ar_ba", "z" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapBreaksAtZeroWidthSpace()
+	{
+		// wrapWidth 7 / glyph 1 => 7 chars per line; the zero-width space is the only break point in the first word.
+		string input = "alpha\u200Bbeta gamma";
+		List<string> result = [.. input.NominalWordWrap(7, 1)];
+		CollectionAssert.AreEqual(new List<string> { "alpha", "beta", "gamma" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapBreaksAMarkedUrlOnlyAtItsZeroWidthSpaces()
+	{
+		string input = "see https://\u200Bexample.com/\u200Ba/\u200Bvery/\u200Blong/\u200Bpath now";
+		List<string> result = [.. input.NominalWordWrap(12, 1)];
+		CollectionAssert.AreEqual(new List<string> { "see https://", "example.com/", "a/very/long/", "path now" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapStripsZeroWidthSpaceWhenNotBroken()
+	{
+		string input = "\u200Bfoo\u200B\u200Bbar\u200B baz";
+		List<string> result = [.. input.NominalWordWrap(1000f, 10f)];
+		CollectionAssert.AreEqual(new List<string> { "foobar baz" }, result);
+	}
+
+	[TestMethod]
+	public void NominalWordWrapGivesZeroWidthSpaceNoWidth()
+	{
+		// Six visible glyphs fit a six-character line even with zero-width spaces between them.
+		string input = "ab\u200Bcd\u200Bef";
+		List<string> result = [.. input.NominalWordWrap(6, 1)];
+		CollectionAssert.AreEqual(new List<string> { "abcdef" }, result);
 	}
 
 	[TestMethod]
