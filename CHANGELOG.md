@@ -2,6 +2,7 @@
 
 Changes since v1.9.0:
 
+- Break NominalWordWrap at every Unicode mandatory line break [patch] (#185) (matt-edmondson)
 - Keep a hard-broken hyphen on the line with the rest of its word [patch] (#183) (matt-edmondson)
 - Break NominalWordWrap at zero-width spaces [minor] (#181) (matt-edmondson)
 - Search an interface's ancestors breadth-first by inheritance distance [patch] (#180) (matt-edmondson)
