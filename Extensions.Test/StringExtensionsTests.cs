@@ -667,6 +667,18 @@ public class StringExtensionsTests
 		CollectionAssert.AreEqual(new List<string> { "abcdef" }, result);
 	}
 
+	// A zero-width space starts a new segment, so a dash right after it is word-initial and never a break point,
+	// just as after a space: "-5" and "--force" stay attached to their sign (#186).
+	[TestMethod]
+	[DataRow("a\u200B-5", 2f, new[] { "a", "-5" })]
+	[DataRow("value\u200B-1", 6f, new[] { "value", "-1" })]
+	[DataRow("x\u200B--force", 3f, new[] { "x", "--f", "orc", "e" })]
+	public void NominalWordWrapKeepsADashAfterAZeroWidthSpaceWordInitial(string input, float width, string[] expected)
+	{
+		List<string> result = [.. input.NominalWordWrap(width, 1f)];
+		CollectionAssert.AreEqual(expected, result);
+	}
+
 	[TestMethod]
 	public void NominalWordWrapStripsSoftHyphenWhenNotBroken()
 	{
