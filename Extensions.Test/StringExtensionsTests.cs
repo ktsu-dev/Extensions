@@ -407,6 +407,32 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	[DataRow('\v')]
+	[DataRow('\f')]
+	[DataRow('\u0085')]
+	[DataRow('\u2028')]
+	[DataRow('\u2029')]
+	public void NominalWordWrapHonorsUnicodeMandatoryBreaks(char separator)
+	{
+		string input = "Line one" + separator + "Line two";
+		List<string> result = [.. input.NominalWordWrap(80f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "Line one", "Line two" }, result);
+	}
+
+	[TestMethod]
+	[DataRow('\v')]
+	[DataRow('\f')]
+	[DataRow('\u0085')]
+	[DataRow('\u2028')]
+	[DataRow('\u2029')]
+	public void NominalWordWrapPreservesBlankLinesBetweenUnicodeMandatoryBreaks(char separator)
+	{
+		string input = "a" + separator + separator + "b";
+		List<string> result = [.. input.NominalWordWrap(80f, 1f)];
+		CollectionAssert.AreEqual(new List<string> { "a", "", "b" }, result);
+	}
+
+	[TestMethod]
 	public void NominalWordWrapHonorsWindowsLineBreaks()
 	{
 		string input = "hello\r\nworld";
