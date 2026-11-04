@@ -213,6 +213,45 @@ public class ReflectionExtensionsTests
 	}
 
 	[TestMethod]
+	public void TryFindMethodPrefersDirectParentInterfaceOverMoreDistantOne()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = typeof(IDistanceDerived).TryFindMethod(nameof(IDistanceSibling.Foo), bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(typeof(IDistanceSibling), methodInfo.DeclaringType, "A direct parent interface should be searched before one two levels up.");
+		Assert.IsEmpty(methodInfo.GetParameters());
+	}
+
+	[TestMethod]
+	public void TryFindMethodInterfaceResultDoesNotChangeWhenAParentGainsABase()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		typeof(IDistanceDerived).TryFindMethod(nameof(IDistanceSibling.Foo), bindingFlags, out MethodInfo? withoutBase);
+		typeof(IDistanceDerivedWithSiblingBase).TryFindMethod(nameof(IDistanceSiblingWithBase.Foo), bindingFlags, out MethodInfo? withBase);
+
+		Assert.IsNotNull(withoutBase);
+		Assert.IsNotNull(withBase);
+		Assert.AreEqual(typeof(IDistanceSibling), withoutBase.DeclaringType);
+		Assert.AreEqual(typeof(IDistanceSiblingWithBase), withBase.DeclaringType);
+	}
+
+	[TestMethod]
+	public void TryFindMethodSearchesSharedInterfaceAncestorAtItsNearestDistance()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = typeof(IDistanceDiamond).TryFindMethod(nameof(IDistanceRoot.Foo), bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(typeof(IDistanceRoot), methodInfo.DeclaringType);
+	}
+
+	[TestMethod]
 	public void TryFindMethodFindsMethodsOnGenericCollectionInterfaces()
 	{
 		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
@@ -300,6 +339,49 @@ public class ReflectionExtensionsTests
 	}
 
 	public interface IGrandchildInterface : IDerivedInterface
+	{
+	}
+
+	public interface IDistanceRootBase
+	{
+	}
+
+	public interface IDistanceRoot : IDistanceRootBase
+	{
+		public void Foo(int x);
+	}
+
+	public interface IDistanceBase : IDistanceRoot
+	{
+	}
+
+	public interface IDistanceSibling
+	{
+		public void Foo();
+	}
+
+	public interface IDistanceDerived : IDistanceBase, IDistanceSibling
+	{
+	}
+
+	public interface IDistanceSiblingBaseRoot
+	{
+	}
+
+	public interface IDistanceSiblingBase : IDistanceSiblingBaseRoot
+	{
+	}
+
+	public interface IDistanceSiblingWithBase : IDistanceSiblingBase
+	{
+		public void Foo();
+	}
+
+	public interface IDistanceDerivedWithSiblingBase : IDistanceBase, IDistanceSiblingWithBase
+	{
+	}
+
+	public interface IDistanceDiamond : IDistanceBase, IDistanceRoot
 	{
 	}
 }
