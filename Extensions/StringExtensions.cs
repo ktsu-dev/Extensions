@@ -503,6 +503,8 @@ public static class StringExtensions
 					hyphenBefore = false;
 				}
 
+				// The next segment starts like a new word, so a dash right after the zero-width space is word-initial.
+				seenNonHyphen = false;
 				continue;
 			}
 
