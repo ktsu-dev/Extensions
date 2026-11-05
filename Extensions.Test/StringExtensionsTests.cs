@@ -363,13 +363,14 @@ public class StringExtensionsTests
 	[TestMethod]
 	public void StringExtensionsRegexesHaveNoFiniteMatchTimeout()
 	{
-		foreach (PropertyInfo property in typeof(StringExtensions).GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
+		IEnumerable<PropertyInfo> regexProperties = typeof(StringExtensions)
+			.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+			.Where(property => property.PropertyType == typeof(Regex));
+
+		foreach (PropertyInfo property in regexProperties)
 		{
-			if (property.PropertyType == typeof(Regex))
-			{
-				Regex regex = (Regex)property.GetValue(null)!;
-				Assert.AreEqual(Regex.InfiniteMatchTimeout, regex.MatchTimeout, $"{property.Name} has a finite match timeout.");
-			}
+			Regex regex = (Regex)property.GetValue(null)!;
+			Assert.AreEqual(Regex.InfiniteMatchTimeout, regex.MatchTimeout, $"{property.Name} has a finite match timeout.");
 		}
 	}
 
