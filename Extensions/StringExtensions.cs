@@ -377,13 +377,17 @@ public static class StringExtensions
 
 				// At the start of a fresh line: place the atom, hard-breaking it if it still cannot fit.
 				List<string> fullLines = HardBreak(atomText, maxCharsPerLine, out string remaining);
+				// When nothing of the same word follows to join a hyphen-only remainder, the last character before the
+				// hyphens moves down with them ("self- and" at width 4 gives "sel" / "f-", not "self" / "-").
+				bool nextContinuesWord = next < atoms.Count && !atoms[next].GlueSpace;
+				remaining = nextContinuesWord ? remaining : PullLastCharacterOntoHyphenRemainder(fullLines, remaining, maxCharsPerLine);
 				foreach (string fullLine in fullLines)
 				{
 					yield return fullLine;
 				}
 
 				line.Append(remaining);
-				lineIsHyphenRemainder = fullLines.Count > 0 && remaining.Length > 0 && remaining.Trim('-').Length == 0;
+				lineIsHyphenRemainder = IsHyphenRemainder(fullLines, remaining);
 			}
 
 			if (line.Length > 0)
@@ -391,6 +395,46 @@ public static class StringExtensions
 				yield return line.ToString();
 			}
 		}
+	}
+
+	/// <summary>
+	/// Reports whether a hard break left only the hyphen run cut off the end of a chunk ("self-" at width 4 leaves "-").
+	/// </summary>
+	/// <param name="fullLines">The full lines the hard break cut.</param>
+	/// <param name="remaining">The text the hard break left over.</param>
+	/// <returns>true if the hard break cut lines and left over nothing but hyphens; otherwise, false.</returns>
+	private static bool IsHyphenRemainder(List<string> fullLines, string remaining) =>
+		fullLines.Count > 0 && remaining.Length > 0 && remaining.Trim('-').Length == 0;
+
+	/// <summary>
+	/// When a hard break left only hyphens, moves the last character of the last full line, a whole surrogate pair
+	/// if it ends with one, onto the front of them, so the remainder is not a line of only hyphens.
+	/// </summary>
+	/// <remarks>
+	/// Nothing moves when the remainder holds more than hyphens, when the result would be wider than a line (at a
+	/// width of one, or when the hyphen run already fills the line), when the last full line would be left empty,
+	/// or when the character to move is a hyphen itself.
+	/// </remarks>
+	/// <param name="fullLines">The full lines a hard break cut, whose last line is shortened in place.</param>
+	/// <param name="remaining">The hyphen-only text the hard break left over.</param>
+	/// <param name="maxCharsPerLine">The line width in characters.</param>
+	/// <returns>The remainder, with the moved character in front of it when one moved.</returns>
+	private static string PullLastCharacterOntoHyphenRemainder(List<string> fullLines, string remaining, int maxCharsPerLine)
+	{
+		if (!IsHyphenRemainder(fullLines, remaining))
+		{
+			return remaining;
+		}
+
+		string last = fullLines[^1];
+		int take = last.Length >= 2 && char.IsLowSurrogate(last[^1]) && char.IsHighSurrogate(last[^2]) ? 2 : 1;
+		if (last.Length <= take || last[^1] == '-' || remaining.Length + take > maxCharsPerLine)
+		{
+			return remaining;
+		}
+
+		fullLines[^1] = last[..^take];
+		return last[^take..] + remaining;
 	}
 
 	/// <summary>

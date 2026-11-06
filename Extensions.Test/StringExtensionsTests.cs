@@ -608,6 +608,13 @@ public class StringExtensionsTests
 	[DataRow("self-explanatory", 4f, new[] { "self", "-exp", "lana", "tory" })]
 	[DataRow("abcde-fghij", 5f, new[] { "abcde", "-fghi", "j" })]
 	[DataRow("well-known e-mail", 4f, new[] { "well", "-kno", "wn", "e-", "mail" })]
+	[DataRow("self- and", 4f, new[] { "sel", "f-", "and" })]
+	[DataRow("wait-- what", 4f, new[] { "wai", "t--", "what" })]
+	[DataRow("anti-", 4f, new[] { "ant", "i-" })]
+	[DataRow("go well-", 4f, new[] { "go", "wel", "l-" })]
+	[DataRow("abcde-", 5f, new[] { "abcd", "e-" })]
+	[DataRow("pre- and post-war", 3f, new[] { "pr", "e-", "and", "pos", "t-", "war" })]
+	[DataRow("x\U0001F600- y", 3f, new[] { "x", "\U0001F600-", "y" })]
 	public void NominalWordWrapNeverLeavesALineOfOnlyHyphens(string input, float maxChars, string[] expected)
 	{
 		// A hard break that cuts only the trailing hyphen off a chunk keeps the next chunk of the word on the hyphen's line (#182).
