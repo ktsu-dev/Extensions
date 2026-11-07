@@ -493,6 +493,43 @@ public class StringExtensionsTests
 	}
 
 	[TestMethod]
+	[DataRow(1_000_000)]
+	[DataRow(2_000_000)]
+	[DataRow(10_000_000)]
+	public void NominalWordWrapFitsExactlyNGlyphsInAVeryWideWidth(int n)
+	{
+		string input = new('a', n + 20);
+
+		string firstLine = input.NominalWordWrap(n, 1f).First();
+		Assert.AreEqual(n, firstLine.Length, $"A width of {n} glyphs should hold {n} characters, not more.");
+	}
+
+	[TestMethod]
+	[DataRow(1_000_000)]
+	[DataRow(2_000_000)]
+	[DataRow(4_000_000)]
+	public void NominalWordWrapDoesNotRoundUpAVeryWideWidthHalfAGlyphShort(int n)
+	{
+		string input = new('a', n + 20);
+
+		string firstLine = input.NominalWordWrap(n - 0.5f, 1f).First();
+		Assert.AreEqual(n - 1, firstLine.Length, $"A width of {n - 0.5f} glyphs should hold {n - 1} characters.");
+	}
+
+	[TestMethod]
+	[DataRow(0.7f, 50_000)]
+	[DataRow(0.7f, 100_000)]
+	[DataRow(6.6f, 200_000)]
+	[DataRow(13.3f, 100_000)]
+	public void NominalWordWrapStillAbsorbsFloatErrorAtLargeInexactWidths(float nominalGlyphWidth, int n)
+	{
+		string input = new('a', n + 20);
+
+		string firstLine = input.NominalWordWrap(n * nominalGlyphWidth, nominalGlyphWidth).First();
+		Assert.AreEqual(n, firstLine.Length, $"A width of {n} glyphs of {nominalGlyphWidth} should hold {n} characters.");
+	}
+
+	[TestMethod]
 	public void NominalWordWrapKeepsAWordThatExactlyFillsTheWidthOnOneLine()
 	{
 		List<string> result = [.. "hello world".NominalWordWrap(11 * 0.7f, 0.7f)];
