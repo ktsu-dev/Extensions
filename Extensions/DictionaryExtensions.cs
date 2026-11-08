@@ -33,6 +33,13 @@ public static class DictionaryExtensions
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
 
+		// Overloads bind on the declared type, so a ConcurrentDictionary held as IDictionary lands here.
+		// Its lookup-then-Add would throw when another caller adds the key in between; GetOrAdd is atomic.
+		if (dictionary is ConcurrentDictionary<TKey, TVal> concurrent)
+		{
+			return concurrent.GetOrCreate(key);
+		}
+
 		// Construct only on a miss: passing new TVal() to the defaultValue overload built and discarded
 		// one on every hit, and ran any side effects in its constructor each time.
 		if (dictionary.TryGetValue(key, out TVal? val))
@@ -76,6 +83,13 @@ public static class DictionaryExtensions
 			throw new ArgumentNullException(nameof(defaultValue), "The default value cannot be null.");
 		}
 #pragma warning restore KTSU0004 // Use Ensure.NotNull instead of manual null check
+
+		// Overloads bind on the declared type, so a ConcurrentDictionary held as IDictionary lands here.
+		// Its lookup-then-Add would throw when another caller adds the key in between; GetOrAdd is atomic.
+		if (dictionary is ConcurrentDictionary<TKey, TVal> concurrent)
+		{
+			return concurrent.GetOrCreate(key, defaultValue);
+		}
 
 		if (dictionary.TryGetValue(key, out TVal? val))
 		{
