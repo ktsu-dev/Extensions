@@ -280,6 +280,66 @@ public class ReflectionExtensionsTests
 		Assert.AreEqual(methodName, methodInfo.Name);
 	}
 
+	[TestMethod]
+	public void TryFindMethodIgnoresCaseWhenBindingFlagsAskForIt()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+
+		bool result = typeof(string).TryFindMethod("toupperinvariant", bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result, "IgnoreCase should let a lowercase name find ToUpperInvariant.");
+		Assert.AreEqual(typeof(string).GetMethod("toupperinvariant", bindingFlags), methodInfo);
+	}
+
+	[TestMethod]
+	public void TryFindMethodIgnoresCaseForBaseClassMethod()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+
+		bool result = typeof(DerivedClass).TryFindMethod("basemethod", bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.IsNotNull(methodInfo);
+		Assert.AreEqual(nameof(BaseClass.BaseMethod), methodInfo.Name);
+		Assert.AreEqual(typeof(BaseClass), methodInfo.DeclaringType);
+	}
+
+	[TestMethod]
+	public void TryFindMethodIgnoresCaseForInterfaceAncestorMethod()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+
+		bool result = typeof(IList<int>).TryFindMethod("add", bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsTrue(result);
+		Assert.AreEqual(typeof(ICollection<int>), methodInfo?.DeclaringType);
+	}
+
+	[TestMethod]
+	public void TryFindMethodStaysCaseSensitiveWithoutIgnoreCase()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+
+		bool result = typeof(string).TryFindMethod("toupperinvariant", bindingFlags, out MethodInfo? methodInfo);
+
+		Assert.IsFalse(result);
+		Assert.IsNull(methodInfo);
+	}
+
+	[TestMethod]
+	public void TryFindMethodIgnoringCasePrefersExactCaseMatch()
+	{
+		BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+
+		Assert.IsTrue(typeof(ClassWithCaseVariants).TryFindMethod("run", bindingFlags, out MethodInfo? lower));
+		Assert.IsTrue(typeof(ClassWithCaseVariants).TryFindMethod("Run", bindingFlags, out MethodInfo? upper));
+		Assert.IsTrue(typeof(ClassWithCaseVariants).TryFindMethod("RUN", bindingFlags, out MethodInfo? neither));
+
+		Assert.AreEqual("run", lower?.Name, "An exact-case match should win over a closer overload.");
+		Assert.AreEqual("Run", upper?.Name);
+		Assert.AreEqual("Run", neither?.Name, "With no exact-case match the fewest-parameters rule applies.");
+	}
+
 	// Helper methods for additional tests
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Test class")]
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0051:Remove unused private members", Justification = "Test class")]
@@ -307,6 +367,21 @@ public class ReflectionExtensionsTests
 		}
 
 		public void GenericMethod<T>(T param)
+		{
+		}
+	}
+
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Test class")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Test class")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "IDE1006:Naming Styles", Justification = "The lowercase name is the case variant under test")]
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1708:Identifiers should differ by more than case", Justification = "The case variants are what the tests look up")]
+	public class ClassWithCaseVariants
+	{
+		public void Run()
+		{
+		}
+
+		public void run(int value)
 		{
 		}
 	}

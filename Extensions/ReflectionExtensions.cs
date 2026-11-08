@@ -20,6 +20,11 @@ public static class ReflectionExtensions
 	/// interfaces first, then their direct bases, and so on, stopping at the nearest level that declares the name.
 	/// </para>
 	/// <para>
+	/// The name is matched ordinally, ignoring case when <paramref name="bindingFlags"/> includes
+	/// <see cref="BindingFlags.IgnoreCase"/>. A case-insensitive search prefers a method whose name matches
+	/// <paramref name="methodName"/> exactly over one that differs only by case.
+	/// </para>
+	/// <para>
 	/// When the name is overloaded at that level, the overload with the fewest parameters is returned. A
 	/// non-generic method is preferred over a generic one with the same parameter count, and any remaining tie is
 	/// broken by ordinal comparison of the method signatures, so the result is always the same for the same type.
@@ -40,13 +45,19 @@ public static class ReflectionExtensions
 			throw new ArgumentException("Method name cannot be empty.", nameof(methodName));
 		}
 
+		// GetMethods does not filter by name, so IgnoreCase has to be honoured here
+		StringComparison nameComparison = (bindingFlags & BindingFlags.IgnoreCase) != 0
+			? StringComparison.OrdinalIgnoreCase
+			: StringComparison.Ordinal;
+
 		methodInfo = null;
 		foreach (Type[] level in SearchLevels(type))
 		{
 			methodInfo = level
 				.SelectMany(t => t.GetMethods(bindingFlags | BindingFlags.DeclaredOnly))
-				.Where(m => m.Name.Equals(methodName, StringComparison.Ordinal))
-				.OrderBy(m => m.GetParameters().Length)
+				.Where(m => m.Name.Equals(methodName, nameComparison))
+				.OrderBy(m => !m.Name.Equals(methodName, StringComparison.Ordinal))
+				.ThenBy(m => m.GetParameters().Length)
 				.ThenBy(m => m.IsGenericMethodDefinition)
 				.ThenBy(m => m.ToString(), StringComparer.Ordinal)
 				.FirstOrDefault();
