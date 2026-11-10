@@ -46,6 +46,10 @@ public static class CollectionExtensions
 	/// <typeparam name="T">The type of the items.</typeparam>
 	/// <param name="oldItems">The collection to replace items in.</param>
 	/// <param name="newItems">The enumeration of new items to replace the old items with.</param>
+	/// <remarks>
+	/// If adding any of the new items throws, the collection is restored to its original contents before the
+	/// exception propagates.
+	/// </remarks>
 	/// <exception cref="ArgumentNullException">
 	/// Thrown if the <paramref name="oldItems"/> collection or the <paramref name="newItems"/> enumerable is null.
 	/// </exception>
@@ -67,7 +71,20 @@ public static class CollectionExtensions
 
 		// Materialize first: newItems may be the collection itself or a lazy query over it, which Clear would empty
 		T[] snapshot = [.. newItems];
+
+		// Keep the current contents so a failed Add (a duplicate key, an item the collection rejects) can put
+		// them back rather than leave the collection holding neither the old items nor the new ones
+		T[] original = [.. oldItems];
 		oldItems.Clear();
-		oldItems.AddFrom(snapshot);
+		try
+		{
+			oldItems.AddFrom(snapshot);
+		}
+		catch
+		{
+			oldItems.Clear();
+			oldItems.AddFrom(original);
+			throw;
+		}
 	}
 }
