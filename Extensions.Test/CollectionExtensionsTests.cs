@@ -2,6 +2,8 @@
 
 namespace ktsu.Extensions.Tests;
 
+using System.Collections.ObjectModel;
+
 [TestClass]
 public class CollectionExtensionsTests
 {
@@ -278,5 +280,41 @@ public class CollectionExtensionsTests
 		collection.ReplaceWith(collection);
 
 		CollectionAssert.AreEqual(new List<int> { 1, 2, 3 }, collection);
+	}
+
+	[TestMethod]
+	public void ReplaceWithRestoresOriginalItemsWhenAnAddThrows()
+	{
+		ICollection<KeyValuePair<string, int>> dictionary = new Dictionary<string, int> { ["x"] = 1, ["y"] = 2 };
+		KeyValuePair<string, int>[] newItems = [new("a", 1), new("a", 2)];
+
+		Assert.ThrowsExactly<ArgumentException>(() => dictionary.ReplaceWith(newItems));
+
+		CollectionAssert.AreEquivalent(
+			new Dictionary<string, int> { ["x"] = 1, ["y"] = 2 },
+			(Dictionary<string, int>)dictionary);
+	}
+
+	[TestMethod]
+	public void ReplaceWithRestoresOriginalItemsWhenTheCollectionRejectsAnItem()
+	{
+		RejectingCollection collection = new(rejected: 3) { 1, 2 };
+
+		Assert.ThrowsExactly<InvalidOperationException>(() => collection.ReplaceWith([4, 3, 5]));
+
+		CollectionAssert.AreEqual(new List<int> { 1, 2 }, collection.ToList());
+	}
+
+	private sealed class RejectingCollection(int rejected) : Collection<int>
+	{
+		protected override void InsertItem(int index, int item)
+		{
+			if (item == rejected)
+			{
+				throw new InvalidOperationException($"{item} is not allowed.");
+			}
+
+			base.InsertItem(index, item);
+		}
 	}
 }
