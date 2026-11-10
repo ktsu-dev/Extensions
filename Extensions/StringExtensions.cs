@@ -259,15 +259,23 @@ public static class StringExtensions
 
 		// A width of exactly n glyphs often divides to n - ε, because values like 0.7f are not exact in binary, so
 		// flooring the raw quotient wraps one character early. A small relative tolerance absorbs that error without
-		// rounding up a width that falls genuinely short of the next glyph.
+		// rounding up a width that falls genuinely short of the next glyph. The tolerance is capped below half a glyph:
+		// uncapped, raw * 1e-6 reaches a whole glyph once raw is 1,000,000, and an exact width then rounds up by one.
 		double raw = (double)wrapWidth / nominalGlyphWidth;
+		double tolerance = Math.Min(raw * 1e-6, MaxGlyphRoundingTolerance);
 
 		// Clamp before casting: float-to-int conversion does not saturate before .NET 9, so an infinite or huge ratio
 		// would otherwise become int.MinValue and wrap one character per line.
-		double ratio = Math.Floor(raw + (raw * 1e-6));
+		double ratio = Math.Floor(raw + tolerance);
 		int maxCharsPerLine = ratio >= int.MaxValue ? int.MaxValue : Math.Max(1, (int)ratio);
 		return NominalWordWrapIterator(text, maxCharsPerLine);
 	}
+
+	/// <summary>
+	/// The most, in glyphs, that <see cref="NominalWordWrap"/> rounds a width up by to absorb floating-point error.
+	/// It stays below half a glyph, so a width half a glyph short of n never rounds up to n.
+	/// </summary>
+	private const double MaxGlyphRoundingTolerance = 0.25;
 
 	/// <summary>
 	/// The Unicode soft hyphen (U+00AD): an invisible break opportunity that renders as a hyphen only when a break lands there.
