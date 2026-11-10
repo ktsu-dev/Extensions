@@ -181,6 +181,54 @@ public class DictionaryExtensionsTests
 		Assert.HasCount(1000, dictionary["key1"]);
 	}
 
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryHeldAsIDictionaryShouldReturnStoredValueWhenAnotherCallerAddsFirst()
+	{
+		// Cast to IDictionary, the call binds to the IDictionary overload. The comparer adds a rival
+		// value between the lookup that missed and the add that follows it.
+		RacingComparer comparer = new();
+		ConcurrentDictionary<string, List<int>> dictionary = new(comparer);
+		List<int> rival = [];
+		comparer.OnSecondHash = () => dictionary.TryAdd("key1", rival);
+
+		List<int> result = ((IDictionary<string, List<int>>)dictionary).GetOrCreate("key1", []);
+
+		Assert.AreSame(dictionary["key1"], result);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryHeldAsIDictionaryWithoutDefaultShouldReturnStoredValueWhenAnotherCallerAddsFirst()
+	{
+		RacingComparer comparer = new();
+		ConcurrentDictionary<string, List<int>> dictionary = new(comparer);
+		List<int> rival = [];
+		comparer.OnSecondHash = () => dictionary.TryAdd("key1", rival);
+
+		List<int> result = ((IDictionary<string, List<int>>)dictionary).GetOrCreate("key1");
+
+		Assert.AreSame(dictionary["key1"], result);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryHeldAsIDictionaryShouldReturnSameInstanceToParallelCallers()
+	{
+		ConcurrentDictionary<string, ConcurrentBag<int>> dictionary = new();
+
+		Parallel.For(0, 1000, i => ((IDictionary<string, ConcurrentBag<int>>)dictionary).GetOrCreate("key1", []).Add(i));
+
+		Assert.HasCount(1000, dictionary["key1"]);
+	}
+
+	[TestMethod]
+	public void GetOrCreateConcurrentDictionaryHeldAsIDictionaryWithoutDefaultShouldReturnSameInstanceToParallelCallers()
+	{
+		ConcurrentDictionary<string, ConcurrentBag<int>> dictionary = new();
+
+		Parallel.For(0, 1000, i => ((IDictionary<string, ConcurrentBag<int>>)dictionary).GetOrCreate("key1").Add(i));
+
+		Assert.HasCount(1000, dictionary["key1"]);
+	}
+
 	private sealed class RacingComparer : IEqualityComparer<string>
 	{
 		private int hashCount;
