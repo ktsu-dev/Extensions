@@ -126,10 +126,6 @@ public static class StringExtensions
 	private static Regex LineEndingRegexWindows { get; } = new(@"\r\n", RegexOptions.Compiled);
 	private static Regex LineEndingRegexMac { get; } = new(@"\r(?!\n)", RegexOptions.Compiled);
 
-	// One pass over every kind of line ending. Normalizing in several passes lets an earlier pass
-	// build a sequence the next one reads differently: under Mac, "\r\n\n" became "\r" + "\n", a new CRLF.
-	private static Regex AnyLineEndingRegex { get; } = new(@"\r\n|\r|\n", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
-
 	/// <summary>
 	/// Determines the line ending style of the specified string.
 	/// </summary>
@@ -204,16 +200,46 @@ public static class StringExtensions
 			return s;
 		}
 
-		return style switch
+		string replacement = style switch
 		{
-			LineEndingStyle.None => AnyLineEndingRegex.Replace(s, ""),
-			LineEndingStyle.Unix => AnyLineEndingRegex.Replace(s, "\n"),
-			LineEndingStyle.Windows => AnyLineEndingRegex.Replace(s, "\r\n"),
-			LineEndingStyle.Mac => AnyLineEndingRegex.Replace(s, "\r"),
-			LineEndingStyle.Mixed => AnyLineEndingRegex.Replace(s, "\n"),
+			LineEndingStyle.None => "",
+			LineEndingStyle.Unix => "\n",
+			LineEndingStyle.Windows => "\r\n",
+			LineEndingStyle.Mac => "\r",
+			LineEndingStyle.Mixed => "\n",
 			_ => throw new NotImplementedException("Unknown line ending style."),
 		};
+
+		return ReplaceLineEndings(s, replacement);
 	}
+
+	// One pass over every kind of line ending, reading "\r\n" as one break and a lone "\r" or "\n" as one
+	// break each. Normalizing in several passes lets an earlier pass build a sequence the next one reads
+	// differently: under Mac, "\r\n\n" became "\r" + "\n", a new CRLF. This is a plain scan rather than a
+	// regex so that no match timeout applies: a timeout covers the whole Replace, so it failed on large input.
+	private static string ReplaceLineEndings(string s, string replacement)
+	{
+		int next = s.IndexOfAny(LineEndingChars);
+		if (next < 0)
+		{
+			return s;
+		}
+
+		StringBuilder builder = new(s.Length);
+		int start = 0;
+		while (next >= 0)
+		{
+			builder.Append(s, start, next - start);
+			builder.Append(replacement);
+			start = next + (s[next] == '\r' && next + 1 < s.Length && s[next + 1] == '\n' ? 2 : 1);
+			next = start < s.Length ? s.IndexOfAny(LineEndingChars, start) : -1;
+		}
+
+		builder.Append(s, start, s.Length - start);
+		return builder.ToString();
+	}
+
+	private static readonly char[] LineEndingChars = ['\r', '\n'];
 
 	/// <summary>
 	/// Performs a best-effort word wrap on word boundaries, given a wrap width and a nominal glyph width.

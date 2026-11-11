@@ -2,6 +2,10 @@
 
 namespace ktsu.Extensions.Tests;
 
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+
 [TestClass]
 public class StringExtensionsTests
 {
@@ -330,6 +334,44 @@ public class StringExtensionsTests
 	{
 		Assert.AreEqual(style, "a\r\n\nb".NormalizeLineEndings(style).DetermineLineEndings());
 		Assert.AreEqual(style, "a\r\r\nb".NormalizeLineEndings(style).DetermineLineEndings());
+	}
+
+	// A regex match timeout covers a whole Replace call, not each match, so any input that took more than the
+	// timeout to scan threw RegexMatchTimeoutException. Normalizing must handle large input of every style.
+
+	[TestMethod]
+	[DataRow(LineEndingStyle.Unix, "ab\ncd\nef\n")]
+	[DataRow(LineEndingStyle.Windows, "ab\r\ncd\r\nef\r\n")]
+	[DataRow(LineEndingStyle.Mac, "ab\rcd\ref\r")]
+	[DataRow(LineEndingStyle.None, "abcdef")]
+	[DataRow(LineEndingStyle.Mixed, "ab\ncd\nef\n")]
+	public void NormalizeLineEndingsHandlesLargeInput(LineEndingStyle style, string expectedUnit)
+	{
+		ArgumentNullException.ThrowIfNull(expectedUnit);
+		const int repeats = 6_000_000;
+		string input = new StringBuilder("ab\r\ncd\ref\n".Length * repeats).Insert(0, "ab\r\ncd\ref\n", repeats).ToString();
+
+		string result = input.NormalizeLineEndings(style);
+
+		Assert.AreEqual(expectedUnit.Length * repeats, result.Length);
+		Assert.AreEqual(expectedUnit, result[..expectedUnit.Length]);
+		Assert.AreEqual(expectedUnit, result[^expectedUnit.Length..]);
+	}
+
+	// Pins the fix above: no regex in StringExtensions may carry a finite timeout, so a later analyzer fix
+	// (SonarCloud S6444) can't bring the whole-call timeout back.
+	[TestMethod]
+	public void StringExtensionsRegexesHaveNoFiniteMatchTimeout()
+	{
+		IEnumerable<PropertyInfo> regexProperties = typeof(StringExtensions)
+			.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+			.Where(property => property.PropertyType == typeof(Regex));
+
+		foreach (PropertyInfo property in regexProperties)
+		{
+			Regex regex = (Regex)property.GetValue(null)!;
+			Assert.AreEqual(Regex.InfiniteMatchTimeout, regex.MatchTimeout, $"{property.Name} has a finite match timeout.");
+		}
 	}
 
 	[TestMethod]
