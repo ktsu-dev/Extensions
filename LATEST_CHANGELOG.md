@@ -2,6 +2,13 @@
 
 Changes since v1.9.0:
 
+- Keep a dash after a zero-width space word-initial in NominalWordWrap [patch] (#187) (matt-edmondson)
+- Normalize line endings in a plain scan, with no regex timeout [patch] (#189) (matt-edmondson)
+- Keep a hyphen-only remainder off its own line when a new word or nothing follows [patch] (#191) (matt-edmondson)
+- Keep a very wide NominalWordWrap to its width [patch] (#192) (matt-edmondson)
+- Route a ConcurrentDictionary held as IDictionary through GetOrAdd in GetOrCreate [patch] (#195) (matt-edmondson)
+- Honour BindingFlags.IgnoreCase in TryFindMethod [patch] (#196) (matt-edmondson)
+- Restore a collection's items when ReplaceWith fails part-way [patch] (#198) (matt-edmondson)
 - Break NominalWordWrap at every Unicode mandatory line break [patch] (#185) (matt-edmondson)
 - Keep a hard-broken hyphen on the line with the rest of its word [patch] (#183) (matt-edmondson)
 - Break NominalWordWrap at zero-width spaces [minor] (#181) (matt-edmondson)
