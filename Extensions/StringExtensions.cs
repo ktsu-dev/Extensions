@@ -481,20 +481,23 @@ public static class StringExtensions
 	private static List<string> HardBreak(string text, int maxCharsPerLine, out string remaining)
 	{
 		List<string> fullLines = [];
-		remaining = text;
-		while (remaining.Length > maxCharsPerLine)
+
+		// Walk an offset through the text rather than re-slicing what is left, so a long token is copied once
+		int offset = 0;
+		while (text.Length - offset > maxCharsPerLine)
 		{
 			int cut = maxCharsPerLine;
-			if (char.IsHighSurrogate(remaining[cut - 1]) && char.IsLowSurrogate(remaining[cut]))
+			if (char.IsHighSurrogate(text[offset + cut - 1]) && char.IsLowSurrogate(text[offset + cut]))
 			{
 				// Never split a surrogate pair. At a width of one, let the pair overhang instead.
 				cut = cut > 1 ? cut - 1 : 2;
 			}
 
-			fullLines.Add(remaining.Substring(0, cut));
-			remaining = remaining.Substring(cut);
+			fullLines.Add(text.Substring(offset, cut));
+			offset += cut;
 		}
 
+		remaining = offset == 0 ? text : text.Substring(offset);
 		return fullLines;
 	}
 

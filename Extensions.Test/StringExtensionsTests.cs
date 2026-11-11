@@ -936,4 +936,19 @@ public class StringExtensionsTests
 		List<string> result = [.. "a\u00A0b c\u2007d e\u202Ff".NominalWordWrap(100f, 1f)];
 		CollectionAssert.AreEqual(new List<string> { "a\u00A0b c\u2007d e\u202Ff" }, result);
 	}
+
+	[TestMethod]
+	public void NominalWordWrapHardBreaksALongTokenInLinearTime()
+	{
+		// One unbroken token, such as a base64 blob, cut into many narrow lines
+		string token = new('a', 1_000_000);
+
+		System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
+		List<string> result = [.. token.NominalWordWrap(10f, 1f)];
+		stopwatch.Stop();
+
+		Assert.HasCount(100_000, result);
+		Assert.IsTrue(result.TrueForAll(line => line == "aaaaaaaaaa"));
+		Assert.IsLessThan(1_000, stopwatch.ElapsedMilliseconds);
+	}
 }
