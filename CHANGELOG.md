@@ -2,6 +2,8 @@
 
 Changes since v1.9.0:
 
+- Hard-break a long token in NominalWordWrap in linear time [patch] (#200) (matt-edmondson)
+- Suppress Polyfill shim drift in package validation [patch] (#205) (matt-edmondson)
 - Keep a dash after a zero-width space word-initial in NominalWordWrap [patch] (#187) (matt-edmondson)
 - Normalize line endings in a plain scan, with no regex timeout [patch] (#189) (matt-edmondson)
 - Keep a hyphen-only remainder off its own line when a new word or nothing follows [patch] (#191) (matt-edmondson)
