@@ -493,17 +493,9 @@ public static class StringExtensions
 				// Never split a surrogate pair. At a width of one, let the pair overhang instead.
 				cut = cut > 1 ? cut - 1 : 2;
 			}
-			else if (text[offset + cut - 1] == '-' && text[offset + cut] == '-')
+			else
 			{
-				// Never split a run of hyphens such as a "--" dash: cut before the run instead, so it moves down whole,
-				// unless the run fills the line from its start and there is nothing to cut before.
-				int runStart = cut - 1;
-				while (runStart > 0 && text[offset + runStart - 1] == '-')
-				{
-					runStart--;
-				}
-
-				cut = runStart > 0 ? runStart : cut;
+				cut = CutBeforeHyphenRun(text, offset, cut);
 			}
 
 			fullLines.Add(text.Substring(offset, cut));
@@ -512,6 +504,30 @@ public static class StringExtensions
 
 		remaining = offset == 0 ? text : text.Substring(offset);
 		return fullLines;
+	}
+
+	/// <summary>
+	/// Moves a hard-break cut that would split a run of hyphens, such as a "--" dash, back to the start of the run so
+	/// the run moves down whole, unless the run fills the line from its start and there is nothing to cut before.
+	/// </summary>
+	/// <param name="text">The text being cut.</param>
+	/// <param name="offset">Where the current line starts in <paramref name="text"/>.</param>
+	/// <param name="cut">The proposed line length; <paramref name="offset"/> + <paramref name="cut"/> is inside the text.</param>
+	/// <returns>The line length to cut at.</returns>
+	private static int CutBeforeHyphenRun(string text, int offset, int cut)
+	{
+		if (text[offset + cut - 1] != '-' || text[offset + cut] != '-')
+		{
+			return cut;
+		}
+
+		int runStart = cut - 1;
+		while (runStart > 0 && text[offset + runStart - 1] == '-')
+		{
+			runStart--;
+		}
+
+		return runStart > 0 ? runStart : cut;
 	}
 
 	private static List<(string Text, bool GlueSpace, bool HyphenBefore, bool CanBreak)> BuildAtoms(string segment)

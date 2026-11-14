@@ -716,9 +716,8 @@ public class StringExtensionsTests
 		{
 			for (int wordLength = 1; wordLength <= 12; wordLength++)
 			{
-				foreach (string tail in tails)
+				foreach (string input in tails.Select(tail => new string('a', wordLength) + "--" + tail))
 				{
-					string input = new string('a', wordLength) + "--" + tail;
 					List<string> result = [.. input.NominalWordWrap(width, 1f)];
 					foreach (string line in result)
 					{
