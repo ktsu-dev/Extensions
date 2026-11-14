@@ -472,7 +472,8 @@ public static class StringExtensions
 	}
 
 	/// <summary>
-	/// Cuts text that is wider than a line into full lines, never splitting a surrogate pair.
+	/// Cuts text that is wider than a line into full lines, never splitting a surrogate pair or, where a line can hold
+	/// something before it, a run of hyphens.
 	/// </summary>
 	/// <param name="text">The text to place at the start of a line.</param>
 	/// <param name="maxCharsPerLine">The line width in characters.</param>
@@ -491,6 +492,18 @@ public static class StringExtensions
 			{
 				// Never split a surrogate pair. At a width of one, let the pair overhang instead.
 				cut = cut > 1 ? cut - 1 : 2;
+			}
+			else if (text[offset + cut - 1] == '-' && text[offset + cut] == '-')
+			{
+				// Never split a run of hyphens such as a "--" dash: cut before the run instead, so it moves down whole,
+				// unless the run fills the line from its start and there is nothing to cut before.
+				int runStart = cut - 1;
+				while (runStart > 0 && text[offset + runStart - 1] == '-')
+				{
+					runStart--;
+				}
+
+				cut = runStart > 0 ? runStart : cut;
 			}
 
 			fullLines.Add(text.Substring(offset, cut));

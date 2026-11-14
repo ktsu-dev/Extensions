@@ -694,6 +694,10 @@ public class StringExtensionsTests
 	[DataRow("abcde-", 5f, new[] { "abcd", "e-" })]
 	[DataRow("pre- and post-war", 3f, new[] { "pr", "e-", "and", "pos", "t-", "war" })]
 	[DataRow("x\U0001F600- y", 3f, new[] { "x", "\U0001F600-", "y" })]
+	[DataRow("wait-- then", 5f, new[] { "wai", "t--", "then" })]
+	[DataRow("wait--", 5f, new[] { "wai", "t--" })]
+	[DataRow("late--too", 5f, new[] { "late", "--too" })]
+	[DataRow("well--known fact", 5f, new[] { "well", "--kno", "wn", "fact" })]
 	public void NominalWordWrapNeverLeavesALineOfOnlyHyphens(string input, float maxChars, string[] expected)
 	{
 		// A hard break that cuts only the trailing hyphen off a chunk keeps the next chunk of the word on the hyphen's line (#182).
@@ -701,6 +705,33 @@ public class StringExtensionsTests
 		CollectionAssert.AreEqual(expected, result);
 		Assert.IsFalse(result.Any(line => line.Length > 0 && line.Trim('-').Length == 0), "No line should hold only hyphens.");
 		Assert.IsFalse(result.Any(line => line.Length > maxChars), "No line should be wider than the width.");
+	}
+
+	[TestMethod]
+	public void NominalWordWrapNeverSplitsADoubleHyphenDash()
+	{
+		// Put a "--" dash after words of every length, so the hard break lands before, inside and after the run (#203).
+		string[] tails = ["", " what", "too", " then more"];
+		for (int width = 3; width <= 9; width++)
+		{
+			for (int wordLength = 1; wordLength <= 12; wordLength++)
+			{
+				foreach (string tail in tails)
+				{
+					string input = new string('a', wordLength) + "--" + tail;
+					List<string> result = [.. input.NominalWordWrap(width, 1f)];
+					foreach (string line in result)
+					{
+						Assert.IsFalse(line.StartsWith('-') && !line.StartsWith("--", StringComparison.Ordinal), $"{input} at width {width} split its dash: [{string.Join(" | ", result)}]");
+						Assert.IsFalse(line.EndsWith('-') && !line.EndsWith("--", StringComparison.Ordinal), $"{input} at width {width} split its dash: [{string.Join(" | ", result)}]");
+						Assert.IsFalse(line.Length > 0 && line.Trim('-').Length == 0, $"{input} at width {width} left a line of only hyphens: [{string.Join(" | ", result)}]");
+						Assert.IsLessThanOrEqualTo(width, line.Length, $"{input} at width {width}: [{string.Join(" | ", result)}]");
+					}
+
+					Assert.AreEqual(input.Replace(" ", string.Empty, StringComparison.Ordinal), string.Concat(result).Replace(" ", string.Empty, StringComparison.Ordinal), $"{input} at width {width} lost content: [{string.Join(" | ", result)}]");
+				}
+			}
+		}
 	}
 
 	[TestMethod]
